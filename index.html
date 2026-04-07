@@ -15,6 +15,11 @@
       --text: #d4d4d4;
       --text-dim: #666;
       --accent: #b8ff5b;
+      --purple: #897dd0;
+      --purple-dim: #4a4280;
+      --red: #c43c42;
+      --red-dim: #6e1f22;
+      --gradient: linear-gradient(135deg, var(--purple), var(--red));
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -49,8 +54,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(137,125,208,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196,60,66,0.04) 1px, transparent 1px);
       background-size: 40px 40px;
       pointer-events: none;
       z-index: 0;
@@ -81,15 +86,15 @@
       justify-content: space-between;
     }
 
-    .logo {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 11px;
-      color: var(--green);
-      text-shadow: 0 0 12px var(--green);
-      letter-spacing: 1px;
+    .logo-img {
+      height: 36px;
+      width: auto;
+      image-rendering: pixelated;
+      display: block;
+      transition: opacity 0.2s;
     }
 
-    .logo span { color: var(--text-dim); }
+    .logo-img:hover { opacity: 0.8; }
 
     nav ul {
       list-style: none;
@@ -105,7 +110,107 @@
       transition: color 0.2s;
     }
 
-    nav a:hover { color: var(--green); }
+    nav a:hover { color: var(--purple); }
+
+    /* ── MUSIC PLAYER ── */
+    .music-player {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .music-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(22,22,22,0.95);
+      backdrop-filter: blur(8px);
+      color: var(--text-dim);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .music-btn:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+      transform: scale(1.08);
+    }
+
+    .music-btn.playing {
+      border-color: var(--purple);
+      color: var(--purple);
+      box-shadow: 0 0 18px rgba(137,125,208,0.35);
+      animation: pulseBtn 2s infinite;
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { box-shadow: 0 0 18px rgba(137,125,208,0.35); }
+      50%       { box-shadow: 0 0 28px rgba(137,125,208,0.55); }
+    }
+
+    .music-label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      background: rgba(22,22,22,0.9);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 2px;
+      white-space: nowrap;
+      backdrop-filter: blur(6px);
+    }
+
+    .music-panel {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(22,22,22,0.97);
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+      min-width: 200px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    .music-panel.open { display: flex; }
+
+    .music-panel-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--purple);
+      text-transform: uppercase;
+    }
+
+    .volume-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .volume-row span {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .volume-row input[type=range] {
+      flex: 1;
+      accent-color: var(--purple);
+      cursor: pointer;
+    }
 
     /* ── HERO ── */
     .hero {
@@ -115,7 +220,7 @@
 
     .hero-tag {
       font-size: 11px;
-      color: var(--green);
+      color: var(--purple);
       letter-spacing: 3px;
       text-transform: uppercase;
       margin-bottom: 20px;
@@ -134,8 +239,10 @@
     }
 
     .hero h1 .highlight {
-      color: var(--green);
-      text-shadow: 0 0 20px rgba(57,255,20,0.5);
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hero-desc {
@@ -169,14 +276,14 @@
     }
 
     .btn-primary {
-      background: var(--green);
-      color: #000;
+      background: var(--gradient);
+      color: #fff;
       font-weight: 600;
     }
 
     .btn-primary:hover {
-      background: var(--accent);
-      box-shadow: 0 0 20px rgba(57,255,20,0.4);
+      opacity: 0.85;
+      box-shadow: 0 0 20px rgba(137,125,208,0.4);
       transform: translateY(-1px);
     }
 
@@ -186,8 +293,8 @@
     }
 
     .btn-ghost:hover {
-      border-color: var(--green);
-      color: var(--green);
+      border-color: var(--purple);
+      color: var(--purple);
       transform: translateY(-1px);
     }
 
@@ -198,7 +305,7 @@
       font-size: 10px;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: var(--green);
+      color: var(--purple);
       margin-bottom: 12px;
     }
 
@@ -268,7 +375,7 @@
 
     .stat-item:last-child { border-bottom: none; }
     .stat-item .label { color: var(--text-dim); }
-    .stat-item .value { color: var(--green); font-weight: 600; }
+    .stat-item .value { color: var(--purple); font-weight: 600; }
 
     /* ── MODS ── */
     .mods-grid {
@@ -292,28 +399,38 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
-      background: var(--green);
+      background: var(--gradient);
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 0.3s;
     }
 
-    .mod-card:hover { border-color: var(--green-dim); transform: translateY(-3px); }
+    .mod-card:hover { border-color: var(--purple-dim); transform: translateY(-3px); }
     .mod-card:hover::before { transform: scaleX(1); }
 
     .mod-version {
       font-size: 10px;
-      color: var(--green);
+      color: var(--red);
       letter-spacing: 2px;
       margin-bottom: 10px;
     }
 
+    /* Clickable mod title */
     .mod-name {
       font-family: 'Press Start 2P', monospace;
       font-size: 11px;
       color: #fff;
       margin-bottom: 12px;
       line-height: 1.6;
+      text-decoration: none;
+      display: block;
+      transition: color 0.2s;
+    }
+
+    a.mod-name:hover {
+      color: var(--purple);
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
 
     .mod-desc {
@@ -332,9 +449,9 @@
     .mod-tag {
       font-size: 10px;
       padding: 4px 10px;
-      background: rgba(57,255,20,0.07);
-      border: 1px solid var(--green-dim);
-      color: var(--green);
+      background: rgba(137,125,208,0.1);
+      border: 1px solid var(--purple-dim);
+      color: var(--purple);
       border-radius: 2px;
       letter-spacing: 1px;
     }
@@ -348,7 +465,86 @@
       transition: color 0.2s;
     }
 
-    .mod-link:hover { color: var(--green); }
+    .mod-link:hover { color: var(--red); }
+
+    /* ── RESOURCE PACKS ── */
+    .rp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .rp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .rp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(135deg, var(--red), var(--purple));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .rp-card:hover { border-color: var(--red-dim); transform: translateY(-3px); }
+    .rp-card:hover::before { transform: scaleX(1); }
+
+    .rp-logo {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9);
+      transition: filter 0.3s;
+    }
+
+    .rp-card:hover .rp-logo { filter: brightness(1); }
+
+    .rp-body {
+      padding: 20px;
+    }
+
+    /* Clickable RP title */
+    .rp-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.6;
+      text-decoration: none;
+      display: block;
+      transition: color 0.2s;
+    }
+
+    a.rp-name:hover {
+      color: var(--red);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .rp-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .rp-link {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .rp-link:hover { color: var(--red); }
 
     /* ── CONTACT ── */
     .contact-row {
@@ -372,12 +568,39 @@
     }
 
     .contact-chip:hover {
-      border-color: var(--green);
-      color: var(--green);
+      border-color: var(--purple);
+      color: var(--purple);
       transform: translateY(-2px);
     }
 
     .contact-chip .icon { font-size: 16px; }
+
+    /* ── WIP ── */
+    .wip-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 20px 0;
+    }
+
+    .wip-img {
+      max-width: 320px;
+      width: 100%;
+      image-rendering: pixelated;
+      border-radius: 4px;
+    }
+
+    .wip-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+    }
 
     /* ── FOOTER ── */
     footer {
@@ -388,7 +611,12 @@
       letter-spacing: 1px;
     }
 
-    footer span { color: var(--green); }
+    footer span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
     /* ── FOOTER ICON ── */
     .footer-icon {
@@ -423,14 +651,34 @@
 
   <nav>
     <div class="container">
-      <div class="logo">ElBF<span>::</span>Cambiaformas</div>
+      <a href="#"><img src="images/logo.png" alt="ElBFCambiaformas" class="logo-img" /></a>
       <ul>
         <li><a href="#about">About</a></li>
         <li><a href="#mods">Mods</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#resourcepacks">Resource Packs</a></li>
       </ul>
     </div>
   </nav>
+
+  <!-- MUSIC PLAYER -->
+  <div class="music-player" id="musicPlayer">
+    <div class="music-panel" id="musicPanel">
+      <div class="music-panel-label">// Volume</div>
+      <div class="volume-row">
+        <span>0</span>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.4" />
+        <span>100</span>
+      </div>
+    </div>
+    <div class="music-label" id="musicLabel">&#9834; click to play</div>
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Left click: play/pause &middot; Right click: volume">&#9834;</button>
+  </div>
+
+  <!-- Audio: put your file(s) in an audio/ folder next to index.html -->
+  <audio id="bgMusic" loop>
+    <source src="audio/music.mp3" type="audio/mpeg" />
+    <source src="audio/music.ogg" type="audio/ogg" />
+  </audio>
 
   <!-- HERO -->
   <div class="hero">
@@ -439,7 +687,7 @@
       <h1>Hiiiiiiii, It's me<br><span class="highlight">𝓯𝓪𝓷𝓬𝔂 fella! :3</span></h1>
       <p class="hero-desc">
         I ruin Minecraft horror mods for fun (im looking at you <a href="https://modrinth.com/mod/wonderland-jar">wonderland.jar</a>)
-		yeah so uh, enjoy!
+        yeah so uh, enjoy!
       </p>
       <div class="hero-links">
         <a href="#mods" class="btn btn-primary">View My Mods</a>
@@ -458,20 +706,20 @@
           <img src="images/about.png" alt="The Minecraft Skin i use!" class="about-photo" />
           <p>Hey hello there! It's a me!.</p>
           <p>I am the guy that modified wonderland.jar via bytecoding and made the entities 𝓯𝓪𝓷𝓬𝔂.</p>
-		  <p>It has been such a <i>wonder</i>ful time to do stuff like this!.</p>
-		  <p>From what started from me making the entities fancy to being a wonderland.jar dev really makes me so happy!!!</p>
+          <p>It has been such a <i>wonder</i>ful time to do stuff like this!.</p>
+          <p>From what started from me making the entities fancy to being a wonderland.jar dev really makes me so happy!!!</p>
         </div>
         <div class="stat-box">
           <h3>// Quick Info</h3>
-		  <div class="stat-item"><span class="label">Gender</span><span class="value">Male</span></div>
-		  <div class="stat-item"><span class="label">I couldn't have been this far without</span><span class="value"><a href="#" class="https://www.curseforge.com/members/alexander_25">Alexander25</a></span>,<a href="#" class="https://www.youtube.com/channel/UCJ9Y75Y_Q1N1ttHvhU5MjOQ">Checkmark</a>,<a href="#" class="https://bsky.app/profile/did:plc:yavlup35jrmatm2vtqtic3ko">Gray</a>and </a>,<a href="#" class="https://ko-fi.com/callmestereo">penny</a></div>
+          <div class="stat-item"><span class="label">Gender</span><span class="value">Male</span></div>
+          <div class="stat-item"><span class="label">I couldn't have been this far without</span><span class="value"><a href="https://www.curseforge.com/members/alexander_25" class="mod-link" target="_blank">Alexander25</a></span>,<a href="https://www.youtube.com/channel/UCJ9Y75Y_Q1N1ttHvhU5MjOQ" class="mod-link" target="_blank">Checkmark</a>,<a href="https://bsky.app/profile/did:plc:yavlup35jrmatm2vtqtic3ko" class="mod-link" target="_blank">Gray</a> and <a href="https://ko-fi.com/callmestereo" class="mod-link" target="_blank">penny</a></div>
           <div class="stat-item"><span class="label">All of the mods will always be</span><span class="value">Forge 1.20.1</span></div>
           <div class="stat-item"><span class="label">Mods Released</span><span class="value">0</span></div>
-		  <div class="stat-item"><span class="label">Favorite game</span><span class="value">Garry's Mod and Minecraft</span></div>
-		  <h3><i>Mod types</i></h3>
-		  <div class="stat-item"><span class="label">OLD mods mean</span><span class="value">Will get a better/remake version</span></div>
-		  <div class="stat-item"><span class="label">DISCONTINUED mods mean</span><span class="value">Will be never updated and stay for archival purposes</span></div>
-		  <div class="stat-item"><span class="label">NEW mods mean</span><span class="value">It's brand new/or has been updated</span></div>
+          <div class="stat-item"><span class="label">Favorite game</span><span class="value">Garry's Mod and Minecraft</span></div>
+          <h3><i>Mod types</i></h3>
+          <div class="stat-item"><span class="label">OLD mods mean</span><span class="value">Will get a better/remake version</span></div>
+          <div class="stat-item"><span class="label">DISCONTINUED mods mean</span><span class="value">Will be never updated and stay for archival purposes</span></div>
+          <div class="stat-item"><span class="label">NEW mods mean</span><span class="value">It's brand new/or has been updated</span></div>
         </div>
       </div>
     </div>
@@ -486,179 +734,151 @@
 
         <div class="mod-card">
           <div class="mod-version">v1.0.2</div>
-          <div class="mod-name">Yoinky Sploinky Companion</div>
+          <a href="https://drive.google.com/file/d/1ohBRui88mVzcPSB1V_N3ShIwJIgvgDNl/view?usp=drive_link" class="mod-name" target="_blank">Yoinky Sploinky Companion</a>
           <div class="mod-desc">Adds the guy from one of the sneak peeks of wonderland (called just_like_you) as a companion!.</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1ohBRui88mVzcPSB1V_N3ShIwJIgvgDNl/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-		 <div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.2</div>
-          <div class="mod-name">Terror Radius</div>
+          <a href="https://drive.google.com/file/d/13FY0zAPNTE2rIcMtal-Oof1XVN7fiYP8/view?usp=drive_link" class="mod-name" target="_blank">Terror Radius</a>
           <div class="mod-desc">Makes a entity you put in the config have a music depending on how many blocks you or the mob is in (kinda like Dead By Daylight or Forsaken, or any game that has a terror radius)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/13FY0zAPNTE2rIcMtal-Oof1XVN7fiYP8/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
 
-		<div class="mod-card">
+        <div class="mod-card">
           <div class="mod-version">v1.0.4</div>
-          <div class="mod-name">GrassTP</div>
+          <a href="https://drive.google.com/file/d/1VAmMNCuKVBPltrzdTbbxHnfnAnAb8K7p/view?usp=drive_link" class="mod-name" target="_blank">GrassTP</a>
           <div class="mod-desc">If you touch large or short grass (fern included) you teleport to torture (or any dimension you choose in the config)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1VAmMNCuKVBPltrzdTbbxHnfnAnAb8K7p/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">BlockMusic (OLD)</div>
+          <a href="https://drive.google.com/file/d/19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm/view?usp=drive_link" class="mod-name" target="_blank">BlockMusic (OLD)</a>
           <div class="mod-desc">Break the crystal block in brickways and BIG SHOT plays</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Evil Chiken (DISCONTINUED)</div>
+          <a href="https://drive.google.com/file/d/1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8/view?usp=drive_link" class="mod-name" target="_blank">Evil Chiken (DISCONTINUED)</a>
           <div class="mod-desc">If you kill a chicken, TheEntity spawns</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Soap Mod (OLD)</div>
+          <a href="https://drive.google.com/file/d/19zOYLJ2u7NehP8OXiZfcEF1cBn8ca94M/view?usp=drive_link" class="mod-name" target="_blank">Soap Mod (OLD)</a>
           <div class="mod-desc">Adds a soap item so that you can throw it at mobs and blind them (or adding slowness)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/19zOYLJ2u7NehP8OXiZfcEF1cBn8ca94M/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Wonderland Vanilla Music Fix</div>
+          <a href="https://drive.google.com/file/d/1FLz7TV1jaZ0UXq61SR_O51jfdhqYOWp2/view?usp=drive_link" class="mod-name" target="_blank">Wonderland Vanilla Music Fix</a>
           <div class="mod-desc">Fixes a issue that vanilla music plays if you're in a wonderland dimension after a while</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1FLz7TV1jaZ0UXq61SR_O51jfdhqYOWp2/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Richy BIG SHOT</div>
+          <a href="https://drive.google.com/file/d/1nlUNvNzlXgRA34GXI2Ok0ajUeTz75oL1/view?usp=drive_link" class="mod-name" target="_blank">Richy BIG SHOT</a>
           <div class="mod-desc">If The Hoarder is near you, BIG SHOT plays</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1nlUNvNzlXgRA34GXI2Ok0ajUeTz75oL1/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-			
-					<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">WLJ Painting</div>
+          <a href="https://drive.google.com/file/d/1R7Zpsgko7ZRixvynUoAyQiFcWQihQTmJ/view?usp=drive_link" class="mod-name" target="_blank">WLJ Painting</a>
           <div class="mod-desc">Makes the paintings from Wonderland actually usable (since only in the playtest builds you can place them)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1R7Zpsgko7ZRixvynUoAyQiFcWQihQTmJ/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Source-like movement (DISCONTINUED)</div>
+          <a href="https://drive.google.com/file/d/1Sdec1-DM81tno8LR_1Qt45xFHJK0rNZ4/view?usp=drive_link" class="mod-name" target="_blank">Source-like movement (DISCONTINUED)</a>
           <div class="mod-desc">Somewhat replicates the source movement to Minecraft (really bad recreation)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1Sdec1-DM81tno8LR_1Qt45xFHJK0rNZ4/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Decorative Shade</div>
-          <div class="mod-desc">Gives The Watching Shade entities a Pomni hat! (Requieres <a href="#" class="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link">Hats n Stuff</a>)</div>
+          <a href="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link" class="mod-name" target="_blank">Decorative Shade</a>
+          <div class="mod-desc">Gives The Watching Shade entities a Pomni hat! (Requires <a href="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link" class="mod-link" target="_blank">Hats n Stuff</a>)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Hats n Stuff</div>
+          <a href="https://drive.google.com/file/d/1Lsc30kb6WyEs47xRaKExoE9rddM-W9S8/view?usp=drive_link" class="mod-name" target="_blank">Hats n Stuff</a>
           <div class="mod-desc">Adds some hats (n Stuff) ((it's only the Pomni hat but i might add more!))</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1Lsc30kb6WyEs47xRaKExoE9rddM-W9S8/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">Bullets are Demonic Fish (Maybe DISCONTINUED??)</div>
+          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">Bullets are Demonic Fish (Maybe DISCONTINUED??)</a>
           <div class="mod-desc">Replaces TACZ bullet with Demonic Fish</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-				<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">MLGing Teleports you to dimension (DISCONTINUED)</div>
+          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">MLGing Teleports you to dimension (DISCONTINUED)</a>
           <div class="mod-desc">The title says it</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link">Google Drive →</a>
           </div>
         </div>
-		
-						<div class="mod-card">
+
+        <div class="mod-card">
           <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">MLGing Teleports you to dimension (DISCONTINUED)</div>
-          <div class="mod-desc">The title says it</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link">Google Drive →</a>
-          </div>
-        </div>
-		
-						<div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <div class="mod-name">The Entity Invulnerable</div>
+          <a href="https://drive.google.com/file/d/101_r4rOwDEdosNitx9-d9GtAlJlZdxau/view?usp=drive_link" class="mod-name" target="_blank">The Entity Invulnerable</a>
           <div class="mod-desc">TheEntity is invulnerable to everything, incluiding guns (well i mean it still takes damage, but it can't die)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
-            <a href="#" class="https://drive.google.com/file/d/101_r4rOwDEdosNitx9-d9GtAlJlZdxau/view?usp=drive_link">Google Drive →</a>
-          </div>
-        </div>
-		
           </div>
         </div>
 
@@ -666,22 +886,31 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
+  <!-- RESOURCE PACKS -->
+  <section id="resourcepacks">
     <div class="container">
       <div class="section-label">// 03</div>
-      <div class="section-title">Find Me</div>
-      <div class="contact-row reveal">
-        <!-- Edit href links with your actual profiles -->
-        <a href="https://github.com/ElBFCambiaformas" class="contact-chip" target="_blank">
-          <span class="icon">⌥</span> GitHub
-        </a>
-        <a href="https://modrinth.com/user/ElBFCambiaformas" class="contact-chip" target="_blank">
-          <span class="icon">⬡</span> Modrinth
-        </a>
-        <a href="#" class="contact-chip">
-          <span class="icon">#</span> Discord
-        </a>
+      <div class="section-title">Resource Packs</div>
+      <div class="rp-grid reveal">
+
+        <div class="rp-card">
+          <img src="images/rp-wonderlandfancy.png" alt="Wonderland fancy logo" class="rp-logo" />
+          <div class="rp-body">
+            <a href="https://www.curseforge.com/minecraft/texture-packs/the-fancy-wonderland-zip" class="rp-name" target="_blank">The 𝓯𝓪𝓷𝓬𝔂 wonderland.zip</a>
+            <div class="rp-desc">wonderland.jar, but fancy</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WIP -->
+  <section id="contact">
+    <div class="container">
+      <div class="wip-block reveal">
+        <img src="images/wip.png" alt="Work in progress" class="wip-img" />
+        <p class="wip-text">Still in WIP, come back soon!</p>
       </div>
     </div>
   </section>
@@ -694,11 +923,55 @@
   </footer>
 
   <script>
+    // ── Scroll reveal ──
     const observer = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.1 }
     );
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Music player ──
+    const audio     = document.getElementById('bgMusic');
+    const btn       = document.getElementById('musicBtn');
+    const label     = document.getElementById('musicLabel');
+    const panel     = document.getElementById('musicPanel');
+    const volSlider = document.getElementById('volumeSlider');
+
+    audio.volume = parseFloat(volSlider.value);
+
+    volSlider.addEventListener('input', () => {
+      audio.volume = parseFloat(volSlider.value);
+    });
+
+    // Right-click opens the volume panel
+    btn.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      panel.classList.toggle('open');
+    });
+
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play()
+          .then(() => {
+            btn.classList.add('playing');
+            label.textContent = '\u266a playing';
+          })
+          .catch(() => {
+            // Browsers block autoplay without interaction — this click counts, retry
+            audio.load();
+            audio.play().then(() => {
+              btn.classList.add('playing');
+              label.textContent = '\u266a playing';
+            }).catch(() => {
+              label.textContent = '\u266a file missing?';
+            });
+          });
+      } else {
+        audio.pause();
+        btn.classList.remove('playing');
+        label.textContent = '\u266a paused';
+      }
+    }
   </script>
 
 </body>
