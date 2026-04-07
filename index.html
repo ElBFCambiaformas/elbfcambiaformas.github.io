@@ -565,6 +565,132 @@
     }
 
     .reveal.visible { opacity: 1; transform: none; }
+
+    /* Staggered reveal for grid children */
+    .mods-grid.visible .mod-card,
+    .rp-grid.visible .rp-card {
+      opacity: 1;
+      transform: none;
+    }
+
+    .mods-grid .mod-card,
+    .rp-grid .rp-card {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .mods-grid .mod-card:nth-child(1)  { transition-delay: 0.05s; }
+    .mods-grid .mod-card:nth-child(2)  { transition-delay: 0.10s; }
+    .mods-grid .mod-card:nth-child(3)  { transition-delay: 0.15s; }
+    .mods-grid .mod-card:nth-child(4)  { transition-delay: 0.20s; }
+    .mods-grid .mod-card:nth-child(5)  { transition-delay: 0.25s; }
+    .mods-grid .mod-card:nth-child(6)  { transition-delay: 0.30s; }
+    .mods-grid .mod-card:nth-child(7)  { transition-delay: 0.35s; }
+    .mods-grid .mod-card:nth-child(8)  { transition-delay: 0.40s; }
+    .mods-grid .mod-card:nth-child(9)  { transition-delay: 0.45s; }
+    .mods-grid .mod-card:nth-child(10) { transition-delay: 0.50s; }
+    .mods-grid .mod-card:nth-child(11) { transition-delay: 0.55s; }
+    .mods-grid .mod-card:nth-child(12) { transition-delay: 0.60s; }
+    .mods-grid .mod-card:nth-child(13) { transition-delay: 0.65s; }
+    .mods-grid .mod-card:nth-child(14) { transition-delay: 0.70s; }
+    .mods-grid .mod-card:nth-child(15) { transition-delay: 0.75s; }
+    .rp-grid   .rp-card:nth-child(1)   { transition-delay: 0.05s; }
+    .rp-grid   .rp-card:nth-child(2)   { transition-delay: 0.15s; }
+    .rp-grid   .rp-card:nth-child(3)   { transition-delay: 0.25s; }
+
+    /* Section label slide-in */
+    .section-label {
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .section-label.visible { opacity: 1; transform: none; }
+
+    /* Nav links underline sweep */
+    nav a::after {
+      content: '';
+      display: block;
+      height: 1px;
+      background: var(--purple);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s;
+    }
+    nav a:hover::after { transform: scaleX(1); }
+
+    /* Mod card shimmer on hover */
+    .mod-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(137,125,208,0.05) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+      pointer-events: none;
+    }
+    .mod-card:hover::after { transform: translateX(100%); }
+
+    /* Stat-box rows fade in */
+    .stat-item {
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .about-grid.visible .stat-item { opacity: 1; transform: none; }
+    .about-grid.visible .stat-item:nth-child(1)  { transition-delay: 0.10s; }
+    .about-grid.visible .stat-item:nth-child(2)  { transition-delay: 0.18s; }
+    .about-grid.visible .stat-item:nth-child(3)  { transition-delay: 0.26s; }
+    .about-grid.visible .stat-item:nth-child(4)  { transition-delay: 0.34s; }
+    .about-grid.visible .stat-item:nth-child(5)  { transition-delay: 0.42s; }
+    .about-grid.visible .stat-item:nth-child(6)  { transition-delay: 0.50s; }
+    .about-grid.visible .stat-item:nth-child(7)  { transition-delay: 0.58s; }
+    .about-grid.visible .stat-item:nth-child(8)  { transition-delay: 0.66s; }
+    .about-grid.visible .stat-item:nth-child(9)  { transition-delay: 0.74s; }
+    .about-grid.visible .stat-item:nth-child(10) { transition-delay: 0.82s; }
+
+    /* ── BOUNCY FOOTER ICON ── */
+    .bounce-icon-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 32px 0 8px;
+    }
+
+    .bounce-icon {
+      width: 56px;
+      height: 56px;
+      image-rendering: pixelated;
+      cursor: pointer;
+      user-select: none;
+      display: block;
+      transition: filter 0.2s;
+      /* gentle idle float */
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    .bounce-icon:hover {
+      filter: drop-shadow(0 0 8px var(--purple));
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    @keyframes iconBounce {
+      0%   { transform: translateY(0px)   scaleY(1)    scaleX(1); }
+      15%  { transform: translateY(-40px) scaleY(1.1)  scaleX(0.9); }
+      30%  { transform: translateY(0px)   scaleY(0.85) scaleX(1.15); }
+      45%  { transform: translateY(-20px) scaleY(1.05) scaleX(0.95); }
+      60%  { transform: translateY(0px)   scaleY(0.95) scaleX(1.05); }
+      75%  { transform: translateY(-8px)  scaleY(1.02) scaleX(0.98); }
+      90%  { transform: translateY(0px)   scaleY(0.99) scaleX(1.01); }
+      100% { transform: translateY(0px)   scaleY(1)    scaleX(1); }
+    }
+
+    .bounce-icon.bouncing {
+      animation: iconBounce 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+    }
   </style>
 </head>
 <body>
@@ -631,23 +757,12 @@
     <div class="container">
       <div class="section-label">// 02</div>
       <div class="section-title">My Mods</div>
-	  <div class="section-label">To download the mods, hover over the title</div>
       <div class="mods-grid reveal">
 
         <div class="mod-card status-new">
           <div class="mod-version new">v1.0.2</div>
           <a href="https://drive.google.com/file/d/1ohBRui88mVzcPSB1V_N3ShIwJIgvgDNl/view?usp=drive_link" class="mod-name" target="_blank">Yoinky Sploinky Companion</a>
           <div class="mod-desc">Adds the guy from one of the sneak peeks of wonderland (called just_like_you) as a companion!.</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-		
-		 <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.3</div>
-          <a href="https://drive.google.com/file/d/1VoEWJJzpe5VKutfglKGoeIHNuB7K13l8/view?usp=drive_link" class="mod-name" target="_blank">Multicolor Eyelings</a>
-          <div class="mod-desc">Adds different colored eyelings to defend you from TheEntity.</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
             <span class="mod-tag">1.20.1</span>
@@ -765,7 +880,7 @@
         </div>
 
         <div class="mod-card status-discontinued">
-          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED??</div>
+          <div class="mod-version discontinued">v1.0.0 · MAYBE DISCONTINUED??</div>
           <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">Bullets are Demonic Fish</a>
           <div class="mod-desc">Replaces TACZ bullet with Demonic Fish</div>
           <div class="mod-footer">
@@ -829,19 +944,57 @@
 
   <footer>
     <div class="container">
-      <img src="images/icon.png" alt="Site icon" class="footer-icon" />
+      <!-- Bouncy icon -->
+      <div class="bounce-icon-wrap">
+        <img src="images/icon.png" alt="boing!" class="bounce-icon" id="bounceIcon" />
+      </div>
       <span>ElBFCambiaformas</span> · built with GitHub Pages
     </div>
   </footer>
 
-  <script>
-    // ── Scroll reveal ──
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
+<script>
+  // ── Scroll reveal (sections, labels, grids) ──
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    }),
+    { threshold: 0.08 }
+  );
+
+  document
+    .querySelectorAll('.reveal, .section-label, .mods-grid, .rp-grid')
+    .forEach(el => observer.observe(el));
+
+  // ── Bouncy icon ──
+  const bounceIcon = document.getElementById('bounceIcon');
+
+  // ✅ MP3 audio instead of generated sound
+  const boingSound = new Audio("audio/boing.mp3");
+
+  function playBoing() {
+    boingSound.currentTime = 0; // restart if spam clicked
+    boingSound.play();
+  }
+
+  bounceIcon.addEventListener('click', () => {
+    // restart animation
+    bounceIcon.classList.remove('bouncing');
+    void bounceIcon.offsetWidth; // reflow trick
+    bounceIcon.classList.add('bouncing');
+
+    bounceIcon.addEventListener(
+      'animationend',
+      () => {
+        bounceIcon.classList.remove('bouncing');
+      },
+		{ once: true }
+		);
+
+		playBoing();
+	});
+</script>
 
 </body>
 </html>
