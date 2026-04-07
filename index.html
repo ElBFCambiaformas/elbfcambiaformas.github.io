@@ -112,105 +112,25 @@
 
     nav a:hover { color: var(--purple); }
 
-    /* ── MUSIC PLAYER ── */
-    .music-player {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 200;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-    }
+    /* ── MOD STATUS COLORS ── */
+    .mod-card.status-old        { border-color: #4a2e00; }
+    .mod-card.status-old::before        { background: linear-gradient(135deg, #e07800, #ff9f1c); }
+    .mod-card.status-old:hover          { border-color: #7a4d00; }
+    .mod-card.status-discontinued       { border-color: var(--red-dim); }
+    .mod-card.status-discontinued::before { background: linear-gradient(135deg, var(--red), #ff5c63); }
+    .mod-card.status-discontinued:hover { border-color: var(--red); }
+    .mod-card.status-new                { border-color: #0f3a0f; }
+    .mod-card.status-new::before        { background: linear-gradient(135deg, #2dba00, #39ff14); }
+    .mod-card.status-new:hover          { border-color: #1a7a00; }
 
-    .music-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: rgba(22,22,22,0.95);
-      backdrop-filter: blur(8px);
-      color: var(--text-dim);
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
+    .mod-version.old          { color: #e07800; }
+    .mod-version.discontinued { color: var(--red); }
+    .mod-version.new          { color: #39ff14; }
 
-    .music-btn:hover {
-      border-color: var(--purple);
-      color: var(--purple);
-      transform: scale(1.08);
-    }
-
-    .music-btn.playing {
-      border-color: var(--purple);
-      color: var(--purple);
-      box-shadow: 0 0 18px rgba(137,125,208,0.35);
-      animation: pulseBtn 2s infinite;
-    }
-
-    @keyframes pulseBtn {
-      0%, 100% { box-shadow: 0 0 18px rgba(137,125,208,0.35); }
-      50%       { box-shadow: 0 0 28px rgba(137,125,208,0.55); }
-    }
-
-    .music-label {
-      font-size: 10px;
-      letter-spacing: 1px;
-      color: var(--text-dim);
-      background: rgba(22,22,22,0.9);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 2px;
-      white-space: nowrap;
-      backdrop-filter: blur(6px);
-    }
-
-    .music-panel {
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-      background: rgba(22,22,22,0.97);
-      border: 1px solid var(--border);
-      padding: 14px;
-      border-radius: 4px;
-      backdrop-filter: blur(8px);
-      min-width: 200px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-    }
-
-    .music-panel.open { display: flex; }
-
-    .music-panel-label {
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--purple);
-      text-transform: uppercase;
-    }
-
-    .volume-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .volume-row span {
-      font-size: 10px;
-      color: var(--text-dim);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .volume-row input[type=range] {
-      flex: 1;
-      accent-color: var(--purple);
-      cursor: pointer;
-    }
+    /* Stat box value colors for mod types */
+    .value.type-old          { color: #e07800 !important; }
+    .value.type-discontinued { color: var(--red) !important; }
+    .value.type-new          { color: #39ff14 !important; }
 
     /* ── HERO ── */
     .hero {
@@ -660,25 +580,6 @@
     </div>
   </nav>
 
-  <!-- MUSIC PLAYER -->
-  <div class="music-player" id="musicPlayer">
-    <div class="music-panel" id="musicPanel">
-      <div class="music-panel-label">// Volume</div>
-      <div class="volume-row">
-        <span>0</span>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.4" />
-        <span>100</span>
-      </div>
-    </div>
-    <div class="music-label" id="musicLabel">&#9834; click to play</div>
-    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Left click: play/pause &middot; Right click: volume">&#9834;</button>
-  </div>
-
-  <!-- Audio: put your file(s) in an audio/ folder next to index.html -->
-  <audio id="bgMusic" loop>
-    <source src="audio/music.mp3" type="audio/mpeg" />
-    <source src="audio/music.ogg" type="audio/ogg" />
-  </audio>
 
   <!-- HERO -->
   <div class="hero">
@@ -717,9 +618,9 @@
           <div class="stat-item"><span class="label">Mods Released</span><span class="value">0</span></div>
           <div class="stat-item"><span class="label">Favorite game</span><span class="value">Garry's Mod and Minecraft</span></div>
           <h3><i>Mod types</i></h3>
-          <div class="stat-item"><span class="label">OLD mods mean</span><span class="value">Will get a better/remake version</span></div>
-          <div class="stat-item"><span class="label">DISCONTINUED mods mean</span><span class="value">Will be never updated and stay for archival purposes</span></div>
-          <div class="stat-item"><span class="label">NEW mods mean</span><span class="value">It's brand new/or has been updated</span></div>
+          <div class="stat-item"><span class="label">OLD mods mean</span><span class="value type-old">Will get a better/remake version</span></div>
+          <div class="stat-item"><span class="label">DISCONTINUED mods mean</span><span class="value type-discontinued">Will be never updated and stay for archival purposes</span></div>
+          <div class="stat-item"><span class="label">NEW mods mean</span><span class="value type-new">It's brand new/or has been updated</span></div>
         </div>
       </div>
     </div>
@@ -730,11 +631,10 @@
     <div class="container">
       <div class="section-label">// 02</div>
       <div class="section-title">My Mods</div>
-	  <div class="section-label">// To download the mods, hover over the title</div>
       <div class="mods-grid reveal">
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.2</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.2</div>
           <a href="https://drive.google.com/file/d/1ohBRui88mVzcPSB1V_N3ShIwJIgvgDNl/view?usp=drive_link" class="mod-name" target="_blank">Yoinky Sploinky Companion</a>
           <div class="mod-desc">Adds the guy from one of the sneak peeks of wonderland (called just_like_you) as a companion!.</div>
           <div class="mod-footer">
@@ -743,8 +643,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.2</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.2</div>
           <a href="https://drive.google.com/file/d/13FY0zAPNTE2rIcMtal-Oof1XVN7fiYP8/view?usp=drive_link" class="mod-name" target="_blank">Terror Radius</a>
           <div class="mod-desc">Makes a entity you put in the config have a music depending on how many blocks you or the mob is in (kinda like Dead By Daylight or Forsaken, or any game that has a terror radius)</div>
           <div class="mod-footer">
@@ -753,8 +653,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.4</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.4</div>
           <a href="https://drive.google.com/file/d/1VAmMNCuKVBPltrzdTbbxHnfnAnAb8K7p/view?usp=drive_link" class="mod-name" target="_blank">GrassTP</a>
           <div class="mod-desc">If you touch large or short grass (fern included) you teleport to torture (or any dimension you choose in the config)</div>
           <div class="mod-footer">
@@ -763,9 +663,9 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm/view?usp=drive_link" class="mod-name" target="_blank">BlockMusic (OLD)</a>
+        <div class="mod-card status-old">
+          <div class="mod-version old">v1.0.0 · OLD</div>
+          <a href="https://drive.google.com/file/d/19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm/view?usp=drive_link" class="mod-name" target="_blank">BlockMusic</a>
           <div class="mod-desc">Break the crystal block in brickways and BIG SHOT plays</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
@@ -773,9 +673,9 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8/view?usp=drive_link" class="mod-name" target="_blank">Evil Chiken (DISCONTINUED)</a>
+        <div class="mod-card status-discontinued">
+          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED</div>
+          <a href="https://drive.google.com/file/d/1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8/view?usp=drive_link" class="mod-name" target="_blank">Evil Chiken</a>
           <div class="mod-desc">If you kill a chicken, TheEntity spawns</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
@@ -783,9 +683,9 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/19zOYLJ2u7NehP8OXiZfcEF1cBn8ca94M/view?usp=drive_link" class="mod-name" target="_blank">Soap Mod (OLD)</a>
+        <div class="mod-card status-old">
+          <div class="mod-version old">v1.0.0 · OLD</div>
+          <a href="https://drive.google.com/file/d/19zOYLJ2u7NehP8OXiZfcEF1cBn8ca94M/view?usp=drive_link" class="mod-name" target="_blank">Soap Mod</a>
           <div class="mod-desc">Adds a soap item so that you can throw it at mobs and blind them (or adding slowness)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
@@ -793,8 +693,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.0</div>
           <a href="https://drive.google.com/file/d/1FLz7TV1jaZ0UXq61SR_O51jfdhqYOWp2/view?usp=drive_link" class="mod-name" target="_blank">Wonderland Vanilla Music Fix</a>
           <div class="mod-desc">Fixes a issue that vanilla music plays if you're in a wonderland dimension after a while</div>
           <div class="mod-footer">
@@ -803,8 +703,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.0</div>
           <a href="https://drive.google.com/file/d/1nlUNvNzlXgRA34GXI2Ok0ajUeTz75oL1/view?usp=drive_link" class="mod-name" target="_blank">Richy BIG SHOT</a>
           <div class="mod-desc">If The Hoarder is near you, BIG SHOT plays</div>
           <div class="mod-footer">
@@ -813,8 +713,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.0</div>
           <a href="https://drive.google.com/file/d/1R7Zpsgko7ZRixvynUoAyQiFcWQihQTmJ/view?usp=drive_link" class="mod-name" target="_blank">WLJ Painting</a>
           <div class="mod-desc">Makes the paintings from Wonderland actually usable (since only in the playtest builds you can place them)</div>
           <div class="mod-footer">
@@ -823,9 +723,9 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1Sdec1-DM81tno8LR_1Qt45xFHJK0rNZ4/view?usp=drive_link" class="mod-name" target="_blank">Source-like movement (DISCONTINUED)</a>
+        <div class="mod-card status-discontinued">
+          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED</div>
+          <a href="https://drive.google.com/file/d/1Sdec1-DM81tno8LR_1Qt45xFHJK0rNZ4/view?usp=drive_link" class="mod-name" target="_blank">Source-like movement</a>
           <div class="mod-desc">Somewhat replicates the source movement to Minecraft (really bad recreation)</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
@@ -833,8 +733,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.0</div>
           <a href="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link" class="mod-name" target="_blank">Decorative Shade</a>
           <div class="mod-desc">Gives The Watching Shade entities a Pomni hat! (Requires <a href="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link" class="mod-link" target="_blank">Hats n Stuff</a>)</div>
           <div class="mod-footer">
@@ -843,8 +743,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.0</div>
           <a href="https://drive.google.com/file/d/1Lsc30kb6WyEs47xRaKExoE9rddM-W9S8/view?usp=drive_link" class="mod-name" target="_blank">Hats n Stuff</a>
           <div class="mod-desc">Adds some hats (n Stuff) ((it's only the Pomni hat but i might add more!))</div>
           <div class="mod-footer">
@@ -853,9 +753,9 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">Bullets are Demonic Fish (Maybe DISCONTINUED??)</a>
+        <div class="mod-card status-discontinued">
+          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED??</div>
+          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">Bullets are Demonic Fish</a>
           <div class="mod-desc">Replaces TACZ bullet with Demonic Fish</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
@@ -863,9 +763,9 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">MLGing Teleports you to dimension (DISCONTINUED)</a>
+        <div class="mod-card status-discontinued">
+          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED</div>
+          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">MLGing Teleports you to dimension</a>
           <div class="mod-desc">The title says it</div>
           <div class="mod-footer">
             <span class="mod-tag">Forge</span>
@@ -873,8 +773,8 @@
           </div>
         </div>
 
-        <div class="mod-card">
-          <div class="mod-version">v1.0.0</div>
+        <div class="mod-card status-new">
+          <div class="mod-version new">v1.0.0</div>
           <a href="https://drive.google.com/file/d/101_r4rOwDEdosNitx9-d9GtAlJlZdxau/view?usp=drive_link" class="mod-name" target="_blank">The Entity Invulnerable</a>
           <div class="mod-desc">TheEntity is invulnerable to everything, incluiding guns (well i mean it still takes damage, but it can't die)</div>
           <div class="mod-footer">
@@ -930,49 +830,6 @@
       { threshold: 0.1 }
     );
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // ── Music player ──
-    const audio     = document.getElementById('bgMusic');
-    const btn       = document.getElementById('musicBtn');
-    const label     = document.getElementById('musicLabel');
-    const panel     = document.getElementById('musicPanel');
-    const volSlider = document.getElementById('volumeSlider');
-
-    audio.volume = parseFloat(volSlider.value);
-
-    volSlider.addEventListener('input', () => {
-      audio.volume = parseFloat(volSlider.value);
-    });
-
-    // Right-click opens the volume panel
-    btn.addEventListener('contextmenu', e => {
-      e.preventDefault();
-      panel.classList.toggle('open');
-    });
-
-    function toggleMusic() {
-      if (audio.paused) {
-        audio.play()
-          .then(() => {
-            btn.classList.add('playing');
-            label.textContent = '\u266a playing';
-          })
-          .catch(() => {
-            // Browsers block autoplay without interaction — this click counts, retry
-            audio.load();
-            audio.play().then(() => {
-              btn.classList.add('playing');
-              label.textContent = '\u266a playing';
-            }).catch(() => {
-              label.textContent = '\u266a file missing?';
-            });
-          });
-      } else {
-        audio.pause();
-        btn.classList.remove('playing');
-        label.textContent = '\u266a paused';
-      }
-    }
   </script>
 
 </body>
