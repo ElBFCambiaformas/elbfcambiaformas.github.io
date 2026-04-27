@@ -734,7 +734,7 @@
           <p>Hey hello there! It's a me!.</p>
           <p>I am the guy that modified wonderland.jar via bytecoding and made the entities 𝓯𝓪𝓷𝓬𝔂.</p>
           <p>It has been such a <i>wonder</i>ful time to do stuff like this!.</p>
-          <p>From what started from me making the entities fancy to being a wonderland.jar dev really makes me so happy!!!</p>
+          <p>From what started from me making the entities fancy to being regconized by the creators makes me so happy!!!</p>
         </div>
         <div class="stat-box">
           <h3>// Quick Info</h3>
@@ -943,8 +943,8 @@
 		<div class="rp-card">
           <img src="images/rp-wonderland.jar.png" alt="Dandy's wonderland logo" class="rp-logo" />
           <div class="rp-body">
-            <a href="https://drive.google.com/file/d/1DpZkXvI9gFf9g3l49ezgf1kX9VjTlg6d/view?usp=drive_link" class="rp-name" target="_blank">The fancy wonderland.zip</a>
-            <div class="rp-desc">wonderland.jar, but fancy</div>
+            <a href="https://drive.google.com/file/d/1DpZkXvI9gFf9g3l49ezgf1kX9VjTlg6d/view?usp=drive_link" class="rp-name" target="_blank">Dandy's wonderland</a>
+            <div class="rp-desc">I CAN DO ANYTHING!</div>
           </div>
         </div>
 
@@ -990,18 +990,17 @@
   // ── Bouncy icon ──
   const bounceIcon = document.getElementById('bounceIcon');
 
-  // ✅ MP3 audio instead of generated sound
-  const boingSound = new Audio("audio/boing.mp3");
+  const boingSound = new Audio("audio/boing.ogg");
 
   function playBoing() {
-    boingSound.currentTime = 0; // restart if spam clicked
+    boingSound.currentTime = 0;
     boingSound.play();
   }
 
   bounceIcon.addEventListener('click', () => {
     // restart animation
     bounceIcon.classList.remove('bouncing');
-    void bounceIcon.offsetWidth; // reflow trick
+    void bounceIcon.offsetWidth;
     bounceIcon.classList.add('bouncing');
 
     bounceIcon.addEventListener(
