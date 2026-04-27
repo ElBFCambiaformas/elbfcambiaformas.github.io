@@ -691,6 +691,69 @@
     .bounce-icon.bouncing {
       animation: iconBounce 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
     }
+
+    /* ── CORNER POPUP ── */
+    .corner-popup {
+      position: fixed;
+      z-index: 998;
+      cursor: pointer;
+      /* starts fully hidden below its corner */
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* bottom-left */
+    .corner-popup.corner-bl {
+      bottom: 0; left: 24px;
+      transform: translateY(110%);
+    }
+    /* bottom-right */
+    .corner-popup.corner-br {
+      bottom: 0; right: 24px;
+      transform: translateY(110%);
+    }
+    /* top-left */
+    .corner-popup.corner-tl {
+      top: 70px; left: 24px;
+      transform: translateY(-110%);
+    }
+    /* top-right */
+    .corner-popup.corner-tr {
+      top: 70px; right: 24px;
+      transform: translateY(-110%);
+    }
+
+    /* slide into view */
+    .corner-popup.corner-bl.show,
+    .corner-popup.corner-br.show { transform: translateY(0); }
+    .corner-popup.corner-tl.show,
+    .corner-popup.corner-tr.show { transform: translateY(0); }
+
+    .corner-popup img {
+      width: 96px;
+      height: 96px;
+      image-rendering: pixelated;
+      display: block;
+      border: 2px solid var(--border);
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      background: var(--surface);
+      transition: filter 0.2s, transform 0.2s;
+      box-shadow: 0 -4px 20px rgba(137,125,208,0.25);
+    }
+
+    .corner-popup:hover img {
+      filter: drop-shadow(0 0 10px var(--purple));
+      transform: translateY(-4px);
+    }
+
+    /* top corners flip border radius */
+    .corner-popup.corner-tl img,
+    .corner-popup.corner-tr img {
+      border-radius: 0 0 4px 4px;
+      border-bottom: 2px solid var(--border);
+      border-top: none;
+      box-shadow: 0 4px 20px rgba(137,125,208,0.25);
+    }
   </style>
 </head>
 <body>
@@ -972,6 +1035,12 @@
     </div>
   </footer>
 
+  <!-- CORNER POPUP EASTER EGG -->
+  <!-- Put your secret image at images/secret.png — replace secret.html with your actual secret page path -->
+  <div class="corner-popup" id="cornerPopup">
+    <img src="images/secret.png" alt="..." />
+  </div>
+
 <script>
   // ── Scroll reveal (sections, labels, grids) ──
   const observer = new IntersectionObserver(
@@ -998,21 +1067,46 @@
   }
 
   bounceIcon.addEventListener('click', () => {
-    // restart animation
     bounceIcon.classList.remove('bouncing');
     void bounceIcon.offsetWidth;
     bounceIcon.classList.add('bouncing');
-
     bounceIcon.addEventListener(
       'animationend',
-      () => {
-        bounceIcon.classList.remove('bouncing');
-      },
-		{ once: true }
-		);
+      () => { bounceIcon.classList.remove('bouncing'); },
+      { once: true }
+    );
+    playBoing();
+  });
 
-		playBoing();
-	});
+  // ── Corner popup easter egg ──
+  (function() {
+    // 40% chance to show
+    if (Math.random() > 0.40) return;
+
+    const popup  = document.getElementById('cornerPopup');
+    const SECRET = 'secret.html'; // ← change this to your secret page
+
+    // Pick a random corner
+    const corners = ['corner-bl', 'corner-br', 'corner-tl', 'corner-tr'];
+    const chosen  = corners[Math.floor(Math.random() * corners.length)];
+    popup.classList.add(chosen);
+
+    // Click goes to secret page
+    popup.addEventListener('click', () => {
+      window.location.href = SECRET;
+    });
+
+    // Slide in after a random delay between 2–6 seconds
+    const delay = 2000 + Math.random() * 4000;
+    setTimeout(() => {
+      popup.classList.add('show');
+
+      // Auto-hide after 8 seconds if not clicked
+      setTimeout(() => {
+        popup.classList.remove('show');
+      }, 8000);
+    }, delay);
+  })();
 </script>
 
 </body>
