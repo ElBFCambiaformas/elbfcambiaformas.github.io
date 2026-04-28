@@ -10,15 +10,20 @@
       --bg: #0e0e0e;
       --surface: #161616;
       --border: #2a2a2a;
-      --green: #39ff14;
-      --green-dim: #1a7a00;
       --text: #d4d4d4;
       --text-dim: #666;
-      --accent: #b8ff5b;
       --purple: #897dd0;
       --purple-dim: #4a4280;
       --red: #c43c42;
       --red-dim: #6e1f22;
+      --orange: #e07800;
+      --orange-dim: #4a2e00;
+      --green: #39ff14;
+      --green-dim: #1a7a00;
+      --yellow: #f0c040;
+      --yellow-dim: #5a4000;
+      --revival: #b06cd0;
+      --revival-dim: #4a2060;
       --gradient: linear-gradient(135deg, var(--purple), var(--red));
     }
 
@@ -32,23 +37,19 @@
       overflow-x: hidden;
     }
 
-    /* Scanline overlay */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
         to bottom,
-        transparent 0px,
-        transparent 3px,
-        rgba(0,0,0,0.07) 3px,
-        rgba(0,0,0,0.07) 4px
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
       );
       pointer-events: none;
       z-index: 999;
     }
 
-    /* Grid background */
     body::after {
       content: '';
       position: fixed;
@@ -80,27 +81,17 @@
       z-index: 100;
     }
 
-    nav .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; }
 
     .logo-img {
-      height: 36px;
-      width: auto;
+      height: 36px; width: auto;
       image-rendering: pixelated;
       display: block;
       transition: opacity 0.2s;
     }
-
     .logo-img:hover { opacity: 0.8; }
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 28px;
-    }
+    nav ul { list-style: none; display: flex; gap: 28px; }
 
     nav a {
       color: var(--text-dim);
@@ -109,34 +100,32 @@
       letter-spacing: 1px;
       transition: color 0.2s;
     }
-
     nav a:hover { color: var(--purple); }
-
-    /* ── MOD STATUS COLORS ── */
-    .mod-card.status-old        { border-color: #4a2e00; }
-    .mod-card.status-old::before        { background: linear-gradient(135deg, #e07800, #ff9f1c); }
-    .mod-card.status-old:hover          { border-color: #7a4d00; }
-    .mod-card.status-discontinued       { border-color: var(--red-dim); }
-    .mod-card.status-discontinued::before { background: linear-gradient(135deg, var(--red), #ff5c63); }
-    .mod-card.status-discontinued:hover { border-color: var(--red); }
-    .mod-card.status-new                { border-color: #0f3a0f; }
-    .mod-card.status-new::before        { background: linear-gradient(135deg, #2dba00, #39ff14); }
-    .mod-card.status-new:hover          { border-color: #1a7a00; }
-
-    .mod-version.old          { color: #e07800; }
-    .mod-version.discontinued { color: var(--red); }
-    .mod-version.new          { color: #39ff14; }
-
-    /* Stat box value colors for mod types */
-    .value.type-old          { color: #e07800 !important; }
-    .value.type-discontinued { color: var(--red) !important; }
-    .value.type-new          { color: #39ff14 !important; }
+    nav a::after {
+      content: '';
+      display: block;
+      height: 1px;
+      background: var(--purple);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s;
+    }
+    nav a:hover::after { transform: scaleX(1); }
 
     /* ── HERO ── */
     .hero {
-      padding: 100px 0 80px;
+      padding: 80px 0 70px;
       border-bottom: 1px solid var(--border);
     }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) { .hero-inner { grid-template-columns: 1fr; } }
 
     .hero-tag {
       font-size: 11px;
@@ -150,10 +139,10 @@
 
     .hero h1 {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(22px, 4vw, 36px);
+      font-size: clamp(18px, 3.5vw, 30px);
       line-height: 1.6;
       color: #fff;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       opacity: 0;
       animation: fadeUp 0.6s 0.25s forwards;
     }
@@ -166,18 +155,29 @@
     }
 
     .hero-desc {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-dim);
       line-height: 1.9;
-      max-width: 560px;
-      margin-bottom: 40px;
+      margin-bottom: 28px;
       opacity: 0;
       animation: fadeUp 0.6s 0.4s forwards;
     }
 
+    /* random quotes */
+    .hero-quote {
+      font-size: 11px;
+      color: #444;
+      font-style: italic;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.5s forwards;
+      min-height: 18px;
+    }
+
     .hero-links {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
       opacity: 0;
       animation: fadeUp 0.6s 0.55s forwards;
@@ -185,9 +185,9 @@
 
     .btn {
       display: inline-block;
-      padding: 12px 24px;
+      padding: 10px 20px;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 1px;
       text-decoration: none;
       border-radius: 2px;
@@ -195,27 +195,94 @@
       cursor: pointer;
     }
 
-    .btn-primary {
-      background: var(--gradient);
-      color: #fff;
-      font-weight: 600;
-    }
+    .btn-primary { background: var(--gradient); color: #fff; font-weight: 600; }
+    .btn-primary:hover { opacity: 0.85; box-shadow: 0 0 20px rgba(137,125,208,0.4); transform: translateY(-1px); }
+    .btn-ghost { border: 1px solid var(--border); color: var(--text-dim); }
+    .btn-ghost:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-1px); }
 
-    .btn-primary:hover {
-      opacity: 0.85;
-      box-shadow: 0 0 20px rgba(137,125,208,0.4);
-      transform: translateY(-1px);
-    }
-
-    .btn-ghost {
+    /* ── CHANGELOG WIDGET ── */
+    .changelog-widget {
+      background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text-dim);
+      border-radius: 4px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.3s forwards;
     }
 
-    .btn-ghost:hover {
-      border-color: var(--purple);
+    .changelog-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .changelog-header span {
+      font-size: 10px;
+      letter-spacing: 3px;
       color: var(--purple);
-      transform: translateY(-1px);
+      text-transform: uppercase;
+    }
+
+    .changelog-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    .changelog-list {
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .changelog-empty {
+      padding: 20px 16px;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    .changelog-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .changelog-item:last-child { border-bottom: none; }
+    .changelog-item:hover { background: rgba(137,125,208,0.04); }
+
+    .changelog-item-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 5px;
+      line-height: 1.5;
+      transition: color 0.2s;
+    }
+    .changelog-item-name:hover { color: var(--purple); }
+
+    .changelog-item-change {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 5px;
+    }
+
+    .changelog-item-date {
+      font-size: 9px;
+      color: #444;
+      letter-spacing: 1px;
     }
 
     /* ── SECTION SHARED ── */
@@ -233,7 +300,7 @@
       font-family: 'Press Start 2P', monospace;
       font-size: 16px;
       color: #fff;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
       line-height: 1.6;
     }
 
@@ -243,7 +310,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 40px;
     }
-
     @media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
 
     .about-photo {
@@ -253,11 +319,10 @@
       border-radius: 4px;
       border: 1px solid var(--border);
       display: block;
-      margin-bottom: 40px;
+      margin-bottom: 24px;
       filter: grayscale(20%);
       transition: filter 0.3s;
     }
-
     .about-photo:hover { filter: grayscale(0%); }
 
     .about-text p {
@@ -266,8 +331,44 @@
       color: var(--text-dim);
       margin-bottom: 16px;
     }
-
     .about-text p:last-child { margin-bottom: 0; }
+
+    /* Credits cards */
+    .credits-title {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin: 28px 0 14px;
+    }
+
+    .credits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .credit-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: block;
+    }
+    .credit-card:hover { border-color: var(--purple); transform: translateY(-2px); }
+    .credit-card .credit-name {
+      font-size: 11px;
+      color: #fff;
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .credit-card .credit-role {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
 
     .stat-box {
       background: var(--surface);
@@ -291,11 +392,35 @@
       padding: 10px 0;
       border-bottom: 1px solid var(--border);
       font-size: 12px;
+      flex-wrap: wrap;
+      gap: 4px;
     }
-
     .stat-item:last-child { border-bottom: none; }
     .stat-item .label { color: var(--text-dim); }
     .stat-item .value { color: var(--purple); font-weight: 600; }
+
+    /* ── STATUS LEGEND ── */
+    .status-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
 
     /* ── MODS ── */
     .mods-grid {
@@ -325,17 +450,53 @@
       transition: transform 0.3s;
     }
 
-    .mod-card:hover { border-color: var(--purple-dim); transform: translateY(-3px); }
+    .mod-card:hover { transform: translateY(-3px); }
     .mod-card:hover::before { transform: scaleX(1); }
+
+    /* Shimmer */
+    .mod-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(137,125,208,0.05) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+      pointer-events: none;
+    }
+    .mod-card:hover::after { transform: translateX(100%); }
+
+    /* Status colors */
+    .mod-card.status-active       { border-color: #0f3a0f; }
+    .mod-card.status-active::before { background: linear-gradient(135deg, #2dba00, #39ff14); }
+    .mod-card.status-active:hover { border-color: var(--green-dim); }
+
+    .mod-card.status-recent       { border-color: var(--yellow-dim); }
+    .mod-card.status-recent::before { background: linear-gradient(135deg, var(--yellow), #ffe080); }
+    .mod-card.status-recent:hover { border-color: var(--yellow); }
+
+    .mod-card.status-old          { border-color: var(--orange-dim); }
+    .mod-card.status-old::before  { background: linear-gradient(135deg, var(--orange), #ff9f1c); }
+    .mod-card.status-old:hover    { border-color: var(--orange); }
+
+    .mod-card.status-revival      { border-color: var(--revival-dim); }
+    .mod-card.status-revival::before { background: linear-gradient(135deg, var(--revival), #d080f0); }
+    .mod-card.status-revival:hover { border-color: var(--revival); }
+
+    .mod-card.status-discontinued { border-color: var(--red-dim); }
+    .mod-card.status-discontinued::before { background: linear-gradient(135deg, var(--red), #ff5c63); }
+    .mod-card.status-discontinued:hover { border-color: var(--red); }
 
     .mod-version {
       font-size: 10px;
-      color: var(--red);
       letter-spacing: 2px;
       margin-bottom: 10px;
     }
+    .mod-version.active       { color: var(--green); }
+    .mod-version.recent       { color: var(--yellow); }
+    .mod-version.old          { color: var(--orange); }
+    .mod-version.revival      { color: var(--revival); }
+    .mod-version.discontinued { color: var(--red); }
 
-    /* Clickable mod title */
     .mod-name {
       font-family: 'Press Start 2P', monospace;
       font-size: 11px;
@@ -346,11 +507,48 @@
       display: block;
       transition: color 0.2s;
     }
+    a.mod-name:hover { color: var(--purple); text-decoration: underline; text-underline-offset: 4px; }
 
-    a.mod-name:hover {
-      color: var(--purple);
-      text-decoration: underline;
-      text-underline-offset: 4px;
+    /* Preview image on hover */
+    .mod-preview {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .mod-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .mod-preview-label {
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+    }
+
+    .mod-card:hover .mod-preview { opacity: 1; pointer-events: none; }
+
+    /* Last updated badge */
+    .mod-updated {
+      font-size: 9px;
+      color: var(--yellow);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
     }
 
     .mod-desc {
@@ -364,6 +562,7 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .mod-tag {
@@ -380,12 +579,168 @@
       font-size: 11px;
       color: var(--text-dim);
       text-decoration: none;
-      margin-left: auto;
-      align-self: center;
+      transition: color 0.2s;
+    }
+    .mod-link:hover { color: var(--red); }
+
+    /* Install hint */
+    .install-hint {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .page-btn {
+      padding: 8px 18px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .page-btn:hover:not(:disabled) { border-color: var(--purple); color: var(--purple); }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+
+    .page-info {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    /* ── VERSION TREE ── */
+    .mod-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* takes up same column slot as a card */
+    }
+
+    .mod-tree-line {
+      width: 2px;
+      height: 20px;
+      background: var(--border);
+      position: relative;
+    }
+
+    .mod-tree-line::after {
+      content: '▼';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 8px;
+      color: var(--border);
+      line-height: 1;
+    }
+
+    .mod-old-card {
+      width: 100%;
+      background: rgba(14,14,14,0.6);
+      border: 1px solid var(--orange-dim);
+      border-radius: 4px;
+      padding: 16px 20px;
+      position: relative;
+      opacity: 0.75;
+      transition: opacity 0.2s, border-color 0.2s;
+      margin-top: 8px;
+    }
+
+    .mod-old-card:hover { opacity: 1; border-color: var(--orange); }
+
+    .mod-old-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(135deg, var(--orange), #ff9f1c);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .mod-old-label {
+      font-size: 9px;
+      color: var(--orange);
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    .mod-old-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: #aaa;
+      text-decoration: none;
+      display: block;
+      line-height: 1.6;
+      margin-bottom: 6px;
       transition: color 0.2s;
     }
 
-    .mod-link:hover { color: var(--red); }
+    .mod-old-name:hover { color: var(--orange); }
+
+    .mod-old-desc {
+      font-size: 11px;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    /* The card+tree wrapper — sits in the grid like a normal card */
+    .mod-tree-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .tree-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .tree-toggle:hover { border-color: var(--orange); color: var(--orange); }
+
+    .mod-tree-wrap .mod-tree-line,
+    .mod-tree-wrap .mod-old-card {
+      display: none;
+    }
+
+    .mod-tree-wrap.open .mod-tree-line,
+    .mod-tree-wrap.open .mod-old-card {
+      display: block;
+    }
+
+    /* Arrow indicator on mod title when it has old versions */
+    .mod-name.has-tree::after {
+      content: ' ▾';
+      font-size: 10px;
+      color: var(--text-dim);
+      font-family: monospace;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .mod-tree-wrap.open .mod-name.has-tree::after {
+      content: ' ▴';
+    }
 
     /* ── RESOURCE PACKS ── */
     .rp-grid {
@@ -413,7 +768,6 @@
       transform-origin: left;
       transition: transform 0.3s;
     }
-
     .rp-card:hover { border-color: var(--red-dim); transform: translateY(-3px); }
     .rp-card:hover::before { transform: scaleX(1); }
 
@@ -425,14 +779,10 @@
       filter: brightness(0.9);
       transition: filter 0.3s;
     }
-
     .rp-card:hover .rp-logo { filter: brightness(1); }
 
-    .rp-body {
-      padding: 20px;
-    }
+    .rp-body { padding: 20px; }
 
-    /* Clickable RP title */
     .rp-name {
       font-family: 'Press Start 2P', monospace;
       font-size: 10px;
@@ -443,57 +793,13 @@
       display: block;
       transition: color 0.2s;
     }
-
-    a.rp-name:hover {
-      color: var(--red);
-      text-decoration: underline;
-      text-underline-offset: 4px;
-    }
+    a.rp-name:hover { color: var(--red); text-decoration: underline; text-underline-offset: 4px; }
 
     .rp-desc {
       font-size: 12px;
       color: var(--text-dim);
       line-height: 1.8;
-      margin-bottom: 16px;
     }
-
-    .rp-link {
-      font-size: 11px;
-      color: var(--text-dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .rp-link:hover { color: var(--red); }
-
-    /* ── CONTACT ── */
-    .contact-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-    }
-
-    .contact-chip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 20px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      text-decoration: none;
-      color: var(--text-dim);
-      font-size: 12px;
-      transition: all 0.2s;
-    }
-
-    .contact-chip:hover {
-      border-color: var(--purple);
-      color: var(--purple);
-      transform: translateY(-2px);
-    }
-
-    .contact-chip .icon { font-size: 16px; }
 
     /* ── WIP ── */
     .wip-block {
@@ -504,12 +810,7 @@
       padding: 20px 0;
     }
 
-    .wip-img {
-      max-width: 320px;
-      width: 100%;
-      image-rendering: pixelated;
-      border-radius: 4px;
-    }
+    .wip-img { max-width: 320px; width: 100%; image-rendering: pixelated; border-radius: 4px; }
 
     .wip-text {
       font-family: 'Press Start 2P', monospace;
@@ -538,118 +839,7 @@
       background-clip: text;
     }
 
-    /* ── FOOTER ICON ── */
-    .footer-icon {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto 16px;
-      image-rendering: pixelated;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-
-    .footer-icon:hover { opacity: 1; }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s, transform 0.6s;
-    }
-
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* Staggered reveal for grid children */
-    .mods-grid.visible .mod-card,
-    .rp-grid.visible .rp-card {
-      opacity: 1;
-      transform: none;
-    }
-
-    .mods-grid .mod-card,
-    .rp-grid .rp-card {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.5s, transform 0.5s;
-    }
-
-    .mods-grid .mod-card:nth-child(1)  { transition-delay: 0.05s; }
-    .mods-grid .mod-card:nth-child(2)  { transition-delay: 0.10s; }
-    .mods-grid .mod-card:nth-child(3)  { transition-delay: 0.15s; }
-    .mods-grid .mod-card:nth-child(4)  { transition-delay: 0.20s; }
-    .mods-grid .mod-card:nth-child(5)  { transition-delay: 0.25s; }
-    .mods-grid .mod-card:nth-child(6)  { transition-delay: 0.30s; }
-    .mods-grid .mod-card:nth-child(7)  { transition-delay: 0.35s; }
-    .mods-grid .mod-card:nth-child(8)  { transition-delay: 0.40s; }
-    .mods-grid .mod-card:nth-child(9)  { transition-delay: 0.45s; }
-    .mods-grid .mod-card:nth-child(10) { transition-delay: 0.50s; }
-    .mods-grid .mod-card:nth-child(11) { transition-delay: 0.55s; }
-    .mods-grid .mod-card:nth-child(12) { transition-delay: 0.60s; }
-    .mods-grid .mod-card:nth-child(13) { transition-delay: 0.65s; }
-    .mods-grid .mod-card:nth-child(14) { transition-delay: 0.70s; }
-    .mods-grid .mod-card:nth-child(15) { transition-delay: 0.75s; }
-    .rp-grid   .rp-card:nth-child(1)   { transition-delay: 0.05s; }
-    .rp-grid   .rp-card:nth-child(2)   { transition-delay: 0.15s; }
-    .rp-grid   .rp-card:nth-child(3)   { transition-delay: 0.25s; }
-
-    /* Section label slide-in */
-    .section-label {
-      opacity: 0;
-      transform: translateX(-12px);
-      transition: opacity 0.5s, transform 0.5s;
-    }
-    .section-label.visible { opacity: 1; transform: none; }
-
-    /* Nav links underline sweep */
-    nav a::after {
-      content: '';
-      display: block;
-      height: 1px;
-      background: var(--purple);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.25s;
-    }
-    nav a:hover::after { transform: scaleX(1); }
-
-    /* Mod card shimmer on hover */
-    .mod-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent 30%, rgba(137,125,208,0.05) 50%, transparent 70%);
-      transform: translateX(-100%);
-      transition: transform 0.5s;
-      pointer-events: none;
-    }
-    .mod-card:hover::after { transform: translateX(100%); }
-
-    /* Stat-box rows fade in */
-    .stat-item {
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: opacity 0.4s, transform 0.4s;
-    }
-    .about-grid.visible .stat-item { opacity: 1; transform: none; }
-    .about-grid.visible .stat-item:nth-child(1)  { transition-delay: 0.10s; }
-    .about-grid.visible .stat-item:nth-child(2)  { transition-delay: 0.18s; }
-    .about-grid.visible .stat-item:nth-child(3)  { transition-delay: 0.26s; }
-    .about-grid.visible .stat-item:nth-child(4)  { transition-delay: 0.34s; }
-    .about-grid.visible .stat-item:nth-child(5)  { transition-delay: 0.42s; }
-    .about-grid.visible .stat-item:nth-child(6)  { transition-delay: 0.50s; }
-    .about-grid.visible .stat-item:nth-child(7)  { transition-delay: 0.58s; }
-    .about-grid.visible .stat-item:nth-child(8)  { transition-delay: 0.66s; }
-    .about-grid.visible .stat-item:nth-child(9)  { transition-delay: 0.74s; }
-    .about-grid.visible .stat-item:nth-child(10) { transition-delay: 0.82s; }
-
-    /* ── BOUNCY FOOTER ICON ── */
+    /* ── BOUNCY ICON ── */
     .bounce-icon-wrap {
       display: flex;
       justify-content: center;
@@ -657,20 +847,14 @@
     }
 
     .bounce-icon {
-      width: 56px;
-      height: 56px;
+      width: 56px; height: 56px;
       image-rendering: pixelated;
       cursor: pointer;
       user-select: none;
       display: block;
-      transition: filter 0.2s;
-      /* gentle idle float */
       animation: iconFloat 3s ease-in-out infinite;
     }
-
-    .bounce-icon:hover {
-      filter: drop-shadow(0 0 8px var(--purple));
-    }
+    .bounce-icon:hover { filter: drop-shadow(0 0 8px var(--purple)); }
 
     @keyframes iconFloat {
       0%, 100% { transform: translateY(0px); }
@@ -697,40 +881,20 @@
       position: fixed;
       z-index: 998;
       cursor: pointer;
-      /* starts fully hidden below its corner */
+      display: none;
       transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    .corner-popup.corner-bl { display: block; bottom: 0; left: 24px;  transform: translateY(calc(100% + 4px)); }
+    .corner-popup.corner-br { display: block; bottom: 0; right: 24px; transform: translateY(calc(100% + 4px)); }
+    .corner-popup.corner-tl { display: block; top: 70px; left: 24px;  transform: translateY(calc(-100% - 74px)); }
+    .corner-popup.corner-tr { display: block; top: 70px; right: 24px; transform: translateY(calc(-100% - 74px)); }
 
-    /* bottom-left */
-    .corner-popup.corner-bl {
-      bottom: 0; left: 24px;
-      transform: translateY(110%);
-    }
-    /* bottom-right */
-    .corner-popup.corner-br {
-      bottom: 0; right: 24px;
-      transform: translateY(110%);
-    }
-    /* top-left */
-    .corner-popup.corner-tl {
-      top: 70px; left: 24px;
-      transform: translateY(-110%);
-    }
-    /* top-right */
-    .corner-popup.corner-tr {
-      top: 70px; right: 24px;
-      transform: translateY(-110%);
-    }
-
-    /* slide into view */
     .corner-popup.corner-bl.show,
     .corner-popup.corner-br.show { transform: translateY(0); }
     .corner-popup.corner-tl.show,
     .corner-popup.corner-tr.show { transform: translateY(0); }
-
     .corner-popup img {
-      width: 96px;
-      height: 96px;
+      width: 96px; height: 96px;
       image-rendering: pixelated;
       display: block;
       border: 2px solid var(--border);
@@ -740,13 +904,7 @@
       transition: filter 0.2s, transform 0.2s;
       box-shadow: 0 -4px 20px rgba(137,125,208,0.25);
     }
-
-    .corner-popup:hover img {
-      filter: drop-shadow(0 0 10px var(--purple));
-      transform: translateY(-4px);
-    }
-
-    /* top corners flip border radius */
+    .corner-popup:hover img { filter: drop-shadow(0 0 10px var(--purple)); transform: translateY(-4px); }
     .corner-popup.corner-tl img,
     .corner-popup.corner-tr img {
       border-radius: 0 0 4px 4px;
@@ -754,6 +912,62 @@
       border-top: none;
       box-shadow: 0 4px 20px rgba(137,125,208,0.25);
     }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .mods-grid .mod-card,
+    .rp-grid .rp-card {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .mods-grid.visible .mod-card,
+    .rp-grid.visible .rp-card { opacity: 1; transform: none; }
+
+    .mods-grid .mod-card:nth-child(1)  { transition-delay: 0.05s; }
+    .mods-grid .mod-card:nth-child(2)  { transition-delay: 0.10s; }
+    .mods-grid .mod-card:nth-child(3)  { transition-delay: 0.15s; }
+    .mods-grid .mod-card:nth-child(4)  { transition-delay: 0.20s; }
+    .mods-grid .mod-card:nth-child(5)  { transition-delay: 0.25s; }
+    .mods-grid .mod-card:nth-child(6)  { transition-delay: 0.30s; }
+    .mods-grid .mod-card:nth-child(7)  { transition-delay: 0.35s; }
+    .mods-grid .mod-card:nth-child(8)  { transition-delay: 0.40s; }
+    .mods-grid .mod-card:nth-child(9)  { transition-delay: 0.45s; }
+    .mods-grid .mod-card:nth-child(10) { transition-delay: 0.50s; }
+    .rp-grid .rp-card:nth-child(1) { transition-delay: 0.05s; }
+    .rp-grid .rp-card:nth-child(2) { transition-delay: 0.15s; }
+    .rp-grid .rp-card:nth-child(3) { transition-delay: 0.25s; }
+
+    .section-label {
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .section-label.visible { opacity: 1; transform: none; }
+
+    .stat-item {
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .about-grid.visible .stat-item { opacity: 1; transform: none; }
+    .about-grid.visible .stat-item:nth-child(1)  { transition-delay: 0.10s; }
+    .about-grid.visible .stat-item:nth-child(2)  { transition-delay: 0.18s; }
+    .about-grid.visible .stat-item:nth-child(3)  { transition-delay: 0.26s; }
+    .about-grid.visible .stat-item:nth-child(4)  { transition-delay: 0.34s; }
+    .about-grid.visible .stat-item:nth-child(5)  { transition-delay: 0.42s; }
+    .about-grid.visible .stat-item:nth-child(6)  { transition-delay: 0.50s; }
   </style>
 </head>
 <body>
@@ -769,19 +983,37 @@
     </div>
   </nav>
 
+  <!-- CORNER POPUP -->
+  <div class="corner-popup" id="cornerPopup">
+    <img src="images/secret.png" alt="..." />
+  </div>
 
   <!-- HERO -->
   <div class="hero">
     <div class="container">
-      <div class="hero-tag">// I CAN DO ANYTHING, ANYWHERE, ANYTIME!!</div>
-      <h1>Hiiiiiiii, It's me<br><span class="highlight">fancy fella! :3</span></h1>
-      <p class="hero-desc">
-        I ruin Minecraft horror mods for fun (im looking at you <a href="https://modrinth.com/mod/wonderland-jar">wonderland.jar</a>)
-        yeah so uh, enjoy!
-      </p>
-      <div class="hero-links">
-        <a href="#mods" class="btn btn-primary">View My Mods</a>
-        <a href="#about" class="btn btn-ghost">About Me</a>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-tag">// I CAN DO ANYTHING, ANYWHERE, ANYTIME!!</div>
+          <h1>Hiiiiiiii, It's me<br><span class="highlight">fancy fella! :3</span></h1>
+          <p class="hero-desc">
+            I ruin Minecraft horror mods for fun (im looking at you <a href="https://modrinth.com/mod/wonderland-jar">wonderland.jar</a>)
+            yeah so uh, enjoy!
+          </p>
+          <p class="hero-quote" id="heroQuote"></p>
+          <div class="hero-links">
+            <a href="#mods" class="btn btn-primary">View My Mods</a>
+            <a href="#about" class="btn btn-ghost">About Me</a>
+          </div>
+        </div>
+        <div class="changelog-widget">
+          <div class="changelog-header">
+            <span>// Recent Updates</span>
+            <div class="changelog-dot"></div>
+          </div>
+          <div class="changelog-list" id="changelogList">
+            <div class="changelog-empty">Loading...</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -797,20 +1029,34 @@
           <p>Hey hello there! It's a me!.</p>
           <p>I am the guy that modified wonderland.jar via bytecoding and made the entities 𝓯𝓪𝓷𝓬𝔂.</p>
           <p>It has been such a <i>wonder</i>ful time to do stuff like this!.</p>
-          <p>From what started from me making the entities fancy to being regconized by the creators makes me so happy!!!</p>
+          <p>From what started from me making the entities fancy to being recognized by the creators makes me so happy!!!</p>
+          <p class="credits-title">// couldn't have done it without</p>
+          <div class="credits-grid">
+            <a href="https://www.curseforge.com/members/alexander_25" class="credit-card" target="_blank">
+              <span class="credit-name">Alexander25</span>
+              <span class="credit-role">Modding help</span>
+            </a>
+            <a href="https://www.youtube.com/channel/UCJ9Y75Y_Q1N1ttHvhU5MjOQ" class="credit-card" target="_blank">
+              <span class="credit-name">Checkmark</span>
+              <span class="credit-role">Support</span>
+            </a>
+            <a href="https://bsky.app/profile/did:plc:yavlup35jrmatm2vtqtic3ko" class="credit-card" target="_blank">
+              <span class="credit-name">Gray</span>
+              <span class="credit-role">Support</span>
+            </a>
+            <a href="https://ko-fi.com/callmestereo" class="credit-card" target="_blank">
+              <span class="credit-name">penny</span>
+              <span class="credit-role">Support</span>
+            </a>
+          </div>
         </div>
         <div class="stat-box">
           <h3>// Quick Info</h3>
           <div class="stat-item"><span class="label">Gender</span><span class="value">Male</span></div>
-          <div class="stat-item"><span class="label">I couldn't have been this far without</span><span class="value"><a href="https://www.curseforge.com/members/alexander_25" class="mod-link" target="_blank">Alexander25</a></span>,<a href="https://www.youtube.com/channel/UCJ9Y75Y_Q1N1ttHvhU5MjOQ" class="mod-link" target="_blank">Checkmark</a>,<a href="https://bsky.app/profile/did:plc:yavlup35jrmatm2vtqtic3ko" class="mod-link" target="_blank">Gray</a> and <a href="https://ko-fi.com/callmestereo" class="mod-link" target="_blank">penny</a></div>
-          <div class="stat-item"><span class="label">All of the mods will always be</span><span class="value">Forge 1.20.1</span></div>
-          <div class="stat-item"><span class="label">Favorite game</span><span class="value">Garry's Mod and Minecraft</span></div>
-		  <div class="stat-item"><span class="label">Mods Released</span><span class="value">16</span></div>
-		  <div class="stat-item"><span class="label">Resource Packs Released</span><span class="value">2</span></div>
-          <h3><i>Mod types</i></h3>
-          <div class="stat-item"><span class="label">OLD mods mean</span><span class="value type-old">Will get a better/remake version</span></div>
-          <div class="stat-item"><span class="label">DISCONTINUED mods mean</span><span class="value type-discontinued">Will be never updated and stay for archival purposes</span></div>
-          <div class="stat-item"><span class="label">NEW mods mean</span><span class="value type-new">It's brand new/or has been updated</span></div>
+          <div class="stat-item"><span class="label">All mods are</span><span class="value">Forge 1.20.1</span></div>
+          <div class="stat-item"><span class="label">Mods Released</span><span class="value">16</span></div>
+          <div class="stat-item"><span class="label">Resource Packs</span><span class="value">2</span></div>
+          <div class="stat-item"><span class="label">Favorite games</span><span class="value">Garry's Mod &amp; Minecraft</span></div>
         </div>
       </div>
     </div>
@@ -821,170 +1067,21 @@
     <div class="container">
       <div class="section-label">// 02</div>
       <div class="section-title">My Mods</div>
-	  <div class="mod-version new">TO INSTALL THE MODS CLICK THE TITLE OF THE MOD</div>
-      <div class="mods-grid reveal">
 
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.2</div>
-          <a href="https://drive.google.com/file/d/1ohBRui88mVzcPSB1V_N3ShIwJIgvgDNl/view?usp=drive_link" class="mod-name" target="_blank">Yoinky Sploinky Companion</a>
-          <div class="mod-desc">Adds the guy from one of the sneak peeks of wonderland (called just_like_you) as a companion!.</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-		
-		 <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.3</div>
-          <a href="https://drive.google.com/file/d/1VoEWJJzpe5VKutfglKGoeIHNuB7K13l8/view?usp=drivesdk" class="mod-name" target="_blank">Multicolor Eyelings</a>
-          <div class="mod-desc">Adds the guy from one of the sneak peeks of wonderland (called just_like_you) as a companion!.</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.2</div>
-          <a href="https://drive.google.com/file/d/13FY0zAPNTE2rIcMtal-Oof1XVN7fiYP8/view?usp=drive_link" class="mod-name" target="_blank">Terror Radius</a>
-          <div class="mod-desc">Makes a entity you put in the config have a music depending on how many blocks you or the mob is in (kinda like Dead By Daylight or Forsaken, or any game that has a terror radius)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.4</div>
-          <a href="https://drive.google.com/file/d/1VAmMNCuKVBPltrzdTbbxHnfnAnAb8K7p/view?usp=drive_link" class="mod-name" target="_blank">GrassTP</a>
-          <div class="mod-desc">If you touch large or short grass (fern included) you teleport to torture (or any dimension you choose in the config)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-old">
-          <div class="mod-version old">v1.0.0 · OLD</div>
-          <a href="https://drive.google.com/file/d/19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm/view?usp=drive_link" class="mod-name" target="_blank">BlockMusic</a>
-          <div class="mod-desc">Break the crystal block in brickways and BIG SHOT plays</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-discontinued">
-          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED</div>
-          <a href="https://drive.google.com/file/d/1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8/view?usp=drive_link" class="mod-name" target="_blank">Evil Chiken</a>
-          <div class="mod-desc">If you kill a chicken, TheEntity spawns</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-old">
-          <div class="mod-version old">v1.0.0 · OLD</div>
-          <a href="https://drive.google.com/file/d/19zOYLJ2u7NehP8OXiZfcEF1cBn8ca94M/view?usp=drive_link" class="mod-name" target="_blank">Soap Mod</a>
-          <div class="mod-desc">Adds a soap item so that you can throw it at mobs and blind them (or adding slowness)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1FLz7TV1jaZ0UXq61SR_O51jfdhqYOWp2/view?usp=drive_link" class="mod-name" target="_blank">Wonderland Vanilla Music Fix</a>
-          <div class="mod-desc">Fixes a issue that vanilla music plays if you're in a wonderland dimension after a while</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1nlUNvNzlXgRA34GXI2Ok0ajUeTz75oL1/view?usp=drive_link" class="mod-name" target="_blank">Richy BIG SHOT</a>
-          <div class="mod-desc">If The Hoarder is near you, BIG SHOT plays</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1R7Zpsgko7ZRixvynUoAyQiFcWQihQTmJ/view?usp=drive_link" class="mod-name" target="_blank">WLJ Painting</a>
-          <div class="mod-desc">Makes the paintings from Wonderland actually usable (since only in the playtest builds you can place them)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-discontinued">
-          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED</div>
-          <a href="https://drive.google.com/file/d/1Sdec1-DM81tno8LR_1Qt45xFHJK0rNZ4/view?usp=drive_link" class="mod-name" target="_blank">Source-like movement</a>
-          <div class="mod-desc">Somewhat replicates the source movement to Minecraft (really bad recreation)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link" class="mod-name" target="_blank">Decorative Shade</a>
-          <div class="mod-desc">Gives The Watching Shade entities a Pomni hat! (Requires <a href="https://drive.google.com/file/d/1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1/view?usp=drive_link" class="mod-link" target="_blank">Hats n Stuff</a>)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/1Lsc30kb6WyEs47xRaKExoE9rddM-W9S8/view?usp=drive_link" class="mod-name" target="_blank">Hats n Stuff</a>
-          <div class="mod-desc">Adds some hats (n Stuff) ((it's only the Pomni hat but i might add more!))</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-discontinued">
-          <div class="mod-version discontinued">v1.0.0 · MAYBE DISCONTINUED??</div>
-          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">Bullets are Demonic Fish</a>
-          <div class="mod-desc">Replaces TACZ bullet with Demonic Fish</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-discontinued">
-          <div class="mod-version discontinued">v1.0.0 · DISCONTINUED</div>
-          <a href="https://drive.google.com/file/d/1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6/view?usp=drive_link" class="mod-name" target="_blank">MLGing Teleports you to dimension</a>
-          <div class="mod-desc">The title says it</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
-        <div class="mod-card status-new">
-          <div class="mod-version new">v1.0.0</div>
-          <a href="https://drive.google.com/file/d/101_r4rOwDEdosNitx9-d9GtAlJlZdxau/view?usp=drive_link" class="mod-name" target="_blank">The Entity Invulnerable</a>
-          <div class="mod-desc">TheEntity is invulnerable to everything, incluiding guns (well i mean it still takes damage, but it can't die)</div>
-          <div class="mod-footer">
-            <span class="mod-tag">Forge</span>
-            <span class="mod-tag">1.20.1</span>
-          </div>
-        </div>
-
+      <!-- Status legend -->
+      <div class="status-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div> RECENTLY UPDATED</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green);box-shadow:0 0 5px var(--green)"></div> ACTIVE</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange);box-shadow:0 0 5px var(--orange)"></div> OLD</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--revival);box-shadow:0 0 5px var(--revival)"></div> REVIVAL</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red);box-shadow:0 0 5px var(--red)"></div> DISCONTINUED</div>
       </div>
+
+      <p class="install-hint">// click a mod title to download it</p>
+
+      <div class="mods-grid" id="modsGrid"></div>
+
+      <div class="pagination" id="pagination"></div>
     </div>
   </section>
 
@@ -1002,11 +1099,11 @@
             <div class="rp-desc">wonderland.jar, but fancy</div>
           </div>
         </div>
-		
-		<div class="rp-card">
+
+        <div class="rp-card">
           <img src="images/rp-wonderland.jar.png" alt="Dandy's wonderland logo" class="rp-logo" />
           <div class="rp-body">
-            <a href="https://drive.google.com/file/d/1DpZkXvI9gFf9g3l49ezgf1kX9VjTlg6d/view?usp=drive_link" class="rp-name" target="_blank">Dandy's wonderland</a>
+            <a href="https://drive.google.com/uc?export=download&id=1DpZkXvI9gFf9g3l49ezgf1kX9VjTlg6d" class="rp-name" target="_blank">Dandy's wonderland</a>
             <div class="rp-desc">I CAN DO ANYTHING!</div>
           </div>
         </div>
@@ -1027,7 +1124,6 @@
 
   <footer>
     <div class="container">
-      <!-- Bouncy icon -->
       <div class="bounce-icon-wrap">
         <img src="images/icon.png" alt="boing!" class="bounce-icon" id="bounceIcon" />
       </div>
@@ -1035,79 +1131,406 @@
     </div>
   </footer>
 
-  <!-- CORNER POPUP EASTER EGG -->
-  <!-- Put your secret image at images/secret.png — replace secret.html with your actual secret page path -->
-  <div class="corner-popup" id="cornerPopup">
-    <img src="images/secret.png" alt="..." />
-  </div>
+  <script>
+  // ─────────────────────────────────────────
+  // MOD DATA
+  // Base status: 'active' | 'old' | 'revival' | 'discontinued'
+  // preview: optional image path in images/previews/
+  // download: direct Google Drive download link
+  // ─────────────────────────────────────────
+  const MODS = [
+    {
+      id: 'yoinky-sploinky',
+      name: 'Yoinky Sploinky Companion',
+      version: 'v1.0.2',
+      desc: 'Adds the guy from one of the sneak peeks of wonderland (called just_like_you) as a companion!',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1ohBRui88mVzcPSB1V_N3ShIwJIgvgDNl',
+      preview: '',
+      oldVersions: [
+        { version: 'v1.0.0', download: 'https://drive.google.com/uc?export=download&id=1fuvPMjtOKZnS7qNt6S--XCNY98z7yeRQ', desc: 'Initial release' },
+        { version: 'v1.0.1', download: 'https://drive.google.com/uc?export=download&id=16-O96wxBdwkX_a583IB70BI8xQptzha-', desc: 'Minor update' }
+      ]
+    },
+    {
+      id: 'multicolor-eyelings',
+      name: 'Multicolor Eyelings',
+      version: 'v1.0.3',
+      desc: 'Adds multicolor variants of the Eyelings from wonderland.jar.',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1VoEWJJzpe5VKutfglKGoeIHNuB7K13l8',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'terror-radius',
+      name: 'Terror Radius',
+      version: 'v1.0.2',
+      desc: 'Makes an entity you put in the config play music depending on how close you are (kinda like Dead By Daylight)',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=13FY0zAPNTE2rIcMtal-Oof1XVN7fiYP8',
+      preview: '',
+      oldVersions: [
+        { version: 'v1.0.0', download: 'https://drive.google.com/uc?export=download&id=15845IbqUa8EO_nrKACed004SmTY5kGrH', desc: 'Initial release' }
+      ]
+    },
+    {
+      id: 'grasstp',
+      name: 'GrassTP',
+      version: 'v1.0.4',
+      desc: 'If you touch large or short grass (fern included) you teleport to torture (or any dimension in the config)',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1VAmMNCuKVBPltrzdTbbxHnfnAnAb8K7p',
+      preview: '',
+      oldVersions: [
+        { version: 'v1.0.0', download: 'https://drive.google.com/uc?export=download&id=1ZeZJqFjvY3r8BPY13RSJpzWXKA6vMKv-', desc: 'Initial release' },
+        { version: 'v1.0.1', download: 'https://drive.google.com/uc?export=download&id=1Tb5Fsbt_yr3GjdIEF7y9bcCtFzJFx3eo', desc: 'Minor update' },
+        { version: 'v1.0.2', download: 'https://drive.google.com/uc?export=download&id=1RUEkg2jAvsuCD53Ke_Kgczrv_fSGhwPI', desc: 'Minor update' },
+        { version: 'v1.0.3', download: 'https://drive.google.com/uc?export=download&id=1jA275UJQ6-hEaeCZA2seCSJRzng8P7uo', desc: 'Minor update' }
+      ]
+    },
+    {
+      id: 'blockmusic',
+      name: 'BlockMusic',
+      version: 'v1.0.0',
+      desc: 'Break the crystal block in brickways and BIG SHOT plays',
+      status: 'old',
+      download: 'https://drive.google.com/uc?export=download&id=19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'soap-mod',
+      name: 'Soap Mod',
+      version: 'v1.0.0',
+      desc: 'Adds a soap item so you can throw it at mobs and blind them (or add slowness)',
+      status: 'old',
+      download: 'https://drive.google.com/uc?export=download&id=19zOYLJ2u7NehP8OXiZfcEF1cBn8ca94M',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'wonderland-music-fix',
+      name: 'Wonderland Vanilla Music Fix',
+      version: 'v1.0.0',
+      desc: 'Fixes an issue where vanilla music plays if you\'re in a wonderland dimension after a while',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1FLz7TV1jaZ0UXq61SR_O51jfdhqYOWp2',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'richy-big-shot',
+      name: 'Richy BIG SHOT',
+      version: 'v1.0.0',
+      desc: 'If The Hoarder is near you, BIG SHOT plays',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1nlUNvNzlXgRA34GXI2Ok0ajUeTz75oL1',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'wlj-painting',
+      name: 'WLJ Painting',
+      version: 'v1.0.0',
+      desc: 'Makes the paintings from Wonderland actually placeable (only worked in playtest builds before)',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1R7Zpsgko7ZRixvynUoAyQiFcWQihQTmJ',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'decorative-shade',
+      name: 'Decorative Shade',
+      version: 'v1.0.0',
+      desc: 'Gives The Watching Shade entities a Pomni hat! (Requires Hats n Stuff)',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'hats-n-stuff',
+      name: 'Hats n Stuff',
+      version: 'v1.0.0',
+      desc: 'Adds some hats (n Stuff) — currently only the Pomni hat but more might be added!',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1Lsc30kb6WyEs47xRaKExoE9rddM-W9S8',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'evil-chiken',
+      name: 'Evil Chiken',
+      version: 'v1.0.0',
+      desc: 'If you kill a chicken, TheEntity spawns',
+      status: 'revival',
+      download: 'https://drive.google.com/uc?export=download&id=1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'source-movement',
+      name: 'Source-like movement',
+      version: 'v1.0.0',
+      desc: 'Somewhat replicates the Source engine movement in Minecraft (really bad recreation)',
+      status: 'discontinued',
+      download: 'https://drive.google.com/uc?export=download&id=1Sdec1-DM81tno8LR_1Qt45xFHJK0rNZ4',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'demonic-fish',
+      name: 'Bullets are Demonic Fish',
+      version: 'v1.0.0',
+      desc: 'Replaces TACZ bullets with Demonic Fish',
+      status: 'discontinued',
+      download: 'https://drive.google.com/uc?export=download&id=1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'mlg-teleport',
+      name: 'MLGing Teleports you to dimension',
+      version: 'v1.0.0',
+      desc: 'The title says it',
+      status: 'discontinued',
+      download: 'https://drive.google.com/uc?export=download&id=1lxBkPFxdtBbx9GxYzhubpg3IgNUajiz6',
+      preview: '',
+      oldVersions: []
+    },
+    {
+      id: 'entity-invulnerable',
+      name: 'The Entity Invulnerable',
+      version: 'v1.0.0',
+      desc: 'TheEntity is invulnerable to everything including guns (it still takes damage, but can\'t die)',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=101_r4rOwDEdosNitx9-d9GtAlJlZdxau',
+      preview: '',
+      oldVersions: []
+    }
+  ];
 
-<script>
-  // ── Scroll reveal (sections, labels, grids) ──
+  // Status sort order
+  const STATUS_ORDER = { recent: 0, active: 1, old: 2, revival: 3, discontinued: 4 };
+  const STATUS_LABELS = {
+    recent:       'RECENTLY UPDATED',
+    active:       'ACTIVE',
+    old:          'OLD',
+    revival:      'REVIVAL',
+    discontinued: 'DISCONTINUED'
+  };
+
+  // ─────────────────────────────────────────
+  // RANDOM QUOTES
+  // ─────────────────────────────────────────
+  const QUOTES = [
+    '// i promise the entities are friendly',
+    '// wonderland.jar fears me',
+    '// yes i did bytecode this at 2am',
+    '// the grass is always teleporty on my side',
+    '// THE ENTITY CANNOT DIE',
+    '// BIG SHOT intensifies',
+    '// fancy or nothing',
+    '// i can do anything, anywhere, anytime!!',
+  ];
+  document.getElementById('heroQuote').textContent =
+    QUOTES[Math.floor(Math.random() * QUOTES.length)];
+
+  // ─────────────────────────────────────────
+  // CHANGELOG — reads changelog.json
+  // ─────────────────────────────────────────
+  const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
+  async function loadChangelog() {
+    const list = document.getElementById('changelogList');
+    let entries = [];
+
+    try {
+      const res = await fetch('changelog.json');
+      entries = await res.json();
+    } catch {
+      list.innerHTML = '<div class="changelog-empty">no updates yet</div>';
+      renderMods(new Set());
+      return;
+    }
+
+    const now = Date.now();
+
+    // Filter: keep permanent entries + temporary ones within 2 days
+    const visible = entries.filter(e => {
+      if (!e.temporary) return true;
+      return (now - new Date(e.date).getTime()) < TWO_DAYS_MS;
+    });
+
+    // Collect mod IDs currently in changelog (for RECENTLY UPDATED status)
+    const recentIds = new Set(visible.map(e => e.modId));
+
+    if (visible.length === 0) {
+      list.innerHTML = '<div class="changelog-empty">no recent updates</div>';
+    } else {
+      list.innerHTML = visible.map(e => {
+        const mod = MODS.find(m => m.id === e.modId);
+        const link = mod ? mod.download : '#';
+        return `
+          <div class="changelog-item">
+            <a href="${link}" class="changelog-item-name" target="_blank">${e.modName}</a>
+            <div class="changelog-item-change">${e.change}</div>
+            <div class="changelog-item-date">${e.date}</div>
+          </div>`;
+      }).join('');
+    }
+
+    renderMods(recentIds);
+  }
+
+  // ─────────────────────────────────────────
+  // RENDER MODS with pagination
+  // ─────────────────────────────────────────
+  const PER_PAGE = 10;
+  let currentPage = 1;
+  let sortedMods = [];
+
+  function renderMods(recentIds) {
+    // Apply RECENTLY UPDATED override, then sort by status
+    sortedMods = MODS.map(m => ({
+      ...m,
+      displayStatus: recentIds.has(m.id) ? 'recent' : m.status
+    })).sort((a, b) => STATUS_ORDER[a.displayStatus] - STATUS_ORDER[b.displayStatus]);
+
+    renderPage(1);
+  }
+
+  function renderPage(page) {
+    currentPage = page;
+    const grid = document.getElementById('modsGrid');
+    const pag  = document.getElementById('pagination');
+    const total = Math.ceil(sortedMods.length / PER_PAGE);
+    const slice = sortedMods.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+    grid.innerHTML = slice.map(mod => {
+      const st = mod.displayStatus;
+      const oldVers = mod.oldVersions || [];
+      const previewHtml = mod.preview
+        ? `<div class="mod-preview">
+             <img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />
+             <span class="mod-preview-label">preview</span>
+           </div>`
+        : '';
+
+      const cardHtml = `
+        <div class="mod-card status-${st}">
+          ${previewHtml}
+          <div class="mod-version ${st}">${mod.version} · ${STATUS_LABELS[st]}</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
+            <a href="${mod.download}" class="mod-name" target="_blank" style="margin-bottom:0;">${mod.name}</a>
+            ${oldVers.length > 0 ? `<button class="tree-toggle" title="Show old versions">▾</button>` : ''}
+          </div>
+          <div class="mod-desc">${mod.desc}</div>
+          <div class="mod-footer">
+            <span class="mod-tag">Forge</span>
+            <span class="mod-tag">1.20.1</span>
+          </div>
+        </div>`;
+
+      // If this mod has old versions, wrap in a tree
+      if (oldVers.length === 0) return cardHtml;
+
+      const oldCardsHtml = oldVers.map(old => `
+        <div class="mod-tree-line"></div>
+        <div class="mod-old-card">
+          <div class="mod-old-label">${old.version} · OLD VERSION</div>
+          <a href="${old.download}" class="mod-old-name" target="_blank">${mod.name}</a>
+          <div class="mod-old-desc">${old.desc}</div>
+        </div>`).join('');
+
+      return `<div class="mod-tree-wrap">${cardHtml}${oldCardsHtml}</div>`;
+    }).join('');
+
+    // Re-trigger stagger animation
+    requestAnimationFrame(() => {
+      grid.classList.remove('visible');
+      void grid.offsetWidth;
+      grid.classList.add('visible');
+    });
+
+    // Version tree toggle
+    grid.querySelectorAll('.tree-toggle').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const wrap = btn.closest('.mod-tree-wrap');
+        wrap.classList.toggle('open');
+        btn.textContent = wrap.classList.contains('open') ? '▴' : '▾';
+      });
+    });
+
+    // Pagination controls
+    pag.innerHTML = `
+      <button class="page-btn" id="prevBtn" ${page <= 1 ? 'disabled' : ''}>← Prev</button>
+      <span class="page-info">Page ${page} / ${total}</span>
+      <button class="page-btn" id="nextBtn" ${page >= total ? 'disabled' : ''}>Next →</button>`;
+
+    document.getElementById('prevBtn').addEventListener('click', () => renderPage(page - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => renderPage(page + 1));
+  }
+
+  // ─────────────────────────────────────────
+  // SCROLL REVEAL
+  // ─────────────────────────────────────────
   const observer = new IntersectionObserver(
-    entries => entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-      }
-    }),
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
     { threshold: 0.08 }
   );
+  document.querySelectorAll('.reveal, .section-label, .rp-grid').forEach(el => observer.observe(el));
 
-  document
-    .querySelectorAll('.reveal, .section-label, .mods-grid, .rp-grid')
-    .forEach(el => observer.observe(el));
+  // Observe mods grid separately after it's populated
+  observer.observe(document.getElementById('modsGrid'));
 
-  // ── Bouncy icon ──
+  // ─────────────────────────────────────────
+  // BOUNCY ICON
+  // ─────────────────────────────────────────
   const bounceIcon = document.getElementById('bounceIcon');
-
-  const boingSound = new Audio("audio/boing.ogg");
-
-  function playBoing() {
-    boingSound.currentTime = 0;
-    boingSound.play();
-  }
+  const boingSound = new Audio('audio/boing.ogg');
 
   bounceIcon.addEventListener('click', () => {
     bounceIcon.classList.remove('bouncing');
     void bounceIcon.offsetWidth;
     bounceIcon.classList.add('bouncing');
-    bounceIcon.addEventListener(
-      'animationend',
-      () => { bounceIcon.classList.remove('bouncing'); },
-      { once: true }
-    );
-    playBoing();
+    bounceIcon.addEventListener('animationend', () => bounceIcon.classList.remove('bouncing'), { once: true });
+    boingSound.currentTime = 0;
+    boingSound.play().catch(() => {});
   });
 
-  // ── Corner popup easter egg ──
+  // ─────────────────────────────────────────
+  // CORNER POPUP
+  // ─────────────────────────────────────────
   (function() {
-    // 40% chance to show
-    if (Math.random() > 0.40) return;
-
-    const popup  = document.getElementById('cornerPopup');
-    const SECRET = 'secret.html'; // ← change this to your secret page
-
-    // Pick a random corner
-    const corners = ['corner-bl', 'corner-br', 'corner-tl', 'corner-tr'];
+    if (Math.random() > 0.15) return;
+    const popup   = document.getElementById('cornerPopup');
+    const corners = ['corner-bl', 'corner-br'];
     const chosen  = corners[Math.floor(Math.random() * corners.length)];
+
+    // Assign corner immediately so it's positioned off-screen
     popup.classList.add(chosen);
 
-    // Click goes to secret page
     popup.addEventListener('click', () => {
-      window.location.href = SECRET;
+      window.location.href = 'secret.html';
     });
 
-    // Slide in after a random delay between 2–6 seconds
-    const delay = 2000 + Math.random() * 4000;
+    // Wait, then slide in — reflow needed so CSS transition fires
+    const delay = 20000 + Math.random() * 20000;
     setTimeout(() => {
+      void popup.offsetWidth; // force reflow
       popup.classList.add('show');
-
-      // Auto-hide after 8 seconds if not clicked
-      setTimeout(() => {
-        popup.classList.remove('show');
-      }, 8000);
+      setTimeout(() => popup.classList.remove('show'), 6000);
     }, delay);
   })();
-</script>
+
+  // ─────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────
+  loadChangelog();
+  </script>
 
 </body>
 </html>
