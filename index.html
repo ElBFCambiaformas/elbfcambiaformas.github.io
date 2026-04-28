@@ -543,7 +543,8 @@
       overflow: hidden;
     }
 
-    .mod-preview img {
+    .mod-preview img,
+    .mod-preview-video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1283,7 +1284,7 @@
       name: 'Evil Chiken',
       version: 'v1.0.0',
       desc: 'If you kill a chicken, TheEntity spawns',
-      status: 'discontinued',
+      status: 'revival',
       download: 'https://drive.google.com/uc?export=download&id=1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8',
       preview: 'images/EvilChikenPreview.mp4',
       oldVersions: []
@@ -1488,10 +1489,14 @@
     grid.innerHTML = slice.map(mod => {
       const st = mod.displayStatus;
       const oldVers = mod.oldVersions || [];
+      const isVideo = mod.preview && mod.preview.endsWith('.mp4');
       const previewHtml = mod.preview
         ? `<div class="mod-preview">
-             <img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />
-             <span class="mod-preview-label">preview</span>
+             ${isVideo
+               ? `<video src="${mod.preview}" class="mod-preview-video" muted loop playsinline></video>`
+               : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
+             }
+             <span class="mod-preview-label">${isVideo ? '▶ preview' : 'preview'}</span>
            </div>`
         : '';
 
@@ -1531,7 +1536,13 @@
       grid.classList.add('visible');
     });
 
-    // Version tree toggle
+    // Video previews — play on hover, pause on leave
+    grid.querySelectorAll('.mod-card').forEach(card => {
+      const video = card.querySelector('.mod-preview-video');
+      if (!video) return;
+      card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+      card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+    });
     grid.querySelectorAll('.tree-toggle').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
