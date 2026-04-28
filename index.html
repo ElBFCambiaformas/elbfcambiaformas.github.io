@@ -399,6 +399,25 @@
     .stat-item .label { color: var(--text-dim); }
     .stat-item .value { color: var(--purple); font-weight: 600; }
 
+    .changelog-old-tag {
+      display: inline-block;
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      background: rgba(224,120,0,0.15);
+      border: 1px solid var(--orange-dim);
+      color: var(--orange);
+      border-radius: 2px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .changelog-old-version:hover .changelog-old-tag {
+      background: rgba(224,120,0,0.25);
+      border-color: var(--orange);
+    }
+
     /* ── STATUS LEGEND ── */
     .status-legend {
       display: flex;
@@ -1264,9 +1283,9 @@
       name: 'Evil Chiken',
       version: 'v1.0.0',
       desc: 'If you kill a chicken, TheEntity spawns',
-      status: 'revival',
+      status: 'discontinued',
       download: 'https://drive.google.com/uc?export=download&id=1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8',
-      preview: '',
+      preview: 'images/EvilChikenPreview.mp4',
       oldVersions: []
     },
     {
@@ -1338,6 +1357,50 @@
     QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
   // ─────────────────────────────────────────
+  // SCROLL TO MOD AND OPEN VERSION TREE
+  // ─────────────────────────────────────────
+  function scrollToModAndOpenTree(modId) {
+    // Find which page the mod is on
+    const idx = sortedMods.findIndex(m => m.id === modId);
+    if (idx === -1) return;
+    const targetPage = Math.floor(idx / PER_PAGE) + 1;
+
+    // Navigate to that page first if needed
+    if (targetPage !== currentPage) {
+      renderPage(targetPage);
+    }
+
+    // After render, find the wrap by data attribute and open it
+    requestAnimationFrame(() => {
+      const grid = document.getElementById('modsGrid');
+      // Find the tree-toggle button inside the card matching this mod
+      // Cards are rendered in order of sortedMods slice, so find by position
+      const sliceIdx = idx - (targetPage - 1) * PER_PAGE;
+      const cards = grid.querySelectorAll('.mod-tree-wrap, .mod-card');
+      // Find by mod title text match
+      const allTitles = grid.querySelectorAll('.mod-name');
+      let targetWrap = null;
+      allTitles.forEach(title => {
+        const mod = MODS.find(m => m.id === modId);
+        if (mod && title.textContent.trim() === mod.name) {
+          targetWrap = title.closest('.mod-tree-wrap');
+        }
+      });
+
+      if (targetWrap) {
+        // Open the tree
+        targetWrap.classList.add('open');
+        const btn = targetWrap.querySelector('.tree-toggle');
+        if (btn) btn.textContent = '▴';
+        // Scroll to it
+        setTimeout(() => {
+          targetWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    });
+  }
+
+  // ─────────────────────────────────────────
   // CHANGELOG — reads changelog.json
   // ─────────────────────────────────────────
   const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
@@ -1371,14 +1434,28 @@
     } else {
       list.innerHTML = visible.map(e => {
         const mod = MODS.find(m => m.id === e.modId);
-        const link = mod ? mod.download : '#';
+        const isOldVersion = e.type === 'old-version';
+
+        const nameHtml = isOldVersion
+          ? `<a href="#" class="changelog-item-name changelog-old-version" data-modid="${e.modId}">${e.modName} <span class="changelog-old-tag">OLD VERSION ADDED</span></a>`
+          : `<a href="${mod ? mod.download : '#'}" class="changelog-item-name" target="_blank">${e.modName}</a>`;
+
         return `
           <div class="changelog-item">
-            <a href="${link}" class="changelog-item-name" target="_blank">${e.modName}</a>
+            ${nameHtml}
             <div class="changelog-item-change">${e.change}</div>
             <div class="changelog-item-date">${e.date}</div>
           </div>`;
       }).join('');
+
+      // Bind old-version links to scroll + open tree
+      list.querySelectorAll('.changelog-old-version').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const modId = link.dataset.modid;
+          scrollToModAndOpenTree(modId);
+        });
+      });
     }
 
     renderMods(recentIds);
