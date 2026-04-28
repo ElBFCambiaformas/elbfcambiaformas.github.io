@@ -528,18 +528,13 @@
     }
     a.mod-name:hover { color: var(--purple); text-decoration: underline; text-underline-offset: 4px; }
 
-    /* Preview image on hover */
     .mod-preview {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 5;
+      z-index: 0;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       overflow: hidden;
     }
 
@@ -551,17 +546,18 @@
       display: block;
     }
 
-    .mod-preview-label {
+    /* Darken the video so card text stays readable */
+    .mod-preview::after {
+      content: '';
       position: absolute;
-      bottom: 8px;
-      right: 10px;
-      font-size: 9px;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
     }
 
-    .mod-card:hover .mod-preview { opacity: 1; pointer-events: none; }
+    .mod-card:hover .mod-preview { opacity: 1; }
+
+    /* Bump card content above the video */
+    .mod-card > *:not(.mod-preview) { position: relative; z-index: 1; }
 
     /* Last updated badge */
     .mod-updated {
@@ -1201,7 +1197,7 @@
       desc: 'If you touch large or short grass (fern included) you teleport to torture (or any dimension in the config)',
       status: 'active',
       download: 'https://drive.google.com/uc?export=download&id=1VAmMNCuKVBPltrzdTbbxHnfnAnAb8K7p',
-      preview: '',
+      preview: 'images/GrassTPreview.mp4',
       oldVersions: [
         { version: 'v1.0.0', download: 'https://drive.google.com/uc?export=download&id=1ZeZJqFjvY3r8BPY13RSJpzWXKA6vMKv-', desc: 'Initial release' },
         { version: 'v1.0.1', download: 'https://drive.google.com/uc?export=download&id=1Tb5Fsbt_yr3GjdIEF7y9bcCtFzJFx3eo', desc: 'Minor update' },
@@ -1496,7 +1492,6 @@
                ? `<video src="${mod.preview}" class="mod-preview-video" muted loop playsinline></video>`
                : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
              }
-             <span class="mod-preview-label">${isVideo ? '▶ preview' : 'preview'}</span>
            </div>`
         : '';
 
