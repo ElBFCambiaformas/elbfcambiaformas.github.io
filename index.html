@@ -1175,7 +1175,7 @@
       desc: 'Adds multicolor variants of the Eyelings from wonderland.jar.',
       status: 'active',
       download: 'https://drive.google.com/uc?export=download&id=1VoEWJJzpe5VKutfglKGoeIHNuB7K13l8',
-      preview: '',
+      preview: 'images/EyelingsPreview.mp4',
       oldVersions: []
     },
     {
@@ -1185,7 +1185,8 @@
       desc: 'Makes an entity you put in the config play music depending on how close you are (kinda like Dead By Daylight)',
       status: 'active',
       download: 'https://drive.google.com/uc?export=download&id=13FY0zAPNTE2rIcMtal-Oof1XVN7fiYP8',
-      preview: '',
+      preview: 'images/TerrorRaidusPreview.mp4',
+	  hasSound: true,
       oldVersions: [
         { version: 'v1.0.0', download: 'https://drive.google.com/uc?export=download&id=15845IbqUa8EO_nrKACed004SmTY5kGrH', desc: 'Initial release' }
       ]
@@ -1212,7 +1213,8 @@
       desc: 'Break the crystal block in brickways and BIG SHOT plays',
       status: 'old',
       download: 'https://drive.google.com/uc?export=download&id=19vL3gFUHA02AI4MmHhEvNQ8hHS28gkZm',
-      preview: '',
+	  preview: 'images/BlockMusicPreview.mp4',
+	  hasSound: true,
       oldVersions: []
     },
     {
@@ -1242,7 +1244,8 @@
       desc: 'If The Hoarder is near you, BIG SHOT plays',
       status: 'active',
       download: 'https://drive.google.com/uc?export=download&id=1nlUNvNzlXgRA34GXI2Ok0ajUeTz75oL1',
-      preview: '',
+      preview: 'images/BIGSHOTPreview.mp4',
+	  hasSound: true,
       oldVersions: []
     },
     {
@@ -1262,7 +1265,7 @@
       desc: 'Gives The Watching Shade entities a Pomni hat! (Requires Hats n Stuff)',
       status: 'active',
       download: 'https://drive.google.com/uc?export=download&id=1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1',
-      preview: '',
+      preview: 'images/DecorativeShadePreview.png',
       oldVersions: []
     },
     {
@@ -1280,7 +1283,7 @@
       name: 'Evil Chiken',
       version: 'v1.0.0',
       desc: 'If you kill a chicken, TheEntity spawns',
-      status: 'revival',
+      status: 'discontinued',
       download: 'https://drive.google.com/uc?export=download&id=1GE_v9T0WtCXa_KherzYCjKXEyzQziWE8',
       preview: 'images/EvilChikenPreview.mp4',
       oldVersions: []
@@ -1486,14 +1489,20 @@
       const st = mod.displayStatus;
       const oldVers = mod.oldVersions || [];
       const isVideo = mod.preview && mod.preview.endsWith('.mp4');
-      const previewHtml = mod.preview
-        ? `<div class="mod-preview">
-             ${isVideo
-               ? `<video src="${mod.preview}" class="mod-preview-video" muted loop playsinline></video>`
-               : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
-             }
-           </div>`
-        : '';
+		const previewHtml = mod.preview
+		  ? `<div class="mod-preview">
+			   ${isVideo
+				 ? `<video 
+					  src="${mod.preview}" 
+					  class="mod-preview-video" 
+					  ${mod.hasSound ? '' : 'muted'}
+					  loop 
+					  playsinline
+					></video>`
+				 : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
+			   }
+			 </div>`
+		  : '';
 
       const cardHtml = `
         <div class="mod-card status-${st}">
@@ -1532,20 +1541,29 @@
     });
 
     // Video previews — play on hover, pause on leave
-    grid.querySelectorAll('.mod-card').forEach(card => {
-      const video = card.querySelector('.mod-preview-video');
-      if (!video) return;
-      card.addEventListener('mouseenter', () => video.play().catch(() => {}));
-      card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
-    });
-    grid.querySelectorAll('.tree-toggle').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        const wrap = btn.closest('.mod-tree-wrap');
-        wrap.classList.toggle('open');
-        btn.textContent = wrap.classList.contains('open') ? '▴' : '▾';
-      });
-    });
+    grid.querySelectorAll('.mod-card').forEach((card, index) => {
+  const video = card.querySelector('.mod-preview-video');
+  if (!video) return;
+
+  const mod = slice[index]; // 👈 get current mod data
+
+  card.addEventListener('mouseenter', () => {
+    if (mod.hasSound) {
+      video.muted = false;   // 🔊 ONLY these mods get sound
+      video.volume = 1;
+    }
+    video.play().catch(() => {});
+  });
+
+  card.addEventListener('mouseleave', () => {
+    video.pause();
+    video.currentTime = 0;
+
+    if (mod.hasSound) {
+      video.muted = true;    // 🔇 reset so autoplay still works
+    }
+  });
+});
 
     // Pagination controls
     pag.innerHTML = `
