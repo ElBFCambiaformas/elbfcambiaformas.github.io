@@ -1,9 +1,10 @@
 [
   {
-    "modId": "grasstp",
+    "modId": "GrassTP",
     "modName": "GrassTP",
     "date": "2026-04-28",
     "change": "Added old version of the mod",
+	"type": "old-version",
     "temporary": true
   },
   {
@@ -19,12 +20,5 @@
     "date": "2026-04-28",
     "change": "Added old versions of the mod",
     "temporary": true
-  },
-   {
-    "modId": "",
-    "modName": "Some updates im thinking for the website",
-    "date": "2026-05-03",
-    "change": "Im thinking of adding a webpage for the ports i do in Gamebanana, and maybe some other stuff",
-    "temporary": false
   }
 ]

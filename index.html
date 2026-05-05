@@ -559,6 +559,26 @@
     /* Bump card content above the video */
     .mod-card > *:not(.mod-preview) { position: relative; z-index: 1; }
 
+    /* Mute toggle button */
+    .mute-btn {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      z-index: 10;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      pointer-events: all;
+      transition: background 0.2s, border-color 0.2s;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 1px;
+    }
+    .mute-btn:hover { background: rgba(137,125,208,0.5); border-color: var(--purple); }
+
     /* Last updated badge */
     .mod-updated {
       font-size: 9px;
@@ -995,6 +1015,7 @@
         <li><a href="#about">About</a></li>
         <li><a href="#mods">Mods</a></li>
         <li><a href="#resourcepacks">Resource Packs</a></li>
+        <li><a href="gamebanana.html">Ports</a></li>
       </ul>
     </div>
   </nav>
@@ -1019,11 +1040,12 @@
           <div class="hero-links">
             <a href="#mods" class="btn btn-primary">View My Mods</a>
             <a href="#about" class="btn btn-ghost">About Me</a>
+            <a href="gamebanana.html" class="btn btn-ghost" style="border-color:#5a4800;color:#f5c518;">🍌 Ports</a>
           </div>
         </div>
         <div class="changelog-widget">
           <div class="changelog-header">
-            <span>// Recent Updates/Misc Stuff</span>
+            <span>// Recent Updates</span>
             <div class="changelog-dot"></div>
           </div>
           <div class="changelog-list" id="changelogList">
@@ -1249,13 +1271,7 @@
       oldVersions: []
     },
     {
-      id: 'wlj-painting',
-      name: 'WLJ Painting',
-      version: 'v1.0.0',
-      desc: 'Makes the paintings from Wonderland actually placeable (only worked in playtest builds before)',
-      status: 'active',
-      download: 'https://drive.google.com/uc?export=download&id=1R7Zpsgko7ZRixvynUoAyQiFcWQihQTmJ',
-      preview: '',
+      preview: 'images/WLJPaintingPreview.png',
       oldVersions: []
     },
     {
@@ -1269,13 +1285,7 @@
       oldVersions: []
     },
     {
-      id: 'hats-n-stuff',
-      name: 'Hats n Stuff',
-      version: 'v1.0.0',
-      desc: 'Adds some hats (n Stuff) — currently only the Pomni hat but more might be added!',
-      status: 'active',
-      download: 'https://drive.google.com/uc?export=download&id=1Lsc30kb6WyEs47xRaKExoE9rddM-W9S8',
-      preview: '',
+      preview: 'images/HatsNStuffPreview.png',
       oldVersions: []
     },
     {
@@ -1489,20 +1499,15 @@
       const st = mod.displayStatus;
       const oldVers = mod.oldVersions || [];
       const isVideo = mod.preview && mod.preview.endsWith('.mp4');
-		const previewHtml = mod.preview
-		  ? `<div class="mod-preview">
-			   ${isVideo
-				 ? `<video 
-					  src="${mod.preview}" 
-					  class="mod-preview-video" 
-					  ${mod.hasSound ? '' : 'muted'}
-					  loop 
-					  playsinline
-					></video>`
-				 : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
-			   }
-			 </div>`
-		  : '';
+      const previewHtml = mod.preview
+        ? `<div class="mod-preview">
+             ${isVideo
+               ? `<video src="${mod.preview}" class="mod-preview-video" muted loop playsinline></video>
+                  ${mod.hasSound ? `<button class="mute-btn" title="Toggle sound">🔇</button>` : ''}`
+               : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
+             }
+           </div>`
+        : '';
 
       const cardHtml = `
         <div class="mod-card status-${st}">
@@ -1540,30 +1545,40 @@
       grid.classList.add('visible');
     });
 
-    // Video previews — play on hover, pause on leave
+    // Video previews — play on hover, pause on leave, mute toggle for sound mods
     grid.querySelectorAll('.mod-card').forEach((card, index) => {
-  const video = card.querySelector('.mod-preview-video');
-  if (!video) return;
+      const video = card.querySelector('.mod-preview-video');
+      if (!video) return;
+      const mod = slice[index];
+      const muteBtn = card.querySelector('.mute-btn');
 
-  const mod = slice[index]; // 👈 get current mod data
+      video.muted = true; // always start muted
 
-  card.addEventListener('mouseenter', () => {
-    if (mod.hasSound) {
-      video.muted = false;   // 🔊 ONLY these mods get sound
-      video.volume = 1;
-    }
-    video.play().catch(() => {});
-  });
+      card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+        if (muteBtn) { video.muted = true; muteBtn.textContent = 'Unmuted'; }
+      });
 
-  card.addEventListener('mouseleave', () => {
-    video.pause();
-    video.currentTime = 0;
+      if (muteBtn) {
+        muteBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          video.muted = !video.muted;
+          muteBtn.textContent = video.muted ? 'Muted' : 'Unmuted';
+        });
+      }
+    });
 
-    if (mod.hasSound) {
-      video.muted = true;    // 🔇 reset so autoplay still works
-    }
-  });
-});
+    // Version tree toggle
+    grid.querySelectorAll('.tree-toggle').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const wrap = btn.closest('.mod-tree-wrap');
+        wrap.classList.toggle('open');
+        btn.textContent = wrap.classList.contains('open') ? '▴' : '▾';
+      });
+    });
 
     // Pagination controls
     pag.innerHTML = `

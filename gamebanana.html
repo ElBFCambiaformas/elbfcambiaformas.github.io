@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ports — ElBFCambiaformas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text: #d4d4d4;
+      --text-dim: #666;
+      --purple: #897dd0;
+      --red: #c43c42;
+      --gb-banana: #f5c518;
+      --gb-gradient: linear-gradient(135deg, #f5c518, #e07800);
+      --ports-gradient: linear-gradient(135deg, #0075d8, #cc0000);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,117,216,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(204,0,0,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky; top: 0;
+      background: rgba(14,14,14,0.92);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .logo-img { height: 36px; width: auto; image-rendering: pixelated; display: block; transition: opacity 0.2s; }
+    .logo-img:hover { opacity: 0.8; }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav a { color: var(--text-dim); text-decoration: none; font-size: 12px; letter-spacing: 1px; transition: color 0.2s; }
+    nav a:hover { color: var(--gb-banana); }
+    nav a::after { content: ''; display: block; height: 1px; background: var(--gb-banana); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+    nav a:hover::after { transform: scaleX(1); }
+
+    /* ── HERO ── */
+    .hero { padding: 70px 0 50px; border-bottom: 1px solid var(--border); }
+    .hero-tag { font-size: 11px; color: var(--gb-banana); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; opacity: 0; animation: fadeUp 0.6s 0.1s forwards; }
+    .hero h1 { font-family: 'Press Start 2P', monospace; font-size: clamp(16px, 3vw, 26px); line-height: 1.6; color: #fff; margin-bottom: 16px; opacity: 0; animation: fadeUp 0.6s 0.25s forwards; }
+    .hero h1 .highlight {
+      background: var(--ports-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc { font-size: 13px; color: var(--text-dim); line-height: 1.9; max-width: 540px; opacity: 0; animation: fadeUp 0.6s 0.4s forwards; }
+
+    /* ── SECTION ── */
+    section { padding: 60px 0; }
+    .section-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gb-banana); margin-bottom: 16px; opacity: 0; transform: translateX(-12px); transition: opacity 0.5s, transform 0.5s; }
+    .section-label.visible { opacity: 1; transform: none; }
+    .section-title { font-family: 'Press Start 2P', monospace; font-size: 15px; color: #fff; margin-bottom: 28px; line-height: 1.6; }
+
+    /* ── GAME SELECTOR ── */
+    .game-selector {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    /* Big card shown by default */
+    .game-card {
+      position: relative;
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 4px solid transparent;
+      transition: all 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
+      flex: 1;
+      max-width: 360px;
+      user-select: none;
+    }
+
+    .game-card img.game-card-banner {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.6);
+      transition: filter 0.3s;
+    }
+
+    .game-card:hover img.game-card-banner { filter: brightness(0.85); }
+    .game-card.active img.game-card-banner { filter: brightness(1); }
+
+    .game-card-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .game-card-label img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+    }
+
+    .game-card-label span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: #fff;
+      letter-spacing: 1px;
+      line-height: 1.6;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    }
+
+    .game-card-count {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    /* Active state — shrinks to a strip at the top */
+    .game-selector.has-active .game-card {
+      flex: 0 0 120px;
+      max-width: 120px;
+    }
+
+    .game-selector.has-active .game-card img.game-card-banner {
+      aspect-ratio: 1 / 1;
+    }
+
+    .game-selector.has-active .game-card-label span,
+    .game-selector.has-active .game-card-count { display: none; }
+
+    .game-selector.has-active .game-card-label img { width: 44px; height: 44px; }
+
+    .game-selector.has-active .game-card.active {
+      flex: 0 0 200px;
+      max-width: 200px;
+    }
+
+    .game-selector.has-active .game-card.active img.game-card-banner {
+      aspect-ratio: 16 / 7;
+    }
+
+    .game-selector.has-active .game-card.active .game-card-label span { display: block; font-size: 9px; }
+    .game-selector.has-active .game-card.active .game-card-count { display: block; font-size: 10px; }
+
+    /* dimmed non-active cards */
+    .game-selector.has-active .game-card:not(.active) { opacity: 0.45; }
+    .game-selector.has-active .game-card:not(.active):hover { opacity: 0.75; }
+
+    /* ── PORTS SECTION (hidden until a game is picked) ── */
+    .ports-section {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .ports-section.open {
+      max-height: 9999px;
+      opacity: 1;
+      margin-top: 40px;
+    }
+
+    /* ── PORTS GRID ── */
+    .ports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+
+    /* ── PORT CARD ── */
+    .port-card {
+      background: var(--surface);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s, opacity 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .port-card.visible { opacity: 1; transform: translateY(0); }
+    .port-card:hover   { transform: translateY(-4px); }
+
+    /* ── GAME BANNER HEADER ON CARD ── */
+    .port-game-banner {
+      width: 100%;
+      aspect-ratio: 16 / 5;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.75);
+      transition: filter 0.25s;
+    }
+    .port-card:hover .port-game-banner { filter: brightness(0.9); }
+    .port-game-banner-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 5;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #333;
+    }
+
+    /* ── THUMBNAIL ── */
+    .port-thumb-wrap { position: relative; }
+    .port-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9);
+      transition: filter 0.25s;
+    }
+    .port-card:hover .port-thumb { filter: brightness(1); }
+    .port-thumb-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #2a2a2a;
+    }
+    .port-gb-corner {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      width: 28px; height: 28px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.9));
+    }
+
+    /* ── CARD BODY ── */
+    .port-body { padding: 14px 16px 16px; }
+    .port-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      line-height: 1.7;
+      margin-bottom: 10px;
+      transition: color 0.2s;
+    }
+    .port-name:hover { color: var(--gb-banana); }
+    .port-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .port-tag {
+      font-size: 9px; padding: 3px 8px; border-radius: 2px; letter-spacing: 1px;
+      border: 1px solid #4a4280; background: rgba(137,125,208,0.1); color: #897dd0;
+    }
+    .port-tag.video    { border-color: #6e1f22; background: rgba(196,60,66,0.1);  color: #c43c42; }
+    .port-tag.fun      { border-color: #1a7a00; background: rgba(57,255,20,0.08); color: #39ff14; }
+    .port-tag.roleplay { border-color: #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
+
+    /* ── RECENTLY UPDATED port card ── */
+    .port-card.recently-updated {
+      border-color: #00e5ff !important;
+      box-shadow: 0 0 12px rgba(0,229,255,0.25);
+    }
+    .port-recently-badge {
+      font-size: 8px;
+      letter-spacing: 1px;
+      color: #00e5ff;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* ── PORT STATUS TAGS ── */
+    .port-tag.new     { border-color: #1a7a00; background: rgba(57,255,20,0.08); color: #39ff14; }
+    .port-tag.updated { border-color: #5a4800; background: rgba(245,197,24,0.08); color: #f5c518; }
+    .port-tag.fixed   { border-color: #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
+
+    /* ── CHANGELOG WIDGET ── */
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 40px;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .hero-inner { grid-template-columns: 1fr; } }
+
+    .changelog-widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.3s forwards;
+    }
+
+    .changelog-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .changelog-header span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #00e5ff;
+      text-transform: uppercase;
+    }
+
+    .changelog-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #00e5ff;
+      box-shadow: 0 0 6px #00e5ff;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    .changelog-list {
+      max-height: 240px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .changelog-empty {
+      padding: 20px 16px;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    .changelog-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .changelog-item:last-child { border-bottom: none; }
+    .changelog-item:hover { background: rgba(0,229,255,0.03); }
+
+    .changelog-item-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 5px;
+      line-height: 1.5;
+      transition: color 0.2s;
+    }
+    .changelog-item-name:hover { color: #00e5ff; }
+
+    .changelog-item-tag {
+      display: inline-block;
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .changelog-item-tag.new     { border: 1px solid #1a7a00; background: rgba(57,255,20,0.08);   color: #39ff14; }
+    .changelog-item-tag.updated { border: 1px solid #5a4800; background: rgba(245,197,24,0.08); color: #f5c518; }
+    .changelog-item-tag.fixed   { border: 1px solid #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
+
+    .changelog-item-change {
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+
+    .changelog-item-date {
+      font-size: 9px;
+      color: #444;
+      letter-spacing: 1px;
+    }
+
+    /* ── NO RESULTS ── */
+    .no-results { font-size: 11px; color: var(--text-dim); letter-spacing: 2px; text-align: center; padding: 40px 0; grid-column: 1/-1; display: none; }
+
+    /* ── FOOTER ── */
+    footer { padding: 40px 0; text-align: center; font-size: 11px; color: var(--text-dim); letter-spacing: 1px; border-top: 1px solid var(--border); }
+    .footer-icon { width: 40px; height: 40px; object-fit: contain; display: block; margin: 0 auto 16px; image-rendering: pixelated; opacity: 0.7; transition: opacity 0.2s; }
+    .footer-icon:hover { opacity: 1; }
+    footer .grad { background: var(--ports-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="index.html"><img src="images/logo.png" alt="ElBFCambiaformas" class="logo-img" /></a>
+      <ul>
+        <li><a href="index.html">← Back</a></li>
+        <li><a href="index.html#mods">Mods</a></li>
+        <li><a href="index.html#resourcepacks">Resource Packs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-tag">// woah, lots of ports</div>
+          <h1>My <span class="highlight">Ports</span></h1>
+          <p class="hero-desc">
+            Stuff I ported to other games. Click a game to browse its ports, click a port title to download.
+          </p>
+        </div>
+        <div class="changelog-widget">
+          <div class="changelog-header">
+            <span>// Recent Updates</span>
+            <div class="changelog-dot"></div>
+          </div>
+          <div class="changelog-list" id="changelogList">
+            <div class="changelog-empty">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="ports">
+    <div class="container">
+      <div class="section-label">// pick a game</div>
+
+      <div class="game-selector" id="gameSelector"></div>
+
+      <div class="ports-section" id="portsSection">
+        <div class="section-label visible">// ports</div>
+        <div class="ports-grid" id="portsGrid">
+          <div class="no-results" id="noResults">// no ports found</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <img src="images/icon.png" alt="icon" class="footer-icon" />
+      <span class="grad">ElBFCambiaformas</span> · built with GitHub Pages
+    </div>
+  </footer>
+
+  <script>
+  // ─────────────────────────────────────────
+  // GAMES
+  // ─────────────────────────────────────────
+  const GAMES = [
+    { id: 'gmod', name: "Garry's Mod", banner: 'images/gmod.jpg',  color: '#0075d8', icon: 'images/gmod-icon.png', nameImage: '' },
+    { id: 'mk7',  name: 'Mario Kart 7', banner: 'images/mk7.webp', color: '#cc0000', icon: '', nameImage: 'images/MK7logo.png' },
+    // { id: 'game-id', name: 'Game Name', banner: 'images/games/xxx.png', color: '#hexcolor', icon: 'images/xxx-icon.png', nameImage: 'images/xxx-name.png' },
+  ];
+
+  // ─────────────────────────────────────────
+  // PORTS
+  // ─────────────────────────────────────────
+  const PORTS = [
+    { gameId: 'gmod', name: '[[VOODOO DOLL] & [PUPPET SIMULATOR]] GOOBTON NEO', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3652007111', thumb: 'images/GOOBTON.jpg',            video: '', tags: ['Port', 'Fun'] },
+    { gameId: 'gmod', name: 'Roblox Mr. Puzzles [Ragdoll & Playermodel]',        download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3637626592', thumb: 'images/Roblox MP.png',           video: '', tags: ['Port', 'Fun'] },
+    { gameId: 'gmod', name: 'Pomni Roblox V2 [Ragdoll & Playermodel]',           download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3637100979', thumb: 'images/Roblox Pomni V2.jpg',     video: '', tags: ['Port', 'Fun'] },
+    { gameId: 'gmod', name: '[OC] Luna Scarlet V2 (still a Ragdoll)',             download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3630167634', thumb: 'images/Luna Scarlet V2.jpg',    video: '', tags: ['Port', 'Fun'] },
+    { gameId: 'gmod', name: 'Pomni Roblox [Ragdoll]',                            download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3623286867', thumb: 'images/Pomni Roblox.jpg',        video: '', tags: ['Port', 'Fun'] },
+    { gameId: 'gmod', name: '[OC] Luna Starlet (Old, Ragdoll)',                   download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3620503444', thumb: 'images/Luna Scarlet OLD.jpg',   video: '', tags: ['Port', 'Fun'] },
+    { gameId: 'mk7',  name: 'Tag (ModNation Racers)',                             download: 'https://gamebanana.com/dl/1692217',                                 thumb: 'images/TagMK7PortPreview.png',       video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Yatta (Dandys World)',                               download: 'https://gamebanana.com/dl/1690738',                                 thumb: 'images/YattaMK7PortPreview.jpg',     video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Finn (Dandys World)',                                download: 'https://gamebanana.com/dl/1675987',                                 thumb: 'images/FinnMK7PortPreview.jpg',      video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'TheEntity (wonderland.jar)',                         download: 'https://gamebanana.com/dl/1687052',                                 thumb: 'images/TheEntityMK7PortPreview.png', video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Minecraft Playermodels with sharp limbs',            download: 'https://gamebanana.com/dl/1633404',                                 thumb: 'images/MCPMK7PortPreview.jpg',       video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Eclipsa Starlight (Dandys World)',                   download: 'https://gamebanana.com/dl/1560527',                                 thumb: 'images/EclipsaMK7PortPreview.jpg',   video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: '2B (NieR: Automata)',                                download: 'https://gamebanana.com/dl/1559169',                                 thumb: 'images/2BMK7PortPreview.jpg',        video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Miss Circle (Fundamental Paper Education)',           download: 'https://gamebanana.com/dl/1558736',                                 thumb: 'images/MissCircleMK7PortPreview.jpg',video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Gardevoir (Pokemon)',                                download: 'https://gamebanana.com/dl/1558733',                                 thumb: 'images/GardenvoirMK7PortPreview.jpg',video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Shelly (Dandys World)',                              download: 'https://gamebanana.com/dl/1556532',                                 thumb: 'images/ShellyMK7PortPreview.jpg',    video: '', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Shrimpo (Dandys World)',                             download: 'https://gamebanana.com/dl/1555683',                                 thumb: 'images/ShrimpoMK7PortPreview.jpg',   video: 'images/ShrimpoMK7PortPreview.mp4', tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Vee (Dandys World)',                                 download: 'https://gamebanana.com/dl/1555404',                                 thumb: 'images/VeeMK7PortPreview.jpg',       video: 'images/VeeMK7PortPreview.mp4',     tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Looey (Dandys World)',                               download: 'https://gamebanana.com/dl/1555366',                                 thumb: 'images/LooeyMK7PortPreview.jpg',     video: 'images/LooeyMK7PortPreview.mp4',   tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Gourdy (Dandys World)',                              download: 'https://gamebanana.com/dl/1554961',                                 thumb: 'images/GourdyMK7PortPreview.jpg',    video: 'images/GourdyMK7PortPreview.mp4',  tags: ['Port'] },
+    { gameId: 'mk7',  name: 'Goob (Dandys World)',                                download: 'https://gamebanana.com/dl/1556526',                                 thumb: 'images/GoobMK7PortPreview.jpg',      video: 'images/GoobMK7PortPreview.mp4',    tags: ['Port'] },
+    // TEMPLATE:
+    // { gameId: 'game-id', name: 'Port Name', download: 'DIRECT_LINK', thumb: 'images/xxx.jpg', video: 'images/xxx.mp4', tags: ['Port'] },
+    // (leave video: '' if no video)
+  ];
+
+  // ─────────────────────────────────────────
+  const TAG_CLASS = { Video: 'video', Fun: 'fun', Roleplay: 'roleplay', New: 'new', Updated: 'updated', Fixed: 'fixed' };
+  const getGame   = id => GAMES.find(g => g.id === id);
+  let activeGame  = null;
+  let recentPortIds = new Set();
+
+  const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
+  // ── Load ports changelog ──
+  async function loadChangelog() {
+    const list = document.getElementById('changelogList');
+    let entries = [];
+
+    try {
+      const res = await fetch('ports-changelog.json');
+      entries = await res.json();
+    } catch {
+      list.innerHTML = '<div class="changelog-empty">no updates yet</div>';
+      renderSelector();
+      return;
+    }
+
+    const now = Date.now();
+
+    const visible = entries.filter(e => {
+      if (!e.temporary) return true;
+      return (now - new Date(e.date).getTime()) < TWO_DAYS_MS;
+    });
+
+    recentPortIds = new Set(visible.map(e => e.portName));
+
+    if (visible.length === 0) {
+      list.innerHTML = '<div class="changelog-empty">no recent updates</div>';
+    } else {
+      list.innerHTML = visible.map(e => {
+        const tagClass = (e.type || '').toLowerCase();
+        const tagHtml  = e.type ? `<span class="changelog-item-tag ${tagClass}">${e.type}</span>` : '';
+        const port     = PORTS.find(p => p.name === e.portName);
+        const link     = port ? port.download : '#';
+        return `
+          <div class="changelog-item">
+            <a href="${link}" class="changelog-item-name" target="_blank">${e.portName}</a>
+            ${tagHtml}
+            <div class="changelog-item-change">${e.change}</div>
+            <div class="changelog-item-date">${e.date}</div>
+          </div>`;
+      }).join('');
+    }
+
+    renderSelector();
+  }
+
+  // ── Build game selector cards ──
+  function renderSelector() {
+    const sel = document.getElementById('gameSelector');
+    sel.innerHTML = GAMES.map(g => {
+      const count = PORTS.filter(p => p.gameId === g.id).length;
+      const iconHtml = g.icon
+        ? `<img src="${g.icon}" alt="${g.name} icon" />`
+        : '';
+      const nameHtml = g.nameImage
+        ? `<img src="${g.nameImage}" alt="${g.name}" style="width:85%;max-width:280px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.9));" />`
+        : `<span>${g.name}</span>`;
+      return `
+        <div class="game-card" data-game="${g.id}" style="border-color:${g.color};"
+             onclick="selectGame('${g.id}')">
+          <img class="game-card-banner" src="${g.banner}" alt="${g.name}" />
+          <div class="game-card-label">
+            ${iconHtml}
+            ${nameHtml}
+            <span class="game-card-count">${count} port${count !== 1 ? 's' : ''}</span>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Select / deselect a game ──
+  function selectGame(gameId) {
+    const wasSame = activeGame === gameId;
+    activeGame = wasSame ? null : gameId;
+
+    const sel     = document.getElementById('gameSelector');
+    const section = document.getElementById('portsSection');
+
+    sel.classList.toggle('has-active', activeGame !== null);
+
+    document.querySelectorAll('.game-card').forEach(el => {
+      el.classList.toggle('active', el.dataset.game === activeGame);
+    });
+
+    if (activeGame) {
+      renderPorts();
+      section.classList.add('open');
+      // Scroll ports into view smoothly
+      setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350);
+    } else {
+      section.classList.remove('open');
+    }
+  }
+
+  // ── Render port cards ──
+  function renderPorts() {
+    const grid = document.getElementById('portsGrid');
+    const noResults = document.getElementById('noResults');
+
+    grid.querySelectorAll('.port-card').forEach(c => c.remove());
+
+    const filtered = PORTS.filter(p => p.gameId === activeGame);
+    noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+
+    filtered.forEach((port, i) => {
+      const game = getGame(port.gameId);
+      if (!game) return;
+
+      const card = document.createElement('div');
+      card.className = 'port-card';
+      const isRecent = recentPortIds.has(port.name);
+      card.style.borderColor = isRecent ? '#00e5ff' : game.color;
+      if (isRecent) card.classList.add('recently-updated');
+
+      card.addEventListener('mouseenter', () => {
+        card.style.boxShadow = isRecent
+          ? '0 8px 24px rgba(0,229,255,0.3)'
+          : `0 8px 24px ${game.color}44`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.boxShadow = 'none'; });
+
+      const cornerIcon = game.icon || 'images/gamebanana.png';
+
+      const thumbHtml = port.thumb
+        ? `<img src="${port.thumb}" alt="${port.name}" class="port-thumb" />`
+        : `<div class="port-thumb-placeholder">// no preview</div>`;
+
+      const tagsHtml = port.tags.map(t =>
+        `<span class="port-tag ${TAG_CLASS[t] || ''}">${t}</span>`
+      ).join('');
+
+      card.innerHTML = `
+        <img src="${game.banner}" alt="${game.name}" class="port-game-banner"
+             onerror="this.outerHTML='<div class=\\'port-game-banner-placeholder\\'>${game.name}</div>'" />
+        <div class="port-thumb-wrap">
+          ${thumbHtml}
+          ${port.video ? `<video src="${port.video}" class="port-thumb port-video" loop playsinline style="display:none;"></video>` : ''}
+          <img src="${cornerIcon}" alt="icon" class="port-gb-corner" />
+        </div>
+        <div class="port-body">
+          ${isRecent ? '<span class="port-recently-badge">// recently updated</span>' : ''}
+          <a href="${port.download}" class="port-name" target="_blank">${port.name}</a>
+          <div class="port-tags">${tagsHtml}</div>
+        </div>`;
+
+      grid.appendChild(card);
+
+      // Video hover
+      if (port.video) {
+        const img   = card.querySelector('.port-thumb:not(.port-video)');
+        const video = card.querySelector('.port-video');
+        card.addEventListener('mouseenter', () => {
+          if (img) img.style.display = 'none';
+          video.style.display = 'block';
+          video.muted = false;
+          video.play().catch(() => {});
+        });
+        card.addEventListener('mouseleave', () => {
+          video.pause(); video.currentTime = 0;
+          video.style.display = 'none';
+          if (img) img.style.display = 'block';
+        });
+      }
+
+      setTimeout(() => card.classList.add('visible'), i * 70);
+    });
+  }
+
+  // Scroll reveal for labels
+  new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.08 }
+  ).observe(document.querySelector('.section-label'));
+
+  loadChangelog();
+  </script>
+
+</body>
+</html>
