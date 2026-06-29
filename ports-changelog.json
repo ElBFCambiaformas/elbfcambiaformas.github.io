@@ -1,5 +1,19 @@
 [
-  {
+      {
+    "portName": "Website",
+    "date": "2026-06-28",
+    "type": "New",
+    "change": "Fixed the layout for the mod cards",
+    "temporary": true
+  },
+    {
+    "portName": "Website",
+    "date": "2026-06-28",
+    "type": "New",
+    "change": "Added Baldi's Basics Plus mods",
+    "temporary": true
+  },
+    {
     "portName": "Website",
     "date": "2026-06-28",
     "type": "New",
@@ -17,14 +31,14 @@
     "portName": "Website",
     "date": "2026-06-28",
     "type": "New",
-    "change": "Removed Garry's Mod mods",
+    "change": "Added back Garry's Mod mods",
     "temporary": true
   },
    {
    "portName": "Sprout (Dandys World) - Mario Kart 7",
    "date": "2026-06-28",
    "type": "New",
-    "change": "Added to the website!",
+    "change": "Added to the website",
     "temporary": true
   }
 ]
