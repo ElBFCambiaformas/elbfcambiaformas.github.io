@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ports — ElBFCambiaformas</title>
+  <title>Ports & Mods — ElBFCambiaformas</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -96,15 +96,42 @@
     .section-label.visible { opacity: 1; transform: none; }
     .section-title { font-family: 'Press Start 2P', monospace; font-size: 15px; color: #fff; margin-bottom: 28px; line-height: 1.6; }
 
+    /* Sub-headers inside game picker */
+    .selector-subgroup-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: #777;
+      letter-spacing: 1px;
+      margin: 24px 0 14px;
+      width: 100%;
+      text-align: center;
+    }
+
     /* ── GAME SELECTOR ── */
-    /* Wraps to new rows instead of squeezing cards when more games are added */
+    .game-selector-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
     .game-selector {
       display: flex;
       flex-wrap: wrap;
       gap: 18px;
       justify-content: center;
-      margin-bottom: 0;
+      width: 100%;
     }
+    
+    /* Layout styling for the Big Showcases sub-section */
+    .game-selector.showcase-layout .game-card {
+      flex: 1 1 380px;
+      max-width: 420px;
+    }
+    .game-selector.showcase-layout .game-card img.game-card-banner {
+      aspect-ratio: 21 / 9;
+    }
+
     .game-selector.fade { opacity: 0; transform: translateY(-6px); transition: opacity 0.18s, transform 0.18s; }
     .game-selector.show { opacity: 1; transform: none; transition: opacity 0.25s, transform 0.25s; }
 
@@ -128,11 +155,11 @@
       aspect-ratio: 16 / 9;
       object-fit: cover;
       display: block;
-      filter: brightness(0.6);
+      filter: brightness(0.55);
       transition: filter 0.3s;
     }
 
-    .game-card:hover img.game-card-banner { filter: brightness(0.85); }
+    .game-card:hover img.game-card-banner { filter: brightness(0.8); }
 
     .game-card-label {
       position: absolute;
@@ -144,6 +171,12 @@
       gap: 10px;
       padding: 16px;
       text-align: center;
+      transition: opacity 0.25s ease; /* Seamless transition when hovering */
+    }
+
+    /* Lowers the label container opacity (including logos) ONLY for showcase cards */
+    .showcase-card:hover .game-card-label {
+      opacity: 0.35;
     }
 
     .game-card-label img.game-card-logo {
@@ -171,8 +204,7 @@
       text-shadow: 0 1px 4px rgba(0,0,0,0.8);
     }
 
-    /* ── Compact tab bar — shown once a game is picked ── */
-    /* Pills stay a fixed comfortable size and wrap, so this scales to any number of games */
+    /* ── Compact tab bar ── */
     .game-selector.has-active {
       gap: 10px;
     }
@@ -221,7 +253,7 @@
     }
     .game-pill.active .game-pill-name { color: #fff; }
 
-    /* ── PORTS SECTION (hidden until a game is picked) ── */
+    /* ── PORTS SECTION ── */
     .ports-section {
       max-height: 0;
       overflow: hidden;
@@ -328,7 +360,7 @@
     .port-tag.fun      { border-color: #1a7a00; background: rgba(57,255,20,0.08); color: #39ff14; }
     .port-tag.roleplay { border-color: #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
 
-    /* ── RECENTLY UPDATED port card ── */
+    /* ── RECENTLY UPDATED ── */
     .port-card.recently-updated {
       border-color: #00e5ff !important;
       box-shadow: 0 0 12px rgba(0,229,255,0.25);
@@ -486,9 +518,9 @@
       <div class="hero-inner">
         <div>
           <div class="hero-tag">// woah, lots of ports</div>
-          <h1>My <span class="highlight">Ports</span></h1>
+          <h1>My <span class="highlight">Ports & Mods</span></h1>
           <p class="hero-desc">
-            Stuff I ported to other games. Click a game to browse its ports, click a port title to download.
+            Stuff I ported or modded for other games. Click a card to browse its content, click a title to download.
           </p>
         </div>
         <div class="changelog-widget">
@@ -508,12 +540,14 @@
     <div class="container">
       <div class="section-label">// pick a game</div>
 
-      <div class="game-selector" id="gameSelector"></div>
+      <div class="game-selector-container" id="gameSelectorContainer">
+         <!-- Game Selector injections occur here dynamically -->
+      </div>
 
       <div class="ports-section" id="portsSection">
-        <div class="section-label visible">// ports</div>
+        <div class="section-label visible" id="portsSectionLabel">// ports</div>
         <div class="ports-grid" id="portsGrid">
-          <div class="no-results" id="noResults">// no ports found</div>
+          <div class="no-results" id="noResults">// no items found</div>
         </div>
       </div>
     </div>
@@ -528,20 +562,95 @@
 
   <script>
   // ─────────────────────────────────────────
-  // GAMES
+  // GAMES (Showcases now support direct downloads and hover videos with sound!)
   // ─────────────────────────────────────────
   const GAMES = [
-    { id: 'bb+',  name: 'Baldis Basics Plus', banner: 'images/bbp.jpg', color: '#00FF00', icon: '', nameImage: 'images/BB+logo.png' },
-    { id: 'slw',  name: 'Sonic Lost World', banner: 'images/slw.jpg', color: '#4CAF50', icon: '', nameImage: 'images/SLWLogo.png' },
-    { id: 'su',  name: 'Sonic Unleashed', banner: 'images/su.jpg', color: '#000080', icon: '', nameImage: 'images/SULogo.png' },
-    { id: 'mk7',  name: 'Mario Kart 7', banner: 'images/mk7.webp', color: '#cc0000', icon: '', nameImage: 'images/MK7logo.png' },
-    { id: 'gmod',  name: 'Garrys Mod', banner: 'images/gmod.jpg', color: '#0082ff', icon: 'images/gmod-icon.png', nameImage: '' },
-
-    // { id: 'game-id', name: 'Game Name', banner: 'images/games/xxx.png', color: '#hexcolor', icon: 'images/xxx-icon.png', nameImage: 'images/xxx-name.png' },
+    { 
+      id: 'bb+',  
+      name: 'Baldis Basics Plus', 
+      banner: 'images/bbp.jpg', 
+      color: '#00FF00', 
+      icon: '', 
+      nameImage: 'images/BB+logo.png', 
+      showcase: false 
+    },
+    { 
+      id: 'slw',  
+      name: 'Looey Lost World', 
+      banner: 'images/LooeyLostLogo.jpg', 
+      color: '#4CAF50', 
+      icon: '', 
+      nameImage: 'images/LLWLogo.png', 
+      showcase: true,
+      download: 'https://gamebanana.com/dl/1736314', // Direct link
+      video: 'images/LLWVideo.mp4'              // Hover video path
+    },
+    { 
+      id: 'su',  
+      name: 'Sonic Unleashed', 
+      banner: 'images/GoobUnleash.png', 
+      color: '#000080', 
+      icon: '', 
+      nameImage: 'images/GULogo.png', 
+      showcase: true,
+      download: 'https://gamebanana.com/dl/1735335', // Direct link
+      video: 'images/GoobUnleashVideo.mp4'               // Hover video path
+    },
+    { 
+      id: 'gpsr',  
+      name: 'Goob Party Star Rush', 
+      banner: 'images/black.png', 
+      color: '#cc0000', 
+      icon: '', 
+      nameImage: 'images/GPSRLogo.png', 
+      showcase: true,
+      download: 'https://drive.google.com/uc?export=download&id=1RXkpDPcjV3HMyuctjrUz69S-aImrds6s', // Direct link
+      video: 'images/GPSRVideo.mp4'               // Hover video path
+    },
+    { 
+      id: 'nsgb2',  
+      name: 'New Super Goob Bros 2.', 
+      banner: 'images/nsgb2banner.png', 
+      color: 'yellow', 
+      icon: '', 
+      nameImage: 'images/NSGB2Logo.png', 
+      showcase: true,
+      download: 'https://drive.google.com/uc?export=download&id=1E3D0QKogztr7FmQCKGGlQqtzcY55wIzf', // Direct link
+      video: 'images/NSGB2Video.mp4'               // Hover video path
+    },
+    { 
+      id: 'sg3d',  
+      name: 'Super Goob 3D Land', 
+      banner: 'images/white.png', 
+      color: '#cc0000', 
+      icon: '', 
+      nameImage: 'images/SG3DLogo.png', 
+      showcase: true,
+      download: 'https://drive.google.com/uc?export=download&id=1Oa6cxs4Ta2ADMJS7pt-8D9UZ836gRLSN', // Direct link
+      video: 'images/SG3DVideo.mp4'               // Hover video path
+    },
+    { 
+      id: 'mk7',  
+      name: 'Mario Kart 7', 
+      banner: 'images/mk7.webp', 
+      color: '#cc0000', 
+      icon: '', 
+      nameImage: 'images/MK7logo.png', 
+      showcase: false 
+    },
+    { 
+      id: 'gmod',  
+      name: 'Garrys Mod', 
+      banner: 'images/gmod.jpg', 
+      color: '#0082ff', 
+      icon: 'images/gmod-icon.png', 
+      nameImage: '', 
+      showcase: false 
+    },
   ];
 
   // ─────────────────────────────────────────
-  // PORTS
+  // PORTS / MODS DATA
   // ─────────────────────────────────────────
   const PORTS = [
     { gameId: 'bb+', name: 'Video Plays When Baldi Catches You', download: 'https://gamebanana.com/dl/1732791', thumb: 'images/death.jpg',            video: 'images/deathvideo.mp4', tags: ['0.14.X', 'Kinda broken'] },
@@ -573,9 +682,6 @@
     { gameId: 'mk7',  name: 'Looey (Dandys World)',                               download: 'https://gamebanana.com/dl/1555366',                                 thumb: 'images/LooeyMK7PortPreview.jpg',     video: 'images/LooeyMK7PortPreview.mp4',   tags: ['Port'] },
     { gameId: 'mk7',  name: 'Gourdy (Dandys World)',                              download: 'https://gamebanana.com/dl/1554961',                                 thumb: 'images/GourdyMK7PortPreview.jpg',    video: 'images/GourdyMK7PortPreview.mp4',  tags: ['Port'] },
     { gameId: 'mk7',  name: 'Goob (Dandys World)',                                download: 'https://gamebanana.com/dl/1556526',                                 thumb: 'images/GoobMK7PortPreview.jpg',      video: 'images/GoobMK7PortPreview.mp4',    tags: ['Port'] },
-    // TEMPLATE:
-    // { gameId: 'game-id', name: 'Port Name', download: 'DIRECT_LINK', thumb: 'images/xxx.jpg', video: 'images/xxx.mp4', tags: ['Port'] },
-    // (leave video: '' if no video)
   ];
 
   // ─────────────────────────────────────────
@@ -585,8 +691,9 @@
   let recentPortIds = new Set();
 
   const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+  const isModGame = id => id === 'bb+' || id === 'mc';
 
-  // ── Load ports changelog ──
+  // ── Load changelog ──
   async function loadChangelog() {
     const list = document.getElementById('changelogList');
     let entries = [];
@@ -601,7 +708,6 @@
     }
 
     const now = Date.now();
-
     const visible = entries.filter(e => {
       if (!e.temporary) return true;
       return (now - new Date(e.date).getTime()) < TWO_DAYS_MS;
@@ -630,41 +736,89 @@
     renderSelector();
   }
 
-  // ── Build the full hero-card grid (shown before a game is picked) ──
-  // Flex-wrap means cards keep a comfortable min/max size and simply wrap
-  // onto a new row instead of squeezing — works the same whether there
-  // are 3 games or 13.
-  function renderSelectorFull() {
-    const sel = document.getElementById('gameSelector');
-    sel.classList.remove('has-active');
-    sel.innerHTML = GAMES.map(g => {
-      const count = PORTS.filter(p => p.gameId === g.id).length;
-      const iconHtml = g.icon
-        ? `<img class="game-card-logo" src="${g.icon}" alt="${g.name} icon" />`
-        : '';
-      const nameHtml = g.nameImage
-        ? `<img class="game-card-logo" src="${g.nameImage}" alt="${g.name}" style="width:85%;max-width:240px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.9));" />`
-        : `<span>${g.name}</span>`;
+  // Helper engine to handle card builders split by configuration
+  function generateGameCardHtml(g) {
+    const count = PORTS.filter(p => p.gameId === g.id).length;
+    const iconHtml = g.icon ? `<img class="game-card-logo" src="${g.icon}" alt="${g.name} icon" />` : '';
+    const nameHtml = g.nameImage
+      ? `<img class="game-card-logo" src="${g.nameImage}" alt="${g.name}" style="width:85%;max-width:240px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.9));" />`
+      : `<span>${g.name}</span>`;
+    
+    // Showcase cards removed 'muted' so they play sound
+    if (g.showcase) {
+      const videoHtml = g.video ? `<video class="game-card-banner showcase-video" src="${g.video}" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
       return `
-        <div class="game-card" data-game="${g.id}" style="border-color:${g.color};"
-             onclick="selectGame('${g.id}')">
-          <img class="game-card-banner" src="${g.banner}" alt="${g.name}" />
-          <div class="game-card-label">
+        <div class="game-card showcase-card" data-game="${g.id}" style="border-color:${g.color};" onclick="window.open('${g.download || '#'}', '_blank')">
+          <img class="game-card-banner" src="${g.banner}" alt="${g.name}" style="position:relative; z-index:1;" />
+          ${videoHtml}
+          <div class="game-card-label" style="z-index:2;">
             ${iconHtml}
             ${nameHtml}
-            <span class="game-card-count">${count} port${count !== 1 ? 's' : ''}</span>
           </div>
         </div>`;
-    }).join('');
+    }
+
+    const labelText = isModGame(g.id) ? 'mod' : 'port';
+    const pluralLabel = count !== 1 ? labelText + 's' : labelText;
+
+    return `
+      <div class="game-card" data-game="${g.id}" style="border-color:${g.color};" onclick="selectGame('${g.id}')">
+        <img class="game-card-banner" src="${g.banner}" alt="${g.name}" />
+        <div class="game-card-label">
+          ${iconHtml}
+          ${nameHtml}
+          <span class="game-card-count">${count} ${pluralLabel}</span>
+        </div>
+      </div>`;
   }
 
-  // ── Build the compact pill/tab bar (shown once a game is picked) ──
-  // Pills are a fixed comfortable size and wrap like the full cards do,
-  // so switching games stays usable no matter how many games exist.
+  // ── Build Split Categories Grid Layout ──
+  function renderSelectorFull() {
+    const container = document.getElementById('gameSelectorContainer');
+    
+    const showcaseGames = GAMES.filter(g => g.showcase);
+    const regularGames = GAMES.filter(g => !g.showcase);
+
+    const showcasesHtml = showcaseGames.map(g => generateGameCardHtml(g)).join('');
+    const regularsHtml = regularGames.map(g => generateGameCardHtml(g)).join('');
+
+    container.innerHTML = `
+      <div class="selector-subgroup-title">// big mod showcases</div>
+      <div class="game-selector showcase-layout show" id="showcaseSelector">${showcasesHtml}</div>
+      
+      <div class="selector-subgroup-title">// regular mods & ports</div>
+      <div class="game-selector show" id="regularSelector">${regularsHtml}</div>
+    `;
+
+    // Hook up video hovering with unmuted audio tracks on Big Showcase cards
+    document.querySelectorAll('.showcase-card').forEach(card => {
+      const img = card.querySelector('.game-card-banner:not(.showcase-video)');
+      const video = card.querySelector('.showcase-video');
+      if (!video) return;
+
+      card.addEventListener('mouseenter', () => {
+        img.style.opacity = '0';
+        video.style.display = 'block';
+        video.muted = false; // Ensured audio output isn't blocked by standard code settings
+        video.play().catch(() => {});
+      });
+
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+        video.style.display = 'none';
+        img.style.opacity = '1';
+      });
+    });
+  }
+
+  // ── Build the compact pill/tab bar ──
   function renderSelectorCompact() {
-    const sel = document.getElementById('gameSelector');
-    sel.classList.add('has-active');
-    sel.innerHTML = GAMES.map(g => {
+    const container = document.getElementById('gameSelectorContainer');
+    
+    const nonShowcaseGames = GAMES.filter(g => !g.showcase);
+
+    const pillsHtml = nonShowcaseGames.map(g => {
       const count = PORTS.filter(p => p.gameId === g.id).length;
       const isActive = g.id === activeGame;
       const thumb = g.icon || g.banner;
@@ -677,6 +831,10 @@
           <span class="game-pill-count">· ${count}</span>
         </div>`;
     }).join('');
+
+    container.innerHTML = `
+      <div class="game-selector has-active show" id="compactSelector">${pillsHtml}</div>
+    `;
   }
 
   function renderSelector() {
@@ -689,30 +847,27 @@
     const wasSame = activeGame === gameId;
     activeGame = wasSame ? null : gameId;
 
-    const sel     = document.getElementById('gameSelector');
+    const container = document.getElementById('gameSelectorContainer');
     const section = document.getElementById('portsSection');
+    const sectionLabel = document.getElementById('portsSectionLabel');
 
-    // crossfade: the full-card and pill markup are different enough
-    // that we swap them rather than try to morph one into the other
-    sel.classList.add('fade');
-    sel.classList.remove('show');
+    const targets = container.querySelectorAll('.game-selector');
+    targets.forEach(t => { t.classList.add('fade'); t.classList.remove('show'); });
+    
     setTimeout(() => {
       renderSelector();
-      sel.classList.remove('fade');
-      sel.classList.add('show');
+      if (activeGame) {
+        sectionLabel.textContent = isModGame(activeGame) ? '// mods' : '// ports';
+        renderPorts();
+        section.classList.add('open');
+        setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350);
+      } else {
+        section.classList.remove('open');
+      }
     }, 160);
-
-    if (activeGame) {
-      renderPorts();
-      section.classList.add('open');
-      // Scroll ports into view smoothly
-      setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350);
-    } else {
-      section.classList.remove('open');
-    }
   }
 
-  // ── Render port cards ──
+  // ── Render dynamic cards ──
   function renderPorts() {
     const grid = document.getElementById('portsGrid');
     const noResults = document.getElementById('noResults');
@@ -720,6 +875,8 @@
     grid.querySelectorAll('.port-card').forEach(c => c.remove());
 
     const filtered = PORTS.filter(p => p.gameId === activeGame);
+    
+    noResults.textContent = isModGame(activeGame) ? '// no mods found' : '// no ports found';
     noResults.style.display = filtered.length === 0 ? 'block' : 'none';
 
     filtered.forEach((port, i) => {
@@ -745,9 +902,8 @@
         ? `<img src="${port.thumb}" alt="${port.name}" class="port-thumb" />`
         : `<div class="port-thumb-placeholder">// no preview</div>`;
 
-      const tagsHtml = port.tags.map(t =>
-        `<span class="port-tag ${TAG_CLASS[t] || ''}">${t}</span>`
-      ).join('');
+      const tagsHtml = port.tags.map(t => `<span class="port-tag ${TAG_CLASS[t] || ''}">${t}</span>`).join('');
+      const badgeText = isModGame(activeGame) ? '// recently updated mod' : '// recently updated';
 
       card.innerHTML = `
         <img src="${game.banner}" alt="${game.name}" class="port-game-banner"
@@ -758,14 +914,13 @@
           <img src="${cornerIcon}" alt="icon" class="port-gb-corner" />
         </div>
         <div class="port-body">
-          ${isRecent ? '<span class="port-recently-badge">// recently updated</span>' : ''}
+          ${isRecent ? `<span class="port-recently-badge">${badgeText}</span>` : ''}
           <a href="${port.download}" class="port-name" target="_blank">${port.name}</a>
           <div class="port-tags">${tagsHtml}</div>
         </div>`;
 
       grid.appendChild(card);
 
-      // Video hover
       if (port.video) {
         const img   = card.querySelector('.port-thumb:not(.port-video)');
         const video = card.querySelector('.port-video');
@@ -786,7 +941,7 @@
     });
   }
 
-  // Scroll reveal for labels
+  // Scroll reveal
   new IntersectionObserver(
     entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
     { threshold: 0.08 }
