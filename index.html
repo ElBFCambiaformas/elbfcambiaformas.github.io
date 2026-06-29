@@ -166,7 +166,7 @@
     /* random quotes */
     .hero-quote {
       font-size: 11px;
-      color: #444;
+      color: #999;
       font-style: italic;
       margin-bottom: 28px;
       letter-spacing: 0.5px;
@@ -1040,7 +1040,7 @@
           <div class="hero-links">
             <a href="#mods" class="btn btn-primary">View My Mods</a>
             <a href="#about" class="btn btn-ghost">About Me</a>
-            <a href="gamebanana.html" class="btn btn-ghost" style="border-color:#5a4800;color:#f5c518;">🍌 Ports</a>
+            <a href="gamebanana.html" class="btn btn-ghost" style="border-color:#5a4800;color:#f5c518;">GameBanana Ports</a>
           </div>
         </div>
         <div class="changelog-widget">
@@ -1064,7 +1064,7 @@
       <div class="about-grid reveal">
         <div class="about-text">
           <img src="images/about.png" alt="The Minecraft Skin i use!" class="about-photo" />
-          <p>Hey hello there! It's a me!.</p>
+          <p>Hey hello there! It's-a-me!.</p>
           <p>I am the guy that modified wonderland.jar via bytecoding and made the entities 𝓯𝓪𝓷𝓬𝔂.</p>
           <p>It has been such a <i>wonder</i>ful time to do stuff like this!.</p>
           <p>From what started from me making the entities fancy to being recognized by the creators makes me so happy!!!</p>
@@ -1281,7 +1281,7 @@
       desc: 'Gives The Watching Shade entities a Pomni hat! (Requires Hats n Stuff)',
       status: 'active',
       download: 'https://drive.google.com/uc?export=download&id=1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1',
-      preview: 'images/DecorativeSHadePreview.png',
+      preview: 'images/DecorativeShadePreview.png',
       oldVersions: []
     },
     {
@@ -1354,16 +1354,20 @@
   // RANDOM QUOTES
   // ─────────────────────────────────────────
   const QUOTES = [
-    '// i promise the entities are friendly',
-    '// wonderland.jar fears me',
+    '// Goob Dandys World my beloved',
+    '// Tag PS3',
+    '// Tag PSP',
+    '// Tag',
     '// yes i did bytecode this at 2am',
-    '// the grass is always teleporty on my side',
-    '// THE ENTITY CANNOT DIE',
+    '// Boss Battle (Day) - Sonic Unleashed my beloved',
+    '// why is modelswapping Wii games so hard 😭',
     '// BIG SHOT intensifies',
-    '// fancy or nothing',
+    '// Rrgh! How’d you get here so quickly?!',
     '// i can do anything, anywhere, anytime!!',
+	'// I want a Wii',
+	'// I AM NOT A MORON!!!!',
   ];
-  document.getElementById('heroQuote').textContent =
+  document.getElementById('heroQuote').innerHTML =
     QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
   // ─────────────────────────────────────────
@@ -1503,7 +1507,7 @@
         ? `<div class="mod-preview">
              ${isVideo
                ? `<video src="${mod.preview}" class="mod-preview-video" muted loop playsinline></video>
-                  ${mod.hasSound ? `<button class="mute-btn" title="Toggle sound">🔇</button>` : ''}`
+                  ${mod.hasSound ? `<button class="mute-btn" title="Toggle sound">Muted</button>` : ''}`
                : `<img src="${mod.preview}" alt="${mod.name} preview" loading="lazy" />`
              }
            </div>`
