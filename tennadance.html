@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>???</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .gif-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gif-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+      user-select: none;
+      -webkit-user-drag: none;
+      
+      /* Hidden state */
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    /* Class injected when clicked */
+    .gif-container img.revealed {
+      display: block;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gif-container">
+    <img id="secretGif" src="" alt="Secret Shenanigans" />
+  </div>
+
+  <audio id="secretMusic" loop>
+    <source src="audio/sponsor.ogg" type="audio/ogg">
+  </audio>
+
+  <script>
+    const audio = document.getElementById('secretMusic');
+    const gif = document.getElementById('secretGif');
+
+    document.addEventListener('click', () => {
+      // 1. Inject the GIF file path only AFTER they click
+      gif.src = "images/swingdance.gif";
+      
+      // 2. Make it visible
+      gif.classList.add('revealed');
+      
+      // 3. Play the music loop
+      if (audio.paused) {
+        audio.play().catch(err => console.log("Audio play blocked/failed:", err));
+      }
+    }, { once: true });
+  </script>
+
+</body>
+</html>

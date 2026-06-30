@@ -62,6 +62,7 @@
       z-index: 0;
     }
 
+    /* Standard container width */
     .container {
       max-width: 860px;
       margin: 0 auto;
@@ -70,7 +71,7 @@
       z-index: 1;
     }
 
-    /* ── NAV ── */
+    /* ── NAV OVERHAUL ── */
     nav {
       border-bottom: 1px solid var(--border);
       padding: 20px 0;
@@ -81,7 +82,14 @@
       z-index: 100;
     }
 
-    nav .container { display: flex; align-items: center; justify-content: space-between; }
+    /* Uses max-width for alignment, but flex spaces the logo left and text right */
+    nav .container { 
+      max-width: 100%; /* Pushes elements fully to the left and right viewports */
+      padding: 0 40px;  /* Adds generous breathing room on the corners */
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+    }
 
     .logo-img {
       height: 36px; width: auto;
@@ -163,7 +171,6 @@
       animation: fadeUp 0.6s 0.4s forwards;
     }
 
-    /* random quotes */
     .hero-quote {
       font-size: 11px;
       color: #999;
@@ -310,11 +317,11 @@
       grid-template-columns: 1fr 1fr;
       gap: 40px;
     }
-    @media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; } }
 
     .about-photo {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 16 / 10;
       object-fit: cover;
       border-radius: 4px;
       border: 1px solid var(--border);
@@ -333,7 +340,6 @@
     }
     .about-text p:last-child { margin-bottom: 0; }
 
-    /* Credits cards */
     .credits-title {
       font-size: 10px;
       letter-spacing: 3px;
@@ -375,6 +381,7 @@
       border: 1px solid var(--border);
       padding: 24px;
       border-radius: 4px;
+      margin-bottom: 24px;
     }
 
     .stat-box h3 {
@@ -398,6 +405,48 @@
     .stat-item:last-child { border-bottom: none; }
     .stat-item .label { color: var(--text-dim); }
     .stat-item .value { color: var(--purple); font-weight: 600; }
+
+    .socials-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px 24px;
+      border-radius: 4px;
+    }
+    .socials-box h3 {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+    .socials-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .social-icon-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .social-icon-btn:hover {
+      border-color: var(--purple);
+      background: rgba(137,125,208,0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 0 10px rgba(137,125,208,0.2);
+    }
+    .social-icon-btn img {
+      width: 20px;
+      height: 20px;
+      image-rendering: pixelated;
+      display: block;
+    }
 
     .changelog-old-tag {
       display: inline-block;
@@ -472,7 +521,6 @@
     .mod-card:hover { transform: translateY(-3px); }
     .mod-card:hover::before { transform: scaleX(1); }
 
-    /* Shimmer */
     .mod-card::after {
       content: '';
       position: absolute;
@@ -484,7 +532,6 @@
     }
     .mod-card:hover::after { transform: translateX(100%); }
 
-    /* Status colors */
     .mod-card.status-active       { border-color: #0f3a0f; }
     .mod-card.status-active::before { background: linear-gradient(135deg, #2dba00, #39ff14); }
     .mod-card.status-active:hover { border-color: var(--green-dim); }
@@ -546,7 +593,6 @@
       display: block;
     }
 
-    /* Darken the video so card text stays readable */
     .mod-preview::after {
       content: '';
       position: absolute;
@@ -555,11 +601,8 @@
     }
 
     .mod-card:hover .mod-preview { opacity: 1; }
-
-    /* Bump card content above the video */
     .mod-card > *:not(.mod-preview) { position: relative; z-index: 1; }
 
-    /* Mute toggle button */
     .mute-btn {
       position: absolute;
       bottom: 8px;
@@ -579,7 +622,6 @@
     }
     .mute-btn:hover { background: rgba(137,125,208,0.5); border-color: var(--purple); }
 
-    /* Last updated badge */
     .mod-updated {
       font-size: 9px;
       color: var(--yellow);
@@ -619,7 +661,6 @@
     }
     .mod-link:hover { color: var(--red); }
 
-    /* Install hint */
     .install-hint {
       font-size: 10px;
       color: var(--text-dim);
@@ -663,7 +704,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* takes up same column slot as a card */
     }
 
     .mod-tree-line {
@@ -733,7 +773,6 @@
       line-height: 1.6;
     }
 
-    /* The card+tree wrapper — sits in the grid like a normal card */
     .mod-tree-wrap {
       display: flex;
       flex-direction: column;
@@ -764,7 +803,6 @@
       display: block;
     }
 
-    /* Arrow indicator on mod title when it has old versions */
     .mod-name.has-tree::after {
       content: ' ▾';
       font-size: 10px;
@@ -829,13 +867,7 @@
       display: block;
       transition: color 0.2s;
     }
-    a.rp-name:hover { color: var(--red); text-decoration: underline; text-underline-offset: 4px; }
-
-    .rp-desc {
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.8;
-    }
+    a.rp-name:hover { color: var(--red); text-underline-offset: 4px; }
 
     /* ── WIP ── */
     .wip-block {
@@ -857,6 +889,32 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       text-align: center;
+    }
+
+    /* ── INTERACTIVE TEXT LINK AT BOTTOM ── */
+    .bottom-interactive-text {
+      text-align: center;
+      padding: 30px 0 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .bottom-interactive-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .bottom-interactive-text a {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s ease, opacity 0.2s ease;
+      cursor: pointer;
+    }
+    .bottom-interactive-text a:hover {
+      color: var(--purple);
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
 
     /* ── FOOTER ── */
@@ -1015,17 +1073,16 @@
         <li><a href="#about">About</a></li>
         <li><a href="#mods">Mods</a></li>
         <li><a href="#resourcepacks">Resource Packs</a></li>
-        <li><a href="gamebanana.html">Ports</a></li>
+        <li><a href="requests.html">Requests</a></li>
+        <li><a href="gamebanana.html">Mods & Ports</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- CORNER POPUP -->
   <div class="corner-popup" id="cornerPopup">
     <img src="images/secret.png" alt="..." />
   </div>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="container">
       <div class="hero-inner">
@@ -1038,9 +1095,9 @@
           </p>
           <p class="hero-quote" id="heroQuote"></p>
           <div class="hero-links">
-            <a href="#mods" class="btn btn-primary">View My Mods</a>
-            <a href="#about" class="btn btn-ghost">About Me</a>
-            <a href="gamebanana.html" class="btn btn-ghost" style="border-color:#5a4800;color:#f5c518;">GameBanana Ports</a>
+            <a href="#about" class="btn btn-primary">About Me</a>
+            <a href="#mods" class="btn btn-ghost">View My Mods</a>
+            <a href="gamebanana.html" class="btn btn-ghost" style="border-color:#5a4800;color:#f5c518;">Mods & Ports</a>
           </div>
         </div>
         <div class="changelog-widget">
@@ -1056,18 +1113,17 @@
     </div>
   </div>
 
-  <!-- ABOUT -->
   <section id="about">
     <div class="container">
       <div class="section-label">// 01</div>
       <div class="section-title">About Me</div>
       <div class="about-grid reveal">
         <div class="about-text">
-          <img src="images/about.png" alt="The Minecraft Skin i use!" class="about-photo" />
-          <p>Hey hello there! It's-a-me!.</p>
+          <p>Hey hello there! It's-a-me!</p>
           <p>I am the guy that modified wonderland.jar via bytecoding and made the entities 𝓯𝓪𝓷𝓬𝔂.</p>
-          <p>It has been such a <i>wonder</i>ful time to do stuff like this!.</p>
+          <p>It has been such a <i>wonder</i>ful time to do stuff like this!</p>
           <p>From what started from me making the entities fancy to being recognized by the creators makes me so happy!!!</p>
+          
           <p class="credits-title">// couldn't have done it without</p>
           <div class="credits-grid">
             <a href="https://www.curseforge.com/members/alexander_25" class="credit-card" target="_blank">
@@ -1088,25 +1144,46 @@
             </a>
           </div>
         </div>
-        <div class="stat-box">
-          <h3>// Quick Info</h3>
-          <div class="stat-item"><span class="label">Gender</span><span class="value">Male</span></div>
-          <div class="stat-item"><span class="label">All mods are</span><span class="value">Forge 1.20.1</span></div>
-          <div class="stat-item"><span class="label">Mods Released</span><span class="value">16</span></div>
-          <div class="stat-item"><span class="label">Resource Packs</span><span class="value">2</span></div>
-          <div class="stat-item"><span class="label">Favorite games</span><span class="value">Garry's Mod &amp; Minecraft</span></div>
+        
+        <div class="about-right-pane">
+          <img src="images/about.png" alt="The Minecraft Skin i use!" class="about-photo" />
+          
+          <div class="stat-box">
+            <h3>// Quick Info</h3>
+            <div class="stat-item"><span class="label">Gender</span><span class="value">Male</span></div>
+            <div class="stat-item"><span class="label">All mods are</span><span class="value">Forge 1.20.1</span></div>
+            <div class="stat-item"><span class="label">Mods Released</span><span class="value">16</span></div>
+            <div class="stat-item"><span class="label">Resource Packs</span><span class="value">2</span></div>
+            <div class="stat-item"><span class="label">Favorite games</span><span class="value">Garry's Mod &amp; Minecraft</span></div>
+          </div>
+
+          <div class="socials-box">
+            <h3>// See my other stuff!!</h3>
+            <div class="socials-row">
+              <a href="https://www.pinterest.com/ElBFCambiaformas/" class="social-icon-btn" target="_blank" title="Pinterest">
+                <img src="images/pinterest.png" alt="GitHub" />
+              </a>
+              <a href="https://youtube.com/@ElBFC" class="social-icon-btn" target="_blank" title="YouTube">
+                <img src="images/youtube.webp" alt="YouTube" />
+              </a>
+              <a href="https://www.deviantart.com/jesusrodz787" class="social-icon-btn" target="_blank" title="DeviantArt">
+                <img src="images/deviantart.webp" alt="Bluesky" />
+              </a>
+              <a href="https://www.reddit.com/user/ElBFC/" class="social-icon-btn" target="_blank" title="Reddit">
+                <img src="images/reddit.png" alt="Discord" />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MODS -->
   <section id="mods">
     <div class="container">
       <div class="section-label">// 02</div>
       <div class="section-title">My Minecraft Mods, Couldnt move it to the Mods And Ports page because i was lazy, i will never move it there</div>
 
-      <!-- Status legend -->
       <div class="status-legend">
         <div class="legend-item"><div class="legend-dot" style="background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div> RECENTLY UPDATED</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--green);box-shadow:0 0 5px var(--green)"></div> ACTIVE</div>
@@ -1123,7 +1200,6 @@
     </div>
   </section>
 
-  <!-- RESOURCE PACKS -->
   <section id="resourcepacks">
     <div class="container">
       <div class="section-label">// 03</div>
@@ -1150,7 +1226,6 @@
     </div>
   </section>
 
-  <!-- WIP -->
   <section id="contact">
     <div class="container">
       <div class="wip-block reveal">
@@ -1159,6 +1234,13 @@
       </div>
     </div>
   </section>
+
+  <!-- Interactive interstitial section right above the footer -->
+  <div class="bottom-interactive-text bottom-reveal">
+    <div class="container">
+      <a href="secret.html" id="footer-secret-link">// Placeholder Text (Click Me)</a>
+    </div>
+  </div>
 
   <footer>
     <div class="container">
@@ -1172,9 +1254,6 @@
   <script>
   // ─────────────────────────────────────────
   // MOD DATA
-  // Base status: 'active' | 'old' | 'revival' | 'discontinued'
-  // preview: optional image path in images/previews/
-  // download: direct Google Drive download link
   // ─────────────────────────────────────────
   const MODS = [
     {
@@ -1271,6 +1350,12 @@
       oldVersions: []
     },
     {
+      id: 'paintings-wlj',
+      name: 'Paintings wonderland.jar',
+      version: 'v1.0.0',
+      desc: 'Adds paintings related to wonderland.jar!',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1b-3k8qM7n_C697Y_N26i_G-SIn7_EshW',
       preview: 'images/WLJPaintingPreview.png',
       oldVersions: []
     },
@@ -1285,6 +1370,12 @@
       oldVersions: []
     },
     {
+      id: 'hats-n-stuff',
+      name: 'Hats n Stuff',
+      version: 'v1.0.0',
+      desc: 'Adds some decorative cosmetic hats to wonderland.jar entities',
+      status: 'active',
+      download: 'https://drive.google.com/uc?export=download&id=1SF1rwTWo3aHPAtAtrGansB-HE-tMggH1',
       preview: 'images/HatsNStuffPreview.png',
       oldVersions: []
     },
@@ -1374,24 +1465,16 @@
   // SCROLL TO MOD AND OPEN VERSION TREE
   // ─────────────────────────────────────────
   function scrollToModAndOpenTree(modId) {
-    // Find which page the mod is on
     const idx = sortedMods.findIndex(m => m.id === modId);
     if (idx === -1) return;
     const targetPage = Math.floor(idx / PER_PAGE) + 1;
 
-    // Navigate to that page first if needed
     if (targetPage !== currentPage) {
       renderPage(targetPage);
     }
 
-    // After render, find the wrap by data attribute and open it
     requestAnimationFrame(() => {
       const grid = document.getElementById('modsGrid');
-      // Find the tree-toggle button inside the card matching this mod
-      // Cards are rendered in order of sortedMods slice, so find by position
-      const sliceIdx = idx - (targetPage - 1) * PER_PAGE;
-      const cards = grid.querySelectorAll('.mod-tree-wrap, .mod-card');
-      // Find by mod title text match
       const allTitles = grid.querySelectorAll('.mod-name');
       let targetWrap = null;
       allTitles.forEach(title => {
@@ -1402,11 +1485,9 @@
       });
 
       if (targetWrap) {
-        // Open the tree
         targetWrap.classList.add('open');
         const btn = targetWrap.querySelector('.tree-toggle');
         if (btn) btn.textContent = '▴';
-        // Scroll to it
         setTimeout(() => {
           targetWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 100);
@@ -1415,7 +1496,7 @@
   }
 
   // ─────────────────────────────────────────
-  // CHANGELOG — reads changelog.json
+  // CHANGELOG
   // ─────────────────────────────────────────
   const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
 
@@ -1433,14 +1514,11 @@
     }
 
     const now = Date.now();
-
-    // Filter: keep permanent entries + temporary ones within 2 days
     const visible = entries.filter(e => {
       if (!e.temporary) return true;
       return (now - new Date(e.date).getTime()) < TWO_DAYS_MS;
     });
 
-    // Collect mod IDs currently in changelog (for RECENTLY UPDATED status)
     const recentIds = new Set(visible.map(e => e.modId));
 
     if (visible.length === 0) {
@@ -1462,7 +1540,6 @@
           </div>`;
       }).join('');
 
-      // Bind old-version links to scroll + open tree
       list.querySelectorAll('.changelog-old-version').forEach(link => {
         link.addEventListener('click', e => {
           e.preventDefault();
@@ -1483,7 +1560,6 @@
   let sortedMods = [];
 
   function renderMods(recentIds) {
-    // Apply RECENTLY UPDATED override, then sort by status
     sortedMods = MODS.map(m => ({
       ...m,
       displayStatus: recentIds.has(m.id) ? 'recent' : m.status
@@ -1528,7 +1604,6 @@
           </div>
         </div>`;
 
-      // If this mod has old versions, wrap in a tree
       if (oldVers.length === 0) return cardHtml;
 
       const oldCardsHtml = oldVers.map(old => `
@@ -1542,21 +1617,18 @@
       return `<div class="mod-tree-wrap">${cardHtml}${oldCardsHtml}</div>`;
     }).join('');
 
-    // Re-trigger stagger animation
     requestAnimationFrame(() => {
       grid.classList.remove('visible');
       void grid.offsetWidth;
       grid.classList.add('visible');
     });
 
-    // Video previews — play on hover, pause on leave, mute toggle for sound mods
     grid.querySelectorAll('.mod-card').forEach((card, index) => {
       const video = card.querySelector('.mod-preview-video');
       if (!video) return;
-      const mod = slice[index];
       const muteBtn = card.querySelector('.mute-btn');
 
-      video.muted = true; // always start muted
+      video.muted = true;
 
       card.addEventListener('mouseenter', () => video.play().catch(() => {}));
       card.addEventListener('mouseleave', () => {
@@ -1574,7 +1646,6 @@
       }
     });
 
-    // Version tree toggle
     grid.querySelectorAll('.tree-toggle').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
@@ -1584,7 +1655,6 @@
       });
     });
 
-    // Pagination controls
     pag.innerHTML = `
       <button class="page-btn" id="prevBtn" ${page <= 1 ? 'disabled' : ''}>← Prev</button>
       <span class="page-info">Page ${page} / ${total}</span>
@@ -1601,9 +1671,7 @@
     entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
     { threshold: 0.08 }
   );
-  document.querySelectorAll('.reveal, .section-label, .rp-grid').forEach(el => observer.observe(el));
-
-  // Observe mods grid separately after it's populated
+  document.querySelectorAll('.reveal, .section-label, .rp-grid, .bottom-reveal').forEach(el => observer.observe(el));
   observer.observe(document.getElementById('modsGrid'));
 
   // ─────────────────────────────────────────
@@ -1630,17 +1698,15 @@
     const corners = ['corner-bl', 'corner-br'];
     const chosen  = corners[Math.floor(Math.random() * corners.length)];
 
-    // Assign corner immediately so it's positioned off-screen
     popup.classList.add(chosen);
 
     popup.addEventListener('click', () => {
       window.location.href = 'secret.html';
     });
 
-    // Wait, then slide in — reflow needed so CSS transition fires
     const delay = 20000 + Math.random() * 20000;
     setTimeout(() => {
-      void popup.offsetWidth; // force reflow
+      void popup.offsetWidth;
       popup.classList.add('show');
       setTimeout(() => popup.classList.remove('show'), 6000);
     }, delay);
