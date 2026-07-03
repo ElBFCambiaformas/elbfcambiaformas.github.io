@@ -493,6 +493,35 @@
     .footer-icon:hover { opacity: 1; }
     footer .grad { background: var(--ports-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
+    /* ── MOBILE VIDEO TOGGLE BUTTON ── */
+    /* Hidden by default (desktop uses hover); shown only on touch devices */
+    .video-toggle-btn {
+      display: none;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.65);
+      border: 2px solid rgba(255,255,255,0.6);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      line-height: 1;
+      padding: 0;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .video-toggle-btn:active { transform: scale(0.9); background: rgba(0,0,0,0.85); }
+    .showcase-card .video-toggle-btn { z-index: 5; }
+    .port-thumb-wrap .video-toggle-btn { z-index: 3; }
+
+    @media (hover: none) {
+      .video-toggle-btn.has-video { display: flex; }
+    }
+
     /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
@@ -517,7 +546,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <div class="hero-tag">// woah, lots of ports</div>
+          <div class="hero-tag">// woah, lots of ports and mods</div>
           <h1>My <span class="highlight">Ports & Mods</span></h1>
           <p class="hero-desc">
             Stuff I ported or modded for other games. Click a card to browse its content, click a title to download.
@@ -653,6 +682,8 @@
   // PORTS / MODS DATA
   // ─────────────────────────────────────────
   const PORTS = [
+    { gameId: 'bb+', name: 'Zoom Mod for BB+', download: 'https://gamebanana.com/dl/1744089', thumb: 'images/zoommod.png',            video: 'images/zoommodvideo.mp4', tags: ['0.14.X'] },
+    { gameId: 'bb+', name: 'Custom Pause Music in BB+', download: 'https://gamebanana.com/dl/1743701', thumb: 'images/pausemusic.png',            video: '', tags: ['0.14.X'] },
     { gameId: 'bb+', name: 'EVIL AND INTIMIDATING FACULTY DOOR (If you see a faculty door, you DIE!)', download: 'https://gamebanana.com/dl/1743199', thumb: 'images/EVILDOOR.png',            video: 'images/EVILDOORVIDEO.mp4', tags: ['0.14.X'] },
     { gameId: 'bb+', name: 'Video Plays When Baldi Catches You', download: 'https://gamebanana.com/dl/1732791', thumb: 'images/death.jpg',            video: 'images/deathvideo.mp4', tags: ['0.14.X', 'Kinda broken'] },
     { gameId: 'bb+', name: 'Video replaces the "Basically Games" logo', download: 'https://gamebanana.com/dl/1730259', thumb: 'images/cryforme.jpg',            video: 'images/cryformevideo.mp4', tags: ['0.14.X'] },
@@ -748,10 +779,12 @@
     // Showcase cards removed 'muted' so they play sound
     if (g.showcase) {
       const videoHtml = g.video ? `<video class="game-card-banner showcase-video" src="${g.video}" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
+      const videoBtnHtml = g.video ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>` : '';
       return `
         <div class="game-card showcase-card" data-game="${g.id}" style="border-color:${g.color};" onclick="window.open('${g.download || '#'}', '_blank')">
           <img class="game-card-banner" src="${g.banner}" alt="${g.name}" style="position:relative; z-index:1;" />
           ${videoHtml}
+          ${videoBtnHtml}
           <div class="game-card-label" style="z-index:2;">
             ${iconHtml}
             ${nameHtml}
@@ -795,6 +828,7 @@
     document.querySelectorAll('.showcase-card').forEach(card => {
       const img = card.querySelector('.game-card-banner:not(.showcase-video)');
       const video = card.querySelector('.showcase-video');
+      const btn = card.querySelector('.video-toggle-btn');
       if (!video) return;
 
       card.addEventListener('mouseenter', () => {
@@ -802,6 +836,7 @@
         video.style.display = 'block';
         video.muted = false; // Ensured audio output isn't blocked by standard code settings
         video.play().catch(() => {});
+        if (btn) btn.textContent = '⏸';
       });
 
       card.addEventListener('mouseleave', () => {
@@ -809,7 +844,31 @@
         video.currentTime = 0;
         video.style.display = 'none';
         img.style.opacity = '1';
+        if (btn) btn.textContent = '▶';
       });
+
+      // Mobile/touch: tap the button to play, tap again to stop
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const isPlaying = video.style.display === 'block';
+          if (!isPlaying) {
+            img.style.opacity = '0';
+            video.style.display = 'block';
+            video.muted = false;
+            video.currentTime = 0;
+            video.play().catch(() => {});
+            btn.textContent = '⏸';
+          } else {
+            video.pause();
+            video.currentTime = 0;
+            video.style.display = 'none';
+            img.style.opacity = '1';
+            btn.textContent = '▶';
+          }
+        });
+      }
     });
   }
 
@@ -912,6 +971,7 @@
         <div class="port-thumb-wrap">
           ${thumbHtml}
           ${port.video ? `<video src="${port.video}" class="port-thumb port-video" loop playsinline style="display:none;"></video>` : ''}
+          ${port.video ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>` : ''}
           <img src="${cornerIcon}" alt="icon" class="port-gb-corner" />
         </div>
         <div class="port-body">
@@ -925,17 +985,43 @@
       if (port.video) {
         const img   = card.querySelector('.port-thumb:not(.port-video)');
         const video = card.querySelector('.port-video');
+        const btn   = card.querySelector('.video-toggle-btn');
         card.addEventListener('mouseenter', () => {
           if (img) img.style.display = 'none';
           video.style.display = 'block';
           video.muted = false;
           video.play().catch(() => {});
+          if (btn) btn.textContent = '⏸';
         });
         card.addEventListener('mouseleave', () => {
           video.pause(); video.currentTime = 0;
           video.style.display = 'none';
           if (img) img.style.display = 'block';
+          if (btn) btn.textContent = '▶';
         });
+
+        // Mobile/touch: tap the button to play, tap again to stop
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            const isPlaying = video.style.display === 'block';
+            if (!isPlaying) {
+              if (img) img.style.display = 'none';
+              video.style.display = 'block';
+              video.muted = false;
+              video.currentTime = 0;
+              video.play().catch(() => {});
+              btn.textContent = '⏸';
+            } else {
+              video.pause();
+              video.currentTime = 0;
+              video.style.display = 'none';
+              if (img) img.style.display = 'block';
+              btn.textContent = '▶';
+            }
+          });
+        }
       }
 
       setTimeout(() => card.classList.add('visible'), i * 70);
