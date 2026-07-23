@@ -14,7 +14,9 @@
       --text-dim: #666;
       --purple: #897dd0;
       --red: #c43c42;
+      --green: #39ff14;
       --gb-banana: #f5c518;
+      --cyan: #00e5ff;
       --gb-gradient: linear-gradient(135deg, #f5c518, #e07800);
       --ports-gradient: linear-gradient(135deg, #0075d8, #cc0000);
     }
@@ -94,7 +96,6 @@
     section { padding: 60px 0; }
     .section-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gb-banana); margin-bottom: 16px; opacity: 0; transform: translateX(-12px); transition: opacity 0.5s, transform 0.5s; }
     .section-label.visible { opacity: 1; transform: none; }
-    .section-title { font-family: 'Press Start 2P', monospace; font-size: 15px; color: #fff; margin-bottom: 28px; line-height: 1.6; }
 
     /* Sub-headers inside game picker */
     .selector-subgroup-title {
@@ -123,7 +124,6 @@
       width: 100%;
     }
     
-    /* Layout styling for the Big Showcases sub-section */
     .game-selector.showcase-layout .game-card {
       flex: 1 1 380px;
       max-width: 420px;
@@ -135,7 +135,6 @@
     .game-selector.fade { opacity: 0; transform: translateY(-6px); transition: opacity 0.18s, transform 0.18s; }
     .game-selector.show { opacity: 1; transform: none; transition: opacity 0.25s, transform 0.25s; }
 
-    /* Big card shown by default */
     .game-card {
       position: relative;
       cursor: pointer;
@@ -171,10 +170,9 @@
       gap: 10px;
       padding: 16px;
       text-align: center;
-      transition: opacity 0.25s ease; /* Seamless transition when hovering */
+      transition: opacity 0.25s ease;
     }
 
-    /* Lowers the label container opacity (including logos) ONLY for showcase cards */
     .showcase-card:hover .game-card-label {
       opacity: 0.35;
     }
@@ -205,9 +203,7 @@
     }
 
     /* ── Compact tab bar ── */
-    .game-selector.has-active {
-      gap: 10px;
-    }
+    .game-selector.has-active { gap: 10px; }
 
     .game-pill {
       display: flex;
@@ -248,9 +244,7 @@
       margin-left: 2px;
     }
 
-    .game-pill.active {
-      background: rgba(255,255,255,0.04);
-    }
+    .game-pill.active { background: rgba(255,255,255,0.04); }
     .game-pill.active .game-pill-name { color: #fff; }
 
     /* ── PORTS SECTION ── */
@@ -281,11 +275,12 @@
       transition: transform 0.25s, box-shadow 0.25s, opacity 0.3s;
       opacity: 0;
       transform: translateY(20px);
+      display: flex;
+      flex-direction: column;
     }
     .port-card.visible { opacity: 1; transform: translateY(0); }
     .port-card:hover   { transform: translateY(-4px); }
 
-    /* ── GAME BANNER HEADER ON CARD ── */
     .port-game-banner {
       width: 100%;
       aspect-ratio: 16 / 5;
@@ -339,7 +334,13 @@
     }
 
     /* ── CARD BODY ── */
-    .port-body { padding: 14px 16px 16px; }
+    .port-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
     .port-name {
       font-family: 'Press Start 2P', monospace;
       font-size: 9px;
@@ -347,10 +348,19 @@
       text-decoration: none;
       display: block;
       line-height: 1.7;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       transition: color 0.2s;
     }
     .port-name:hover { color: var(--gb-banana); }
+    
+    .port-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
     .port-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .port-tag {
       font-size: 9px; padding: 3px 8px; border-radius: 2px; letter-spacing: 1px;
@@ -359,6 +369,36 @@
     .port-tag.video    { border-color: #6e1f22; background: rgba(196,60,66,0.1);  color: #c43c42; }
     .port-tag.fun      { border-color: #1a7a00; background: rgba(57,255,20,0.08); color: #39ff14; }
     .port-tag.roleplay { border-color: #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
+
+    /* Info button on cards */
+    .info-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .info-btn:hover:not(:disabled) {
+      background: var(--cyan);
+      color: #000;
+      border-color: var(--cyan);
+      font-weight: 600;
+    }
+
+    /* Disabled Info Button State */
+    .info-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: var(--border);
+      color: var(--text-dim);
+      background: transparent;
+    }
 
     /* ── RECENTLY UPDATED ── */
     .port-card.recently-updated {
@@ -373,10 +413,97 @@
       display: block;
     }
 
-    /* ── PORT STATUS TAGS ── */
-    .port-tag.new     { border-color: #1a7a00; background: rgba(57,255,20,0.08); color: #39ff14; }
-    .port-tag.updated { border-color: #5a4800; background: rgba(245,197,24,0.08); color: #f5c518; }
-    .port-tag.fixed   { border-color: #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
+    /* ── MODAL WINDOW ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      opacity: 1; pointer-events: auto;
+    }
+    .modal-content {
+      background: var(--surface);
+      border: 2px solid var(--gb-banana);
+      border-radius: 8px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 16px;
+      background: none; border: none;
+      color: var(--text-dim);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--red); }
+    
+    .modal-preview-img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .modal-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .modal-game-name {
+      font-size: 11px;
+      color: var(--gb-banana);
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+    .modal-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .modal-action-btn {
+      display: inline-block;
+      background: var(--gb-banana);
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 12px 18px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .modal-action-btn:hover {
+      background: #fff;
+      transform: translateY(-2px);
+    }
 
     /* ── CHANGELOG WIDGET ── */
     .hero-inner {
@@ -494,7 +621,6 @@
     footer .grad { background: var(--ports-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
     /* ── MOBILE VIDEO TOGGLE BUTTON ── */
-    /* Hidden by default (desktop uses hover); shown only on touch devices */
     .video-toggle-btn {
       display: none;
       position: absolute;
@@ -575,12 +701,27 @@
 
       <div class="ports-section" id="portsSection">
         <div class="section-label visible" id="portsSectionLabel">// ports</div>
+
         <div class="ports-grid" id="portsGrid">
           <div class="no-results" id="noResults">// no items found</div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- MOD INFO POPUP WINDOW -->
+  <div class="modal-overlay" id="modModal" onclick="handleModalOverlayClick(event)">
+    <div class="modal-content">
+      <button type="button" class="modal-close" onclick="closeModModal()" aria-label="Close modal">✕</button>
+      <img id="modalThumb" src="" alt="Mod Preview" class="modal-preview-img" />
+      <div id="modalTitle" class="modal-title">Mod Title</div>
+      <div id="modalGame" class="modal-game-name">// Game Name</div>
+      <div id="modalDesc" class="modal-desc">Mod information and description.</div>
+      <div class="modal-actions">
+        <a id="modalLink" href="#" target="_blank" class="modal-action-btn">GO TO MOD PAGE →</a>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <div class="container">
@@ -591,7 +732,7 @@
 
   <script>
   // ─────────────────────────────────────────
-  // GAMES (Showcases now support direct downloads and hover videos with sound!)
+  // GAMES
   // ─────────────────────────────────────────
   const GAMES = [
     { 
@@ -611,8 +752,9 @@
       icon: '', 
       nameImage: 'images/LLWLogo.png', 
       showcase: true,
-      download: 'https://gamebanana.com/dl/1736314', // Direct link
-      video: 'images/LLWVideo.mp4'              // Hover video path
+      download: 'https://gamebanana.com/dl/1736314',
+      video: 'images/LLWVideo.mp4',
+      desc: 'Custom Sonic Lost World character modification port with optimized texture scaling and custom animations.'
     },
     { 
       id: 'su',  
@@ -622,8 +764,9 @@
       icon: '', 
       nameImage: 'images/GULogo.png', 
       showcase: true,
-      download: 'https://gamebanana.com/dl/1735335', // Direct link
-      video: 'images/GoobUnleashVideo.mp4'               // Hover video path
+      download: 'https://gamebanana.com/dl/1735335',
+      video: 'images/GoobUnleashVideo.mp4',
+      desc: 'Complete character swap modification replacing default assets in Sonic Unleashed.'
     },
     { 
       id: 'gpsr',  
@@ -633,8 +776,9 @@
       icon: '', 
       nameImage: 'images/GPSRLogo.png', 
       showcase: true,
-      download: 'https://drive.google.com/uc?export=download&id=1RXkpDPcjV3HMyuctjrUz69S-aImrds6s', // Direct link
-      video: 'images/GPSRVideo.mp4'               // Hover video path
+      download: 'https://drive.google.com/uc?export=download&id=1RXkpDPcjV3HMyuctjrUz69S-aImrds6s',
+      video: 'images/GPSRVideo.mp4',
+      desc: 'Custom character and UI texture modification pack designed for Mario Party Star Rush.'
     },
     { 
       id: 'nsgb2',  
@@ -644,8 +788,9 @@
       icon: '', 
       nameImage: 'images/NSGB2Logo.png', 
       showcase: true,
-      download: 'https://drive.google.com/uc?export=download&id=1E3D0QKogztr7FmQCKGGlQqtzcY55wIzf', // Direct link
-      video: 'images/NSGB2Video.mp4'               // Hover video path
+      download: 'https://drive.google.com/uc?export=download&id=1E3D0QKogztr7FmQCKGGlQqtzcY55wIzf',
+      video: 'images/NSGB2Video.mp4',
+      desc: 'Version 1.0 release of the New Super Goob Bros 2 character model swap mod.'
     },
     { 
       id: 'sg3d',  
@@ -655,8 +800,9 @@
       icon: '', 
       nameImage: 'images/SG3DLogo.png', 
       showcase: true,
-      download: 'https://drive.google.com/uc?export=download&id=1Oa6cxs4Ta2ADMJS7pt-8D9UZ836gRLSN', // Direct link
-      video: 'images/SG3DVideo.mp4'               // Hover video path
+      download: 'https://drive.google.com/uc?export=download&id=1Oa6cxs4Ta2ADMJS7pt-8D9UZ836gRLSN',
+      video: 'images/SG3DVideo.mp4',
+      desc: 'Full character overhaul modification for Super Mario 3D Land.'
     },
     { 
       id: 'mk7',  
@@ -680,49 +826,55 @@
 
   // ─────────────────────────────────────────
   // PORTS / MODS DATA
+  // download = Direct download link
+  // modPage  = Dedicated mod page URL (used in Info popup)
   // ─────────────────────────────────────────
   const PORTS = [
-    { gameId: 'bb+', name: 'Foxos Stamina System in Plus!', download: 'https://gamebanana.com/dl/1751213', thumb: 'images/staminafoxo.jpg',            video: '', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'Footstep sounds for BB+', download: 'https://gamebanana.com/dl/1751271', thumb: 'images/footstepbaldi.jpg',            video: 'images/footstepbaldivideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'BB+, but you can change the speed!', download: 'https://gamebanana.com/dl/1750860', thumb: 'images/changespeedbaldi.jpg',            video: 'images/changespeedbaldivideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'Baldis Basics Plus, but in your desktop!', download: 'https://gamebanana.com/dl/1750186', thumb: 'images/desktopbaldi.jpg',            video: 'images/desktopbaldivideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'Please Close The Door When Leaving', download: 'https://gamebanana.com/dl/1752004', thumb: 'images/closethedoor.jpg',            video: '', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'BB+, but baldi is fast if you see him!', download: 'https://gamebanana.com/dl/1752839', thumb: 'images/fastbaldi.jpg',            video: 'images/fastbaldivideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'BB+, But you die if you see Baldi!', download: 'https://gamebanana.com/dl/1754323', thumb: 'images/deathbaldi.jpg',            video: '', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'BB+, but Baldi is a weeping angel...', download: 'https://gamebanana.com/dl/1756172', thumb: 'images/weepingbaldi.jpg',            video: 'images/weepingvideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'Zoom Mod for BB+', download: 'https://gamebanana.com/dl/1744089', thumb: 'images/zoommod.png',            video: 'images/zoommodvideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'Custom Pause Music in BB+', download: 'https://gamebanana.com/dl/1743701', thumb: 'images/pausemusic.png',            video: 'images/pausemusicbaldivideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'EVIL AND INTIMIDATING FACULTY DOOR (If you see a faculty door, you DIE!)', download: 'https://gamebanana.com/dl/1743199', thumb: 'images/EVILDOOR.png',            video: 'images/EVILDOORVIDEO.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'Video Plays When Baldi Catches You', download: 'https://gamebanana.com/dl/1732791', thumb: 'images/death.jpg',            video: 'images/deathvideo.mp4', tags: ['0.14.X', 'Kinda broken'] },
-    { gameId: 'bb+', name: 'Video replaces the "Basically Games" logo', download: 'https://gamebanana.com/dl/1730259', thumb: 'images/cryforme.jpg',            video: 'images/cryformevideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'BBCR Escape Engine, but somewhat better', download: 'https://gamebanana.com/dl/1737779', thumb: 'images/bbcrescape.jpg',            video: 'images/bbcrescapevideo.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: 'SM64.z64 timer thing, but in BB+', download: 'https://gamebanana.com/dl/1727605', thumb: 'images/sm64.z64 timer thumb.jpg',            video: 'images/sm64.z64 timer video.mp4', tags: ['0.14.X'] },
-    { gameId: 'bb+', name: '1/99 chance of everyone disappearing', download: 'https://gamebanana.com/dl/1708745', thumb: 'images/wwdegthumb.jpg',            video: '', tags: ['0.14.X'] },
-    { gameId: 'gmod', name: '[[VOODOO DOLL] & [PUPPET SIMULATOR]] GOOBTON NEO', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3652007111', thumb: 'images/GOOBTON.jpg',            video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'slw', name: 'Looey Lost World (PC)', download: 'https://gamebanana.com/dl/1736314', thumb: 'images/LooeyLostLogo.jpg',            video: '', tags: ['Port'] },
-    { gameId: 'su', name: 'Goob Unleashed', download: 'https://gamebanana.com/dl/1735335', thumb: 'images/GoobUnleash.jpeg',            video: 'images/GoobUnleashVideo.mp4', tags: ['Port'] },
-    { gameId: 'gmod', name: 'Roblox Mr. Puzzles [Ragdoll & Playermodel]',        download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3637626592', thumb: 'images/Roblox MP.png',           video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'gmod', name: 'Pomni Roblox V2 [Ragdoll & Playermodel]',           download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3637100979', thumb: 'images/Roblox Pomni V2.jpg',     video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'gmod', name: '[OC] Luna Scarlet V2 (still a Ragdoll)',             download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3630167634', thumb: 'images/Luna Scarlet V2.jpg',    video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'gmod', name: 'Pomni Roblox [Ragdoll]',                            download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3623286867', thumb: 'images/Pomni Roblox.jpg',        video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'gmod', name: 'pebso model [Playermodel]',                   download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3769811428', thumb: 'images/pebso.png',   video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'gmod', name: '[OC] Luna Starlet (Old, Ragdoll)',                   download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3620503444', thumb: 'images/Luna Scarlet OLD.jpg',   video: '', tags: ['Port', 'Fun'] },
-    { gameId: 'mk7',  name: 'Sprout (Dandys World)',                             download: 'https://gamebanana.com/dl/1730613',                                 thumb: 'images/SproutMK7PortPreview.jpg',       video: 'images/SproutMK7PortPreview.mp4', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Tag (ModNation Racers)',                             download: 'https://gamebanana.com/dl/1692217',                                 thumb: 'images/TagMK7PortPreview.png',       video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Yatta (Dandys World)',                               download: 'https://gamebanana.com/dl/1690738',                                 thumb: 'images/YattaMK7PortPreview.jpg',     video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Finn (Dandys World)',                                download: 'https://gamebanana.com/dl/1675987',                                 thumb: 'images/FinnMK7PortPreview.jpg',      video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'TheEntity (wonderland.jar)',                         download: 'https://gamebanana.com/dl/1687052',                                 thumb: 'images/TheEntityMK7PortPreview.png', video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Minecraft Playermodels with sharp limbs',            download: 'https://gamebanana.com/dl/1633404',                                 thumb: 'images/MCPMK7PortPreview.jpg',       video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Eclipsa Starlight (Dandys World)',                   download: 'https://gamebanana.com/dl/1560527',                                 thumb: 'images/EclipsaMK7PortPreview.jpg',   video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: '2B (NieR: Automata)',                                download: 'https://gamebanana.com/dl/1559169',                                 thumb: 'images/2BMK7PortPreview.jpg',        video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Miss Circle (Fundamental Paper Education)',           download: 'https://gamebanana.com/dl/1558736',                                 thumb: 'images/MissCircleMK7PortPreview.jpg',video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Gardevoir (Pokemon)',                                download: 'https://gamebanana.com/dl/1558733',                                 thumb: 'images/GardenvoirMK7PortPreview.jpg',video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Shelly (Dandys World)',                              download: 'https://gamebanana.com/dl/1556532',                                 thumb: 'images/ShellyMK7PortPreview.jpg',    video: '', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Shrimpo (Dandys World)',                             download: 'https://gamebanana.com/dl/1555683',                                 thumb: 'images/ShrimpoMK7PortPreview.jpg',   video: 'images/ShrimpoMK7PortPreview.mp4', tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Vee (Dandys World)',                                 download: 'https://gamebanana.com/dl/1555404',                                 thumb: 'images/VeeMK7PortPreview.jpg',       video: 'images/VeeMK7PortPreview.mp4',     tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Looey (Dandys World)',                               download: 'https://gamebanana.com/dl/1555366',                                 thumb: 'images/LooeyMK7PortPreview.jpg',     video: 'images/LooeyMK7PortPreview.mp4',   tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Gourdy (Dandys World)',                              download: 'https://gamebanana.com/dl/1554961',                                 thumb: 'images/GourdyMK7PortPreview.jpg',    video: 'images/GourdyMK7PortPreview.mp4',  tags: ['Port'] },
-    { gameId: 'mk7',  name: 'Goob (Dandys World)',                                download: 'https://gamebanana.com/dl/1556526',                                 thumb: 'images/GoobMK7PortPreview.jpg',      video: 'images/GoobMK7PortPreview.mp4',    tags: ['Port'] },
+    { gameId: 'bb+', name: 'Foxos Stamina System in Plus!', download: 'https://gamebanana.com/dl/1751213', modPage: 'https://gamebanana.com/mods/693265', thumb: 'images/staminafoxo.jpg', video: '', tags: ['0.14.X', 'No Info'], desc: 'Adds Foxo\'s stamina mechanic in Baldi\'s Basics Plus.' },
+    { gameId: 'bb+', name: 'Footstep sounds for BB+', download: 'https://gamebanana.com/dl/1751271', modPage: 'https://gamebanana.com/mods/692755', thumb: 'images/footstepbaldi.jpg', video: 'images/footstepbaldivideo.mp4', tags: ['0.14.X'], desc: 'Read the .txt in BALDI_Data/StreamingAssets/Modded/com.elbfc.footstepmod/CustomTemplate to make your own footstep sound mod!' },
+    { gameId: 'bb+', name: 'BB+, but you can change the speed!', download: 'https://gamebanana.com/dl/1750860', modPage: 'https://gamebanana.com/mods/693200', thumb: 'images/changespeedbaldi.jpg', video: 'images/changespeedbaldivideo.mp4', tags: ['0.14.X'], desc: 'How to use: \npress F2 to open the window, press it again if you wanna close it' },
+    { gameId: 'bb+', name: 'Baldis Basics Plus, but in your desktop!', download: 'https://gamebanana.com/dl/1750186', modPage: 'https://gamebanana.com/mods/691967', thumb: 'images/desktopbaldi.jpg', video: 'images/desktopbaldivideo.mp4', tags: ['0.14.X'], desc: 'How to use it: \n1. Once you see the Basically Games logo, press F9 (or the key you can configure in the .cfg file) \n2. Press Equals (or the key you can configure in the .cfg file) to actually play the game! \nif you wanna do stuff while the games running, press Equals (or the key you can configure in the .cfg file) to get the mouse back' },
+    { gameId: 'bb+', name: 'Please Close The Door When Leaving', download: 'https://gamebanana.com/dl/1752004', modPage: 'https://gamebanana.com/mods/693494', thumb: 'images/closethedoor.jpg', video: '', tags: ['0.14.X'], desc: 'Here\'s how it works:\nYou can leave the StandardDoor and FacultyOnlyDoor open, you can close it by clicking it \nIf Principal catches you, you get sent to Detention INSTANTLY, so this mod might be unfair (example: Principal opened a door you didnt even open and you get sent to detention), You can disable that in the config (BepInEx/config/com.elbfc.pleaseclosethedoor.cfg)' },
+    { gameId: 'bb+', name: 'BB+, but baldi is fast if you see him!', download: 'https://gamebanana.com/dl/1752839', modPage: 'https://gamebanana.com/mods/693766', thumb: 'images/fastbaldi.jpg', video: 'images/fastbaldivideo.mp4', tags: ['0.14.X'], desc: 'Increases Baldi\'s movement speed whenever he enters line-of-sight.' },
+    { gameId: 'bb+', name: 'BB+, But you die if you see Baldi!', download: 'https://gamebanana.com/dl/1754323', modPage: 'https://gamebanana.com/mods/694251', thumb: 'images/deathbaldi.jpg', video: '', tags: ['0.14.X', 'No Info'], desc: 'Lethal line-of-sight challenge mod where gazing at Baldi triggers game over.' },
+    { gameId: 'bb+', name: 'BB+, but Baldi is a weeping angel...', download: 'https://gamebanana.com/dl/1756172', modPage: 'https://gamebanana.com/mods/694067', thumb: 'images/weepingbaldi.jpg', video: 'images/weepingvideo.mp4', tags: ['0.14.X', 'No Info'], desc: 'Baldi only moves when you are not looking directly at him.' },
+    { gameId: 'bb+', name: 'Zoom Mod for BB+', download: 'https://gamebanana.com/dl/1744089', modPage: 'https://gamebanana.com/mods/550009', thumb: 'images/zoommod.png', video: 'images/zoommodvideo.mp4', tags: ['0.14.X'], desc: 'Here´s how to use it: \nHold C to Zoom and the Mouse Wheel to change the FOV.' },
+    { gameId: 'bb+', name: 'Custom Pause Music in BB+', download: 'https://gamebanana.com/dl/1743701', modPage: 'https://gamebanana.com/mods/691000', thumb: 'images/pausemusic.png', video: 'images/pausemusicbaldivideo.mp4', tags: ['0.14.X'], desc: 'Heres how to use it: \nPut your .mp3s, .oggs or .wavs in the Modded/com.elbfc.pausemusic folder' },
+    { gameId: 'bb+', name: 'EVIL AND INTIMIDATING FACULTY DOOR', download: 'https://gamebanana.com/dl/1743199', modPage: 'https://gamebanana.com/mods/690844', thumb: 'images/EVILDOOR.png', video: 'images/EVILDOORVIDEO.mp4', tags: ['0.14.X'], desc: 'If you see a faculty door, you DIE!' },
+    { gameId: 'bb+', name: 'Video Plays When Baldi Catches You', download: 'https://gamebanana.com/dl/1732791', modPage: 'https://gamebanana.com/mods/550012', thumb: 'images/death.jpg', video: 'images/deathvideo.mp4', tags: ['0.14.X', 'Obsolete', 'No Info'], desc: 'It\'s somewhat broken \ntho you can still use it \nmake a folder called "com.elbfc.baldivideojumpscare" in Modded/ and place your "baldi_death.mp4" video' },
+    { gameId: 'bb+', name: 'Video replaces the "Basically Games" logo', download: 'https://gamebanana.com/dl/1730259', modPage: 'https://gamebanana.com/mods/686824', thumb: 'images/cryforme.jpg', video: 'images/cryformevideo.mp4', tags: ['0.14.X'], desc: 'Basically, Any video! \nany resolution (it will stretch it if its not 1920 x 1080) \nany length (if its a really big file size i think it might take a while idk) \nI saw someone put the entire backrooms movie and super mario galaxy movie in there 😭' },
+    { gameId: 'bb+', name: 'BBCR Escape Engine, but somewhat better', download: 'https://gamebanana.com/dl/1737779', modPage: 'https://gamebanana.com/mods/678159', thumb: 'images/bbcrescape.jpg', video: 'images/bbcrescapevideo.mp4', tags: ['0.14.X'], desc: 'Here\'s the structure of the mod folder com.elbfc.musicplayswhencollectingallnotebooks \n/floor1/ \nfloor2/ \nfloor3/ \nfloor4/ \nfloor5/ \ncustom/ \niirc my mod creates the folders if there are no folders, but in case, create them \nin each floor folder, you put a .ogg, .mp3 and .wav, it can be any name \nin BepInEx/config/com.elbfc.musicplayswhencollectingallnotebooks.cfg, you can configure the effects, the predetermined bpm for each floor (except custom level, in which for some reason I added that)' },
+    { gameId: 'bb+', name: 'SM64.z64 timer thing, but in BB+', download: 'https://gamebanana.com/dl/1727605', modPage: 'https://gamebanana.com/mods/684933', thumb: 'images/sm64.z64 timer thumb.jpg', video: 'images/sm64.z64 timer video.mp4', tags: ['0.14.X', 'No Info'], desc: 'Super Mario 64 speedrun timer integration for level completion tracking.' },
+    { gameId: 'bb+', name: '1/99 chance of everyone disappearing', download: 'https://gamebanana.com/dl/1708745', modPage: 'https://gamebanana.com/mods/677877', thumb: 'images/wwdegthumb.jpg', video: '', tags: ['0.14.X', 'No Info'], desc: 'Randomized gameplay mechanic that occasionally empties the schoolhouse.' },
+    
+    /* GMOD PORTS WITH No Info TAG */
+    { gameId: 'gmod', name: '[[VOODOO DOLL] & [PUPPET SIMULATOR]] GOOBTON NEO', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3652007111', modPage: '', thumb: 'images/GOOBTON.jpg', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+    { gameId: 'slw', name: 'Looey Lost World (PC)', download: 'https://gamebanana.com/dl/1736314', modPage: 'https://gamebanana.com/mods/1736314', thumb: 'images/LooeyLostLogo.jpg', video: '', tags: ['Port'], desc: 'Sonic Lost World character port for PC.' },
+    { gameId: 'su', name: 'Goob Unleashed', download: 'https://gamebanana.com/dl/1735335', modPage: 'https://gamebanana.com/mods/1735335', thumb: 'images/GoobUnleash.jpeg', video: 'images/GoobUnleashVideo.mp4', tags: ['Port'], desc: 'Sonic Unleashed character modification with custom rigging.' },
+    { gameId: 'gmod', name: 'Roblox Mr. Puzzles [Ragdoll & Playermodel]', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3637626592', modPage: '', thumb: 'images/Roblox MP.png', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+    { gameId: 'gmod', name: 'Pomni Roblox V2 [Ragdoll & Playermodel]', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3637100979', modPage: '', thumb: 'images/Roblox Pomni V2.jpg', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+    { gameId: 'gmod', name: '[OC] Luna Scarlet V2 (still a Ragdoll)', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3630167634', modPage: '', thumb: 'images/Luna Scarlet V2.jpg', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+    { gameId: 'gmod', name: 'Pomni Roblox [Ragdoll]', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3623286867', modPage: '', thumb: 'images/Pomni Roblox.jpg', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+    { gameId: 'gmod', name: 'pebso model [Playermodel]', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3769811428', modPage: '', thumb: 'images/pebso.png', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+    { gameId: 'gmod', name: '[OC] Luna Starlet (Old, Ragdoll)', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3620503444', modPage: '', thumb: 'images/Luna Scarlet OLD.jpg', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
+
+    /* MARIO KART 7 PORTS WITH No Info TAG */
+    { gameId: 'mk7',  name: 'Sprout (Dandys World)', download: 'https://gamebanana.com/dl/1730613', modPage: '', thumb: 'images/SproutMK7PortPreview.jpg', video: 'images/SproutMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Tag (ModNation Racers)', download: 'https://gamebanana.com/dl/1692217', modPage: '', thumb: 'images/TagMK7PortPreview.png', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Yatta (Dandys World)', download: 'https://gamebanana.com/dl/1690738', modPage: '', thumb: 'images/YattaMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Finn (Dandys World)', download: 'https://gamebanana.com/dl/1675987', modPage: '', thumb: 'images/FinnMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'TheEntity (wonderland.jar)', download: 'https://gamebanana.com/dl/1687052', modPage: '', thumb: 'images/TheEntityMK7PortPreview.png', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Minecraft Playermodels with sharp limbs', download: 'https://gamebanana.com/dl/1633404', modPage: '', thumb: 'images/MCPMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Eclipsa Starlight (Dandys World)', download: 'https://gamebanana.com/dl/1560527', modPage: '', thumb: 'images/EclipsaMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: '2B (NieR: Automata)', download: 'https://gamebanana.com/dl/1559169', modPage: '', thumb: 'images/2BMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Miss Circle (Fundamental Paper Education)', download: 'https://gamebanana.com/dl/1558736', modPage: '', thumb: 'images/MissCircleMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Gardevoir (Pokemon)', download: 'https://gamebanana.com/dl/1558733', modPage: '', thumb: 'images/GardenvoirMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Shelly (Dandys World)', download: 'https://gamebanana.com/dl/1556532', modPage: '', thumb: 'images/ShellyMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Shrimpo (Dandys World)', download: 'https://gamebanana.com/dl/1555683', modPage: '', thumb: 'images/ShrimpoMK7PortPreview.jpg', video: 'images/ShrimpoMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Vee (Dandys World)', download: 'https://gamebanana.com/dl/1555404', modPage: '', thumb: 'images/VeeMK7PortPreview.jpg', video: 'images/VeeMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Looey (Dandys World)', download: 'https://gamebanana.com/dl/1555366', modPage: '', thumb: 'images/LooeyMK7PortPreview.jpg', video: 'images/LooeyMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Gourdy (Dandys World)', download: 'https://gamebanana.com/dl/1554961', modPage: '', thumb: 'images/GourdyMK7PortPreview.jpg', video: 'images/GourdyMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
+    { gameId: 'mk7',  name: 'Goob (Dandys World)', download: 'https://gamebanana.com/dl/1556526', modPage: '', thumb: 'images/GoobMK7PortPreview.jpg', video: 'images/GoobMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
   ];
 
   // ─────────────────────────────────────────
@@ -777,7 +929,6 @@
     renderSelector();
   }
 
-  // Helper engine to handle card builders split by configuration
   function generateGameCardHtml(g) {
     const count = PORTS.filter(p => p.gameId === g.id).length;
     const iconHtml = g.icon ? `<img class="game-card-logo" src="${g.icon}" alt="${g.name} icon" />` : '';
@@ -785,7 +936,6 @@
       ? `<img class="game-card-logo" src="${g.nameImage}" alt="${g.name}" style="width:85%;max-width:240px;height:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.9));" />`
       : `<span>${g.name}</span>`;
     
-    // Showcase cards removed 'muted' so they play sound
     if (g.showcase) {
       const videoHtml = g.video ? `<video class="game-card-banner showcase-video" src="${g.video}" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
       const videoBtnHtml = g.video ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>` : '';
@@ -815,7 +965,6 @@
       </div>`;
   }
 
-  // ── Build Split Categories Grid Layout ──
   function renderSelectorFull() {
     const container = document.getElementById('gameSelectorContainer');
     
@@ -833,7 +982,6 @@
       <div class="game-selector show" id="regularSelector">${regularsHtml}</div>
     `;
 
-    // Hook up video hovering with unmuted audio tracks on Big Showcase cards
     document.querySelectorAll('.showcase-card').forEach(card => {
       const img = card.querySelector('.game-card-banner:not(.showcase-video)');
       const video = card.querySelector('.showcase-video');
@@ -843,7 +991,7 @@
       card.addEventListener('mouseenter', () => {
         img.style.opacity = '0';
         video.style.display = 'block';
-        video.muted = false; // Ensured audio output isn't blocked by standard code settings
+        video.muted = false;
         video.play().catch(() => {});
         if (btn) btn.textContent = '⏸';
       });
@@ -856,7 +1004,6 @@
         if (btn) btn.textContent = '▶';
       });
 
-      // Mobile/touch: tap the button to play, tap again to stop
       if (btn) {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -881,7 +1028,6 @@
     });
   }
 
-  // ── Build the compact pill/tab bar ──
   function renderSelectorCompact() {
     const container = document.getElementById('gameSelectorContainer');
     
@@ -911,7 +1057,6 @@
     else renderSelectorFull();
   }
 
-  // ── Select / deselect a game ──
   function selectGame(gameId) {
     const wasSame = activeGame === gameId;
     activeGame = wasSame ? null : gameId;
@@ -955,6 +1100,7 @@
       const card = document.createElement('div');
       card.className = 'port-card';
       const isRecent = recentPortIds.has(port.name);
+
       card.style.borderColor = isRecent ? '#00e5ff' : game.color;
       if (isRecent) card.classList.add('recently-updated');
 
@@ -963,7 +1109,9 @@
           ? '0 8px 24px rgba(0,229,255,0.3)'
           : `0 8px 24px ${game.color}44`;
       });
-      card.addEventListener('mouseleave', () => { card.style.boxShadow = 'none'; });
+      card.addEventListener('mouseleave', () => { 
+        card.style.boxShadow = 'none'; 
+      });
 
       const cornerIcon = game.icon || 'images/gamebanana.png';
 
@@ -971,8 +1119,13 @@
         ? `<img src="${port.thumb}" alt="${port.name}" class="port-thumb" />`
         : `<div class="port-thumb-placeholder">// no preview</div>`;
 
-      const tagsHtml = port.tags.map(t => `<span class="port-tag ${TAG_CLASS[t] || ''}">${t}</span>`).join('');
+      // Filter out 'No Info' so the tag badge itself is not rendered visually
+      const visibleTags = port.tags.filter(t => t !== 'No Info');
+      const tagsHtml = visibleTags.map(t => `<span class="port-tag ${TAG_CLASS[t] || ''}">${t}</span>`).join('');
       const badgeText = isModGame(activeGame) ? '// recently updated mod' : '// recently updated';
+
+      const globalIndex = PORTS.indexOf(port);
+      const hasNoInfo = port.tags.includes('No Info');
 
       card.innerHTML = `
         <img src="${game.banner}" alt="${game.name}" class="port-game-banner"
@@ -984,9 +1137,14 @@
           <img src="${cornerIcon}" alt="icon" class="port-gb-corner" />
         </div>
         <div class="port-body">
-          ${isRecent ? `<span class="port-recently-badge">${badgeText}</span>` : ''}
-          <a href="${port.download}" class="port-name" target="_blank">${port.name}</a>
-          <div class="port-tags">${tagsHtml}</div>
+          <div>
+            ${isRecent ? `<span class="port-recently-badge">${badgeText}</span>` : ''}
+            <a href="${port.download}" class="port-name" target="_blank">${port.name}</a>
+          </div>
+          <div class="port-footer">
+            <div class="port-tags">${tagsHtml}</div>
+            <button type="button" class="info-btn" ${hasNoInfo ? 'disabled' : `onclick="openModModal(${globalIndex})"`}>Info</button>
+          </div>
         </div>`;
 
       grid.appendChild(card);
@@ -1009,7 +1167,6 @@
           if (btn) btn.textContent = '▶';
         });
 
-        // Mobile/touch: tap the button to play, tap again to stop
         if (btn) {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1036,6 +1193,45 @@
       setTimeout(() => card.classList.add('visible'), i * 70);
     });
   }
+
+  // ── MODAL CONTROLS ──
+  function openModModal(index) {
+    const port = PORTS[index];
+    if (!port || port.tags.includes('No Info')) return;
+    const game = getGame(port.gameId);
+
+    document.getElementById('modalTitle').textContent = port.name;
+    document.getElementById('modalGame').textContent = `// Game: ${game ? game.name : 'Unknown'}`;
+    document.getElementById('modalDesc').textContent = port.desc || 'No detailed description provided for this modification.';
+    
+    // Uses the dedicated modPage link property
+    const modalLink = document.getElementById('modalLink');
+    modalLink.href = port.modPage || '#';
+
+    const modalThumb = document.getElementById('modalThumb');
+    if (port.thumb) {
+      modalThumb.src = port.thumb;
+      modalThumb.style.display = 'block';
+    } else {
+      modalThumb.style.display = 'none';
+    }
+
+    document.getElementById('modModal').classList.add('active');
+  }
+
+  function closeModModal() {
+    document.getElementById('modModal').classList.remove('active');
+  }
+
+  function handleModalOverlayClick(e) {
+    if (e.target.id === 'modModal') {
+      closeModModal();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModModal();
+  });
 
   // Scroll reveal
   new IntersectionObserver(
