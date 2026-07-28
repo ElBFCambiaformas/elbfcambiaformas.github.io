@@ -108,6 +108,50 @@
       text-align: center;
     }
 
+    /* ── BUBBLES FOR SHOWCASES ── */
+    .showcase-bubble {
+      position: absolute;
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 2px solid var(--surface);
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    /* Fixed to be inside the card to prevent overflow clipping */
+    .update-bubble {
+      top: 8px;
+      right: 8px;
+      background: var(--gb-banana);
+      animation: bounceBubble 2s infinite ease-in-out;
+    }
+
+    .update-bubble:hover {
+      transform: scale(1.1);
+      background: #fff;
+    }
+
+    .info-bubble {
+      top: 8px;
+      left: 8px;
+      background: var(--cyan);
+    }
+
+    .info-bubble:hover {
+      transform: scale(1.1);
+      background: #fff;
+    }
+
+    @keyframes bounceBubble {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
     /* ── GAME SELECTOR ── */
     .game-selector-container {
       display: flex;
@@ -290,17 +334,6 @@
       transition: filter 0.25s;
     }
     .port-card:hover .port-game-banner { filter: brightness(0.9); }
-    .port-game-banner-placeholder {
-      width: 100%;
-      aspect-ratio: 16 / 5;
-      background: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: #333;
-    }
 
     /* ── THUMBNAIL ── */
     .port-thumb-wrap { position: relative; }
@@ -313,17 +346,7 @@
       transition: filter 0.25s;
     }
     .port-card:hover .port-thumb { filter: brightness(1); }
-    .port-thumb-placeholder {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #0a0a0a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: #2a2a2a;
-    }
+    
     .port-gb-corner {
       position: absolute;
       bottom: 8px; right: 8px;
@@ -390,14 +413,122 @@
       border-color: var(--cyan);
       font-weight: 600;
     }
-
-    /* Disabled Info Button State */
     .info-btn:disabled {
       opacity: 0.35;
       cursor: not-allowed;
       border-color: var(--border);
       color: var(--text-dim);
       background: transparent;
+    }
+
+    /* ── WIP / CURRENTLY COOKING SECTION ── */
+    #wip { padding: 50px 0 10px; }
+
+    .wip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .wip-card {
+      background: var(--surface);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      border: 3px dashed var(--border);
+      transition: transform 0.25s, border-color 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .wip-card:hover { transform: translateY(-4px); }
+
+    .wip-ribbon {
+      position: absolute;
+      top: 14px; left: -34px;
+      width: 140px;
+      transform: rotate(-45deg);
+      background: var(--gb-banana);
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      text-align: center;
+      padding: 4px 0;
+      z-index: 5;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+
+    .wip-thumb-wrap { position: relative; }
+    .wip-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.6) grayscale(0.25);
+      transition: filter 0.25s;
+    }
+    .wip-card:hover .wip-thumb { filter: brightness(0.85) grayscale(0.05); }
+
+    .wip-thumb-placeholder {
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-size: 11px;
+      background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 10px, #161616 10px, #161616 20px);
+    }
+
+    .wip-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .wip-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .wip-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: #fff;
+      line-height: 1.7;
+    }
+
+    .wip-status {
+      font-size: 9px;
+      padding: 3px 8px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .wip-status.concept      { border: 1px solid #4a4280; background: rgba(137,125,208,0.1); color: #897dd0; }
+    .wip-status.prototyping  { border: 1px solid #1a7a00; background: rgba(57,255,20,0.08);  color: #39ff14; }
+    .wip-status.debugging    { border: 1px solid #6e1f22; background: rgba(196,60,66,0.1);   color: #c43c42; }
+    .wip-status.polishing    { border: 1px solid #5a4800; background: rgba(245,197,24,0.08); color: #f5c518; }
+
+    .wip-game-tag {
+      font-size: 9px;
+      border: 1px solid;
+      padding: 2px 7px;
+      border-radius: 2px;
+      align-self: flex-start;
+      letter-spacing: 0.5px;
+    }
+
+    .wip-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.7;
     }
 
     /* ── RECENTLY UPDATED ── */
@@ -451,17 +582,38 @@
       font-size: 14px;
       cursor: pointer;
       transition: color 0.2s;
+      z-index: 50;
     }
     .modal-close:hover { color: var(--red); }
     
-    .modal-preview-img {
+    /* Dedicated Modal Thumbnail Container */
+    .modal-thumb-container {
+      position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      object-fit: cover;
-      border-radius: 4px;
-      border: 1px solid var(--border);
       margin-bottom: 16px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .modal-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
+    }
+    .modal-preview-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      max-width: 260px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.9));
+      z-index: 2;
+      display: none;
     }
     .modal-title {
       font-family: 'Press Start 2P', monospace;
@@ -522,53 +674,40 @@
       opacity: 0;
       animation: fadeUp 0.6s 0.3s forwards;
     }
-
     .changelog-header {
       padding: 12px 16px;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
     .changelog-header span {
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: #00e5ff;
-      text-transform: uppercase;
+      font-size: 10px; letter-spacing: 3px; color: #00e5ff; text-transform: uppercase;
     }
-
     .changelog-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #00e5ff;
-      box-shadow: 0 0 6px #00e5ff;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #00e5ff; box-shadow: 0 0 6px #00e5ff;
       animation: dotPulse 2s ease-in-out infinite;
     }
-
     @keyframes dotPulse {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0.3; }
     }
-
     .changelog-list {
-      max-height: 240px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
+      max-height: 240px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
     }
-
     .changelog-empty {
-      padding: 20px 16px;
-      font-size: 11px;
-      color: var(--text-dim);
-      text-align: center;
+      padding: 20px 16px; font-size: 11px; color: var(--text-dim); text-align: center;
     }
-
+    
     .changelog-item {
       padding: 12px 16px;
       border-bottom: 1px solid var(--border);
       transition: background 0.2s;
+    }
+    a.changelog-item {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
     }
     .changelog-item:last-child { border-bottom: none; }
     .changelog-item:hover { background: rgba(0,229,255,0.03); }
@@ -577,13 +716,12 @@
       font-family: 'Press Start 2P', monospace;
       font-size: 8px;
       color: #fff;
-      text-decoration: none;
       display: block;
       margin-bottom: 5px;
       line-height: 1.5;
       transition: color 0.2s;
     }
-    .changelog-item-name:hover { color: #00e5ff; }
+    a.changelog-item:hover .changelog-item-name { color: #00e5ff; }
 
     .changelog-item-tag {
       display: inline-block;
@@ -604,7 +742,6 @@
       line-height: 1.6;
       margin-bottom: 4px;
     }
-
     .changelog-item-date {
       font-size: 9px;
       color: #444;
@@ -622,22 +759,11 @@
 
     /* ── MOBILE VIDEO TOGGLE BUTTON ── */
     .video-toggle-btn {
-      display: none;
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.65);
-      border: 2px solid rgba(255,255,255,0.6);
-      color: #fff;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      line-height: 1;
-      padding: 0;
+      display: none; position: absolute; bottom: 10px; left: 10px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(0,0,0,0.65); border: 2px solid rgba(255,255,255,0.6);
+      color: #fff; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 13px; line-height: 1; padding: 0;
       transition: background 0.2s, transform 0.15s;
     }
     .video-toggle-btn:active { transform: scale(0.9); background: rgba(0,0,0,0.85); }
@@ -691,17 +817,21 @@
     </div>
   </div>
 
+  <section id="wip">
+    <div class="container">
+      <div class="section-label visible">// currently cooking</div>
+      <div class="wip-grid" id="wipGrid"></div>
+    </div>
+  </section>
+
   <section id="ports">
     <div class="container">
       <div class="section-label">// pick a game</div>
 
-      <div class="game-selector-container" id="gameSelectorContainer">
-         <!-- Game Selector injections occur here dynamically -->
-      </div>
+      <div class="game-selector-container" id="gameSelectorContainer"></div>
 
       <div class="ports-section" id="portsSection">
         <div class="section-label visible" id="portsSectionLabel">// ports</div>
-
         <div class="ports-grid" id="portsGrid">
           <div class="no-results" id="noResults">// no items found</div>
         </div>
@@ -713,12 +843,30 @@
   <div class="modal-overlay" id="modModal" onclick="handleModalOverlayClick(event)">
     <div class="modal-content">
       <button type="button" class="modal-close" onclick="closeModModal()" aria-label="Close modal">✕</button>
-      <img id="modalThumb" src="" alt="Mod Preview" class="modal-preview-img" />
+      
+      <div id="modalThumbContainer" class="modal-thumb-container">
+        <img id="modalThumb" src="" alt="Mod Preview" class="modal-preview-img" />
+        <img id="modalThumbLogo" src="" alt="Mod Logo" class="modal-preview-logo" />
+      </div>
+
       <div id="modalTitle" class="modal-title">Mod Title</div>
       <div id="modalGame" class="modal-game-name">// Game Name</div>
       <div id="modalDesc" class="modal-desc">Mod information and description.</div>
-      <div class="modal-actions">
+      <div class="modal-actions" id="modalActions">
         <a id="modalLink" href="#" target="_blank" class="modal-action-btn">GO TO MOD PAGE →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGELOG MODAL POPUP WINDOW -->
+  <div class="modal-overlay" id="changelogModal" onclick="handleChangelogOverlayClick(event)">
+    <div class="modal-content">
+      <button type="button" class="modal-close" onclick="closeChangelogModal()" aria-label="Close modal">✕</button>
+      <div class="modal-title">Changelog</div>
+      <div id="changelogGameName" class="modal-game-name">// Game Name</div>
+      
+      <div class="changelog-list" id="changelogModalList" style="max-height: 250px; margin-bottom: 10px;">
+        <!-- Dynamic logs will be injected here -->
       </div>
     </div>
   </div>
@@ -734,6 +882,25 @@
   // ─────────────────────────────────────────
   // GAMES
   // ─────────────────────────────────────────
+  // `driveFolder` (showcase games only): link to a Google Drive FOLDER
+  // holding all versions of that mod. This is what the changelog popup
+  // links out to, so people can grab any version, not just the latest.
+  // Just paste the folder's "Anyone with the link" share URL in.
+  //
+  // `flags` (showcase games only): quick on/off switches for that game's
+  // card. Everything defaults to ON — you only need to add a flag when
+  // you want to turn something OFF. Leave the whole `flags` object out
+  // entirely and you get the normal full card.
+  //
+  //   updateBubble  : the yellow "New update!" bubble (opens changelog)
+  //   infoBubble    : the cyan "Info" bubble (opens the info popup)
+  //   previewVideo  : hover-to-play video preview on the card
+  //
+  // Example — hide just the update bubble for one game:
+  //   flags: { updateBubble: false }
+  //
+  // Example — hide everything extra, plain card only:
+  //   flags: { updateBubble: false, infoBubble: false, previewVideo: false }
   const GAMES = [
     { 
       id: 'bb+',  
@@ -753,8 +920,10 @@
       nameImage: 'images/LLWLogo.png', 
       showcase: true,
       download: 'https://gamebanana.com/dl/1736314',
+      driveFolder: 'PASTE_GOOGLE_DRIVE_FOLDER_LINK_HERE',
       video: 'images/LLWVideo.mp4',
-      desc: 'Custom Sonic Lost World character modification port with optimized texture scaling and custom animations.'
+      desc: 'Looey as Sonic!',
+      flags: {}
     },
     { 
       id: 'su',  
@@ -765,8 +934,10 @@
       nameImage: 'images/GULogo.png', 
       showcase: true,
       download: 'https://gamebanana.com/dl/1735335',
+      driveFolder: 'PASTE_GOOGLE_DRIVE_FOLDER_LINK_HERE',
       video: 'images/GoobUnleashVideo.mp4',
-      desc: 'Complete character swap modification replacing default assets in Sonic Unleashed.'
+      desc: 'Goob as Sonic and Shrimpo as eggman!',
+      flags: {}
     },
     { 
       id: 'gpsr',  
@@ -777,8 +948,10 @@
       nameImage: 'images/GPSRLogo.png', 
       showcase: true,
       download: 'https://drive.google.com/uc?export=download&id=1RXkpDPcjV3HMyuctjrUz69S-aImrds6s',
+      driveFolder: 'PASTE_GOOGLE_DRIVE_FOLDER_LINK_HERE',
       video: 'images/GPSRVideo.mp4',
-      desc: 'Custom character and UI texture modification pack designed for Mario Party Star Rush.'
+      desc: 'Some of the Dandy\'s World cast in this mod!',
+      flags: {}
     },
     { 
       id: 'nsgb2',  
@@ -789,8 +962,10 @@
       nameImage: 'images/NSGB2Logo.png', 
       showcase: true,
       download: 'https://drive.google.com/uc?export=download&id=1E3D0QKogztr7FmQCKGGlQqtzcY55wIzf',
+      driveFolder: 'https://drive.google.com/drive/folders/1Et5bVnoRGwGaZtM6KyKfrrQtCqyXG8Z4?usp=sharing',
       video: 'images/NSGB2Video.mp4',
-      desc: 'Version 1.0 release of the New Super Goob Bros 2 character model swap mod.'
+      desc: 'My favorite mod!',
+      flags: {}
     },
     { 
       id: 'sg3d',  
@@ -801,8 +976,10 @@
       nameImage: 'images/SG3DLogo.png', 
       showcase: true,
       download: 'https://drive.google.com/uc?export=download&id=1Oa6cxs4Ta2ADMJS7pt-8D9UZ836gRLSN',
+      driveFolder: 'PASTE_GOOGLE_DRIVE_FOLDER_LINK_HERE',
       video: 'images/SG3DVideo.mp4',
-      desc: 'Full character overhaul modification for Super Mario 3D Land.'
+      desc: 'My favorite game!',
+      flags: {}
     },
     { 
       id: 'mk7',  
@@ -826,8 +1003,6 @@
 
   // ─────────────────────────────────────────
   // PORTS / MODS DATA
-  // download = Direct download link
-  // modPage  = Dedicated mod page URL (used in Info popup)
   // ─────────────────────────────────────────
   const PORTS = [
     { gameId: 'bb+', name: 'Foxos Stamina System in Plus!', download: 'https://gamebanana.com/dl/1751213', modPage: 'https://gamebanana.com/mods/693265', thumb: 'images/staminafoxo.jpg', video: '', tags: ['0.14.X', 'No Info'], desc: 'Adds Foxo\'s stamina mechanic in Baldi\'s Basics Plus.' },
@@ -875,6 +1050,91 @@
     { gameId: 'mk7',  name: 'Looey (Dandys World)', download: 'https://gamebanana.com/dl/1555366', modPage: '', thumb: 'images/LooeyMK7PortPreview.jpg', video: 'images/LooeyMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
     { gameId: 'mk7',  name: 'Gourdy (Dandys World)', download: 'https://gamebanana.com/dl/1554961', modPage: '', thumb: 'images/GourdyMK7PortPreview.jpg', video: 'images/GourdyMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
     { gameId: 'mk7',  name: 'Goob (Dandys World)', download: 'https://gamebanana.com/dl/1556526', modPage: '', thumb: 'images/GoobMK7PortPreview.jpg', video: 'images/GoobMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
+  ];
+
+  // ─────────────────────────────────────────
+  // PER-GAME CHANGELOGS (showcase "New update!" popup)
+  // ─────────────────────────────────────────
+  // Each key below is a game's `id` from the GAMES array above.
+  // Every key holds its OWN list of changelog entries — totally separate
+  // per game, so updating one game's log never touches another's.
+  //
+  // ── TO ADD A NEW ENTRY ──
+  // 1. Find the game's id (e.g. 'su' for Sonic Unleashed).
+  // 2. Add a new entry object to the TOP of that game's array (newest first).
+  // 3. Fill in the 4 fields:
+  //      version : short tag text, e.g. 'v1.3'
+  //      type    : 'new' (green) | 'updated' (yellow) | 'fixed' (purple)
+  //      change  : one-line description of what changed
+  //      date    : any text, e.g. 'Today', 'July 2026', '2 weeks ago'
+  //
+  // Example — adding a new entry to Sonic Unleashed ('su'):
+  //   su: [
+  //     { version: 'v1.3', type: 'fixed', change: 'Fixed a clipping issue with Goob.', date: 'Today' },
+  //     { version: 'v1.2', type: 'new',   change: 'Added Shrimpo as Eggman.',           date: 'July 2026' },
+  //   ]
+  //
+  // If a game has no entries yet, just leave its array empty: []
+  // (the popup will show "no changelog yet" automatically).
+  const GAME_CHANGELOGS = {
+    slw: [
+      { version: 'v1.0', type: 'new', change: 'Initial release of Looey Lost World.', date: '—' },
+    ],
+    su: [
+      { version: 'v1.0', type: 'new', change: 'Initial release of Sonic Unleashed.', date: '—' },
+      { version: 'v1.1', type: 'new', change: 'Added Shrimpo as Eggman.', date: '—' },
+    ],
+    gpsr: [
+      { version: 'v1.0', type: 'new', change: 'Initial release of Goob Party Star Rush.', date: '—' },
+    ],
+    nsgb2: [
+      { version: 'v1.0', type: 'new', change: 'Initial release of New Super Goob Bros 2.', date: '—' },
+      { version: 'v1.0.1', type: 'new', change: 'Added the texture of the fire costume.', date: '—' },
+      { version: 'v1.1', type: 'new', change: 'Changed some textures and upped the resolution of the Goob texture to 256 x 256.', date: '—' },
+    ],
+    sg3d: [
+      { version: 'v1.0', type: 'new', change: 'Initial release of Super Goob 3D Land.', date: '—' },
+    ],
+  };
+
+  // ─────────────────────────────────────────
+  // WIP MODS ("Currently Cooking" section)
+  // ─────────────────────────────────────────
+  // Teaser cards for stuff you're actively working on — nothing here is
+  // downloadable, there's just no link on the card at all.
+  //
+  // To add one, drop a new object anywhere in this array:
+  //   name   : working title of the mod
+  //   status : 'concept' | 'prototyping' | 'debugging' | 'polishing'
+  //            (controls the little colored badge — pick whichever fits)
+  //   desc   : a sentence or two on what it does / what's currently stuck
+  //   thumb  : (optional) preview image path — leave '' for a placeholder
+  //   video  : (optional) short preview clip — hover the card to play it
+  //   gameId : (optional) matches an id from GAMES above — tints the card
+  //            border and shows a small game-name tag on it
+  //
+  // Once a mod actually ships, just delete its entry here and add it to
+  // PORTS instead (or to GAME_CHANGELOGS if it's for a big showcase game).
+  //
+  // Leave the array empty ( const WIP_MODS = []; ) to hide the whole
+  // section — it disappears automatically when there's nothing in it.
+  const WIP_MODS = [
+    {
+      name: 'Portal 2 but with Dandy\'s World characters!',
+      gameId: 'portal2',
+      status: 'polishing',
+      desc: 'I still need to fix that the mesh for GlaDOS\'s head isn\'t being replaced for some reason, and change some textures, some subtitles (if possible) and etc etc.',
+      thumb: 'images/portal2wiplogo.webp',
+      video: 'images/portal2wipvideo.mp4'
+    },
+    {
+      name: 'Left 4 Dead 1 and 2 but with Dandy\'s World characters!',
+      gameId: '',
+      status: 'prototyping',
+      desc: 'I still need to replace some models, change some textures, etc etc.',
+      thumb: 'images/L4D2 + Dandys world.png',
+      video: 'images/I sure do love modding!.mp4'
+    },
   ];
 
   // ─────────────────────────────────────────
@@ -929,6 +1189,97 @@
     renderSelector();
   }
 
+  // ── Render "Currently Cooking" WIP mods ──
+  function renderWipMods() {
+    const section = document.getElementById('wip');
+    const grid = document.getElementById('wipGrid');
+
+    if (!WIP_MODS.length) {
+      section.style.display = 'none';
+      return;
+    }
+
+    grid.innerHTML = WIP_MODS.map(w => {
+      const game = w.gameId ? getGame(w.gameId) : null;
+      const borderColor = game ? `${game.color}66` : 'var(--border)';
+
+      const thumbHtml = w.thumb
+        ? `<img src="${w.thumb}" alt="${w.name}" class="wip-thumb" />`
+        : `<div class="wip-thumb-placeholder">// no preview yet</div>`;
+      const videoHtml = w.video
+        ? `<video src="${w.video}" class="wip-thumb wip-video" loop playsinline style="display:none;"></video>`
+        : '';
+      const videoBtnHtml = w.video
+        ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>`
+        : '';
+      const gameTagHtml = game
+        ? `<span class="wip-game-tag" style="color:${game.color};border-color:${game.color};">${game.name}</span>`
+        : '';
+      const statusClass = (w.status || 'concept').toLowerCase();
+
+      return `
+        <div class="wip-card" style="border-color:${borderColor};">
+          <div class="wip-ribbon">WIP</div>
+          <div class="wip-thumb-wrap">
+            ${thumbHtml}
+            ${videoHtml}
+            ${videoBtnHtml}
+          </div>
+          <div class="wip-body">
+            <div class="wip-top-row">
+              <span class="wip-name">${w.name}</span>
+              <span class="wip-status ${statusClass}">${statusClass}</span>
+            </div>
+            ${gameTagHtml}
+            <div class="wip-desc">${w.desc || ''}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    grid.querySelectorAll('.wip-card').forEach(card => {
+      const img = card.querySelector('.wip-thumb:not(.wip-video)');
+      const video = card.querySelector('.wip-video');
+      const btn = card.querySelector('.video-toggle-btn');
+      if (!video) return;
+
+      card.addEventListener('mouseenter', () => {
+        if (img) img.style.display = 'none';
+        video.style.display = 'block';
+        video.muted = false;
+        video.play().catch(() => {});
+        if (btn) btn.textContent = '⏸';
+      });
+      card.addEventListener('mouseleave', () => {
+        video.pause(); video.currentTime = 0;
+        video.style.display = 'none';
+        if (img) img.style.display = 'block';
+        if (btn) btn.textContent = '▶';
+      });
+
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const isPlaying = video.style.display === 'block';
+          if (!isPlaying) {
+            if (img) img.style.display = 'none';
+            video.style.display = 'block';
+            video.muted = false;
+            video.currentTime = 0;
+            video.play().catch(() => {});
+            btn.textContent = '⏸';
+          } else {
+            video.pause();
+            video.currentTime = 0;
+            video.style.display = 'none';
+            if (img) img.style.display = 'block';
+            btn.textContent = '▶';
+          }
+        });
+      }
+    });
+  }
+
   function generateGameCardHtml(g) {
     const count = PORTS.filter(p => p.gameId === g.id).length;
     const iconHtml = g.icon ? `<img class="game-card-logo" src="${g.icon}" alt="${g.name} icon" />` : '';
@@ -937,10 +1288,22 @@
       : `<span>${g.name}</span>`;
     
     if (g.showcase) {
-      const videoHtml = g.video ? `<video class="game-card-banner showcase-video" src="${g.video}" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
-      const videoBtnHtml = g.video ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>` : '';
+      const flags = g.flags || {};
+      const showUpdateBubble = flags.updateBubble !== false;
+      const showInfoBubble   = flags.infoBubble !== false;
+      const showPreviewVideo = flags.previewVideo !== false;
+
+      const hasVideo = g.video && showPreviewVideo;
+      const videoHtml = hasVideo ? `<video class="game-card-banner showcase-video" src="${g.video}" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
+      const videoBtnHtml = hasVideo ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>` : '';
+
+      const updateBubbleHtml = showUpdateBubble ? `<div class="showcase-bubble update-bubble" onclick="openChangelogModal(event, '${g.id}')">Updates</div>` : '';
+      const infoBubbleHtml = showInfoBubble ? `<div class="showcase-bubble info-bubble" onclick="openShowcaseInfoModal(event, '${g.id}')">Info</div>` : '';
+
       return `
         <div class="game-card showcase-card" data-game="${g.id}" style="border-color:${g.color};" onclick="window.open('${g.download || '#'}', '_blank')">
+          ${updateBubbleHtml}
+          ${infoBubbleHtml}
           <img class="game-card-banner" src="${g.banner}" alt="${g.name}" style="position:relative; z-index:1;" />
           ${videoHtml}
           ${videoBtnHtml}
@@ -1119,7 +1482,6 @@
         ? `<img src="${port.thumb}" alt="${port.name}" class="port-thumb" />`
         : `<div class="port-thumb-placeholder">// no preview</div>`;
 
-      // Filter out 'No Info' so the tag badge itself is not rendered visually
       const visibleTags = port.tags.filter(t => t !== 'No Info');
       const tagsHtml = visibleTags.map(t => `<span class="port-tag ${TAG_CLASS[t] || ''}">${t}</span>`).join('');
       const badgeText = isModGame(activeGame) ? '// recently updated mod' : '// recently updated';
@@ -1204,16 +1566,21 @@
     document.getElementById('modalGame').textContent = `// Game: ${game ? game.name : 'Unknown'}`;
     document.getElementById('modalDesc').textContent = port.desc || 'No detailed description provided for this modification.';
     
-    // Uses the dedicated modPage link property
+    document.getElementById('modalActions').style.display = '';
     const modalLink = document.getElementById('modalLink');
     modalLink.href = port.modPage || '#';
 
+    const modalThumbContainer = document.getElementById('modalThumbContainer');
     const modalThumb = document.getElementById('modalThumb');
+    const modalThumbLogo = document.getElementById('modalThumbLogo');
+
     if (port.thumb) {
       modalThumb.src = port.thumb;
-      modalThumb.style.display = 'block';
+      modalThumb.style.filter = "none";
+      modalThumbContainer.style.display = 'block';
+      modalThumbLogo.style.display = 'none'; 
     } else {
-      modalThumb.style.display = 'none';
+      modalThumbContainer.style.display = 'none';
     }
 
     document.getElementById('modModal').classList.add('active');
@@ -1229,8 +1596,89 @@
     }
   }
 
+  // ── SHOWCASE INFO MODAL CONTROLS ──
+  function openShowcaseInfoModal(e, gameId) {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    const game = getGame(gameId);
+    if (!game) return;
+
+    document.getElementById('modalTitle').textContent = game.name;
+    document.getElementById('modalGame').textContent = `// Big Mod Showcase`;
+    document.getElementById('modalDesc').textContent = game.desc || 'No detailed description provided.';
+
+    // Big mod showcases don't get a "GO TO MOD PAGE" button —
+    // their update bubble / changelog popup handles the outbound link instead.
+    document.getElementById('modalActions').style.display = 'none';
+
+    const modalThumbContainer = document.getElementById('modalThumbContainer');
+    const modalThumb = document.getElementById('modalThumb');
+    const modalThumbLogo = document.getElementById('modalThumbLogo');
+
+    if (game.banner) {
+      modalThumb.src = game.banner;
+      modalThumbContainer.style.display = 'block';
+      
+      if (game.nameImage) {
+        modalThumbLogo.src = game.nameImage;
+        modalThumbLogo.style.display = 'block';
+        modalThumb.style.filter = "brightness(0.4)";
+      } else {
+        modalThumbLogo.style.display = 'none';
+        modalThumb.style.filter = "none";
+      }
+    } else {
+      modalThumbContainer.style.display = 'none';
+    }
+
+    document.getElementById('modModal').classList.add('active');
+  }
+
+  // ── CHANGELOG MODAL CONTROLS ──
+  function openChangelogModal(e, gameId) {
+    e.stopPropagation(); 
+    e.preventDefault();
+
+    const game = getGame(gameId);
+    if (!game) return;
+
+    document.getElementById('changelogGameName').textContent = `// ${game.name}`;
+    const driveLink = game.driveFolder || game.download || '#';
+
+    const list = document.getElementById('changelogModalList');
+    const entries = GAME_CHANGELOGS[gameId] || [];
+
+    if (entries.length === 0) {
+      list.innerHTML = '<div class="changelog-empty">no changelog yet</div>';
+    } else {
+      list.innerHTML = entries.map(entry => `
+        <a href="${driveLink}" target="_blank" class="changelog-item">
+          <span class="changelog-item-tag ${(entry.type || '').toLowerCase()}">${entry.version}</span>
+          <div class="changelog-item-change" style="color:var(--text-dim);">${entry.change}</div>
+          <div class="changelog-item-date">${entry.date}</div>
+        </a>
+      `).join('');
+    }
+
+    document.getElementById('changelogModal').classList.add('active');
+  }
+
+  function closeChangelogModal() {
+    document.getElementById('changelogModal').classList.remove('active');
+  }
+
+  function handleChangelogOverlayClick(e) {
+    if (e.target.id === 'changelogModal') {
+      closeChangelogModal();
+    }
+  }
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModModal();
+    if (e.key === 'Escape') {
+      closeModModal();
+      closeChangelogModal();
+    }
   });
 
   // Scroll reveal
@@ -1240,6 +1688,7 @@
   ).observe(document.querySelector('.section-label'));
 
   loadChangelog();
+  renderWipMods();
   </script>
 
 </body>
