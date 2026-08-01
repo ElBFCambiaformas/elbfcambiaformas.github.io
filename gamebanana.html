@@ -515,6 +515,16 @@
     .wip-status.prototyping  { border: 1px solid #1a7a00; background: rgba(57,255,20,0.08);  color: #39ff14; }
     .wip-status.debugging    { border: 1px solid #6e1f22; background: rgba(196,60,66,0.1);   color: #c43c42; }
     .wip-status.polishing    { border: 1px solid #5a4800; background: rgba(245,197,24,0.08); color: #f5c518; }
+    .wip-status.abandoned    { border: 1px solid #555;    background: rgba(120,120,120,0.1); color: #999; }
+
+    /* Abandoned = made, but will never be finished — dead-project look */
+    .wip-ribbon.abandoned { background: #3a3a3a; color: #ccc; }
+    .wip-card.abandoned { border-color: #3a3a3a !important; }
+    .wip-card.abandoned .wip-thumb { filter: grayscale(1) brightness(0.45); }
+    .wip-card.abandoned:hover .wip-thumb { filter: grayscale(0.85) brightness(0.55); }
+
+    /* Opt-out: keep the thumbnail full brightness/color, overrides everything above */
+    .wip-thumb.no-dim { filter: none !important; }
 
     .wip-game-tag {
       font-size: 9px;
@@ -1106,13 +1116,21 @@
   //
   // To add one, drop a new object anywhere in this array:
   //   name   : working title of the mod
-  //   status : 'concept' | 'prototyping' | 'debugging' | 'polishing'
-  //            (controls the little colored badge — pick whichever fits)
+  //   status : 'concept' | 'prototyping' | 'debugging' | 'polishing' | 'abandoned'
+  //            (controls the little colored badge — pick whichever fits.
+  //            'abandoned' = made some progress, but it's never getting
+  //            finished — the card goes grayscale with a gray ribbon
+  //            instead of the usual "WIP" one)
   //   desc   : a sentence or two on what it does / what's currently stuck
   //   thumb  : (optional) preview image path — leave '' for a placeholder
   //   video  : (optional) short preview clip — hover the card to play it
   //   gameId : (optional) matches an id from GAMES above — tints the card
   //            border and shows a small game-name tag on it
+  //   flags  : (optional) { darkenThumb: false } — normally the thumbnail
+  //            is dimmed a bit (and abandoned ones go full grayscale/dark).
+  //            Set darkenThumb to false to keep it full brightness/color
+  //            no matter what the status is. Leave `flags` out entirely
+  //            for the normal look.
   //
   // Once a mod actually ships, just delete its entry here and add it to
   // PORTS instead (or to GAME_CHANGELOGS if it's for a big showcase game).
@@ -1136,8 +1154,16 @@
       thumb: 'images/L4D2 + Dandys world.png',
       video: 'images/isuredolovemodding.mp4'
     },
+    {
+      name: 'ULTRAVEE',
+      gameId: '',
+      status: 'abandoned',
+      desc: 'My first time playing ULTRAKILL, and replacing a model of a compiled Unity game!\n I wish i could keep modding it, but... idk',
+      thumb: 'images/ULTRAVEE.png',
+      video: 'images/ULTRAVEEVideo.mp4',
+	  flags: { darkenThumb: false }
+    },
   ];
-
   // ─────────────────────────────────────────
   const TAG_CLASS = { Video: 'video', Fun: 'fun', Roleplay: 'roleplay', New: 'new', Updated: 'updated', Fixed: 'fixed' };
   const getGame   = id => GAMES.find(g => g.id === id);
@@ -1201,14 +1227,20 @@
     }
 
     grid.innerHTML = WIP_MODS.map(w => {
+      const statusClass = (w.status || 'concept').toLowerCase();
+      const isAbandoned = statusClass === 'abandoned';
+      const keepBright = (w.flags || {}).darkenThumb === false;
+      const noDimClass = keepBright ? ' no-dim' : '';
+
       const game = w.gameId ? getGame(w.gameId) : null;
-      const borderColor = game ? `${game.color}66` : 'var(--border)';
+      const borderColor = isAbandoned ? '' : (game ? `${game.color}66` : 'var(--border)');
+      const borderStyle = borderColor ? `style="border-color:${borderColor};"` : '';
 
       const thumbHtml = w.thumb
-        ? `<img src="${w.thumb}" alt="${w.name}" class="wip-thumb" />`
+        ? `<img src="${w.thumb}" alt="${w.name}" class="wip-thumb${noDimClass}" />`
         : `<div class="wip-thumb-placeholder">// no preview yet</div>`;
       const videoHtml = w.video
-        ? `<video src="${w.video}" class="wip-thumb wip-video" loop playsinline style="display:none;"></video>`
+        ? `<video src="${w.video}" class="wip-thumb wip-video${noDimClass}" loop playsinline style="display:none;"></video>`
         : '';
       const videoBtnHtml = w.video
         ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>`
@@ -1216,11 +1248,11 @@
       const gameTagHtml = game
         ? `<span class="wip-game-tag" style="color:${game.color};border-color:${game.color};">${game.name}</span>`
         : '';
-      const statusClass = (w.status || 'concept').toLowerCase();
+      const ribbonText = isAbandoned ? 'ABANDONED' : 'WIP';
 
       return `
-        <div class="wip-card" style="border-color:${borderColor};">
-          <div class="wip-ribbon">WIP</div>
+        <div class="wip-card ${isAbandoned ? 'abandoned' : ''}" ${borderStyle}>
+          <div class="wip-ribbon ${isAbandoned ? 'abandoned' : ''}">${ribbonText}</div>
           <div class="wip-thumb-wrap">
             ${thumbHtml}
             ${videoHtml}
