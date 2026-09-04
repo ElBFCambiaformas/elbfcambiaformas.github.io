@@ -943,6 +943,11 @@
   //
   // Example — hide everything extra, plain card only:
   //   flags: { updateBubble: false, infoBubble: false, previewVideo: false }
+  //
+  // `video` (showcase games only): can be a single path (string) or an
+  // array of paths — give it an array (e.g. ['clip1.mp4', 'clip2.mp4'])
+  // and a random clip from the list plays each time you hover the card,
+  // same as the per-mod video field down in PORTS.
   const GAMES = [
     { 
       id: 'bb+',  
@@ -975,10 +980,10 @@
       icon: '', 
       nameImage: 'images/GULogo.png', 
       showcase: true,
-      download: 'https://gamebanana.com/dl/1735335',
+      download: 'https://gamebanana.com/dl/1802147',
       driveFolder: 'https://gamebanana.com/mods/688271',
-      video: 'images/GoobUnleashVideo.mp4',
-      desc: 'Goob as Sonic and Shrimpo as eggman!',
+      video: ['images/OldBodyGoobUnleashedVideo.mp4' , 'images/NewBodyGoobUnleashedVideo.mp4'],
+      desc: '',
       flags: {}
     },
     { 
@@ -1005,7 +1010,7 @@
       showcase: true,
       download: 'https://drive.google.com/file/d/1KFGruCLoQW_nc7oFaCFu7cMb4KsacTCE/view?usp=drive_link',
       driveFolder: 'https://drive.google.com/drive/folders/1Et5bVnoRGwGaZtM6KyKfrrQtCqyXG8Z4?usp=sharing',
-      video: 'images/NSGB2Video.mp4',
+      video: ['images/NSGB2Video.mp4','images/NSGB20Video.mp4'],
       desc: 'My favorite mod!',
       flags: {}
     },
@@ -1030,6 +1035,15 @@
       color: '#cc0000', 
       icon: '', 
       nameImage: 'images/MK7logo.png', 
+      showcase: false 
+    },
+    { 
+      id: 'sm64dx',  
+      name: 'Super Mario 64 Coop Deluxe', 
+      banner: 'images/dx.png', 
+      color: '#cc0000', 
+      icon: '', 
+      nameImage: 'images/dxlogo.png', 
       showcase: false 
     },
 	    { 
@@ -1059,10 +1073,12 @@
   // an array (e.g. ['clip1.mp4', 'clip2.mp4']) and a random clip from the
   // list plays each time you hover the card.
   const PORTS = [
+    { gameId: 'bb+', name: 'Baldi\'s Basics Plus, but it\'s dark', download: 'https://gamebanana.com/dl/1797044', modPage: 'https://gamebanana.com/mods/709633', thumb: 'images/ICantSeeShit.jpg', video: '', tags: ['0.14.X'], desc: 'Recommended to use the Flashlight mod: https://gamebanana.com/mods/709172' },
+    { gameId: 'bb+', name: 'Annoying \'Nana Peels', download: 'https://gamebanana.com/dl/1796919', modPage: 'https://gamebanana.com/mods/709574', thumb: 'images/Nana.jpg', video: 'images/NanaVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'Monochrome typing mechanic in BB+! ', download: 'https://gamebanana.com/dl/1793450', modPage: 'https://gamebanana.com/mods/708151', thumb: 'images/MonochromePlus.jpg', video: 'images/MonochromePlusVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'Hypno\'s Lullaby pendulum mechanic in BB+', download: 'https://gamebanana.com/dl/1792483', modPage: 'https://gamebanana.com/mods/707371', thumb: 'images/BaldiHypno.jpg', video: 'images/BaldiHypnoVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'Controller Tooltips in Plus', download: 'https://gamebanana.com/dl/1783476', modPage: 'https://gamebanana.com/mods/703931', thumb: 'images/Controllertooltips.jpg', video: '', tags: ['0.14.X'], desc: '' },
-    { gameId: 'bb+', name: 'mod that closes the game when you open it', download: 'https://gamebanana.com/dl/1769769', modPage: 'https://gamebanana.com/mods/698983', thumb: 'images/modthatclosesthegamewhenyouopenit.jpg', video: '', tags: ['0.14.X'], desc: '' },
+    { gameId: 'bb+', name: 'mod that closes the game when you open it', download: 'https://gamebanana.com/dl/1769121', modPage: 'https://gamebanana.com/mods/698983', thumb: 'images/modthatclosesthegamewhenyouopenit.jpg', video: '', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+, but if you lose you get a BSoD!', download: 'https://gamebanana.com/dl/1769769', modPage: 'https://gamebanana.com/mods/699188', thumb: 'images/BSoD.jpg', video: 'images/BSoDVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+, but 15 Playtimes torture you', download: 'https://gamebanana.com/dl/1770469', modPage: 'https://gamebanana.com/mods/699374', thumb: 'images/LETSPLAY.jpg', video: ['images/LETSPLAYVIDEO.mp4','images/laaa laaa.mp4', 'images/tortureplaytime.mp4'], tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+ but youre forced 2 use touch controls', download: 'https://gamebanana.com/dl/1772894', modPage: 'https://gamebanana.com/mods/700146', thumb: 'images/TouchControls.jpg', video: 'images/TouchControlsVideo.mp4', tags: ['0.14.X'], desc: '' },
@@ -1070,7 +1086,7 @@
     { gameId: 'bb+', name: 'Baldi\'s Basics Plus but Baldi WALKS', download: 'https://gamebanana.com/dl/1775466', modPage: 'https://gamebanana.com/mods/700638', thumb: 'images/BaldiWALKS.jpg', video: 'images/BaldiWALKSVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+ but youre friend is streaming it', download: 'https://gamebanana.com/dl/1775863', modPage: 'https://gamebanana.com/mods/701070', thumb: 'images/shitquality.jpg', video: 'images/shitqualityvideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: '1/600 chance of 20 Flowerpots jumping you', download: 'https://gamebanana.com/dl/1777999', modPage: 'https://gamebanana.com/mods/701860', thumb: 'images/20flowerpots.jpg', video: '', tags: ['0.14.X'], desc: '' },
-    { gameId: 'bb+', name: 'BB+, but 15 Dr. Reflexes torture you', download: 'https://gamebanana.com/dl/1778218', modPage: 'gamebanana.com/mods/701925', thumb: 'images/dr_reflextorture.png', video: 'images/dr_reflextorturevideo.mp4', tags: ['0.14.X',], desc: '' },
+    { gameId: 'bb+', name: 'BB+, but 15 Dr. Reflexes torture you', download: 'https://gamebanana.com/dl/1778218', modPage: 'https://gamebanana.com/mods/701925', thumb: 'images/dr_reflextorture.png', video: 'images/dr_reflextorturevideo.mp4', tags: ['0.14.X',], desc: '' },
     { gameId: 'bb+', name: 'Foxos Stamina System in Plus!', download: 'https://gamebanana.com/dl/1751213', modPage: 'https://gamebanana.com/mods/693265', thumb: 'images/staminafoxo.jpg', video: '', tags: ['0.14.X', 'No Info'], desc: 'Adds Foxo\'s stamina mechanic in Baldi\'s Basics Plus.' },
     { gameId: 'bb+', name: 'Footstep sounds for BB+', download: 'https://gamebanana.com/dl/1751271', modPage: 'https://gamebanana.com/mods/692755', thumb: 'images/footstepbaldi.jpg', video: 'images/footstepbaldivideo.mp4', tags: ['0.14.X'], desc: 'Read the .txt in BALDI_Data/StreamingAssets/Modded/com.elbfc.footstepmod/CustomTemplate to make your own footstep sound mod!' },
     { gameId: 'bb+', name: 'BB+, but you can change the speed!', download: 'https://gamebanana.com/dl/1750860', modPage: 'https://gamebanana.com/mods/693200', thumb: 'images/changespeedbaldi.jpg', video: 'images/changespeedbaldivideo.mp4', tags: ['0.14.X'], desc: 'How to use: \npress F2 to open the window, press it again if you wanna close it' },
@@ -1119,6 +1135,8 @@
     { gameId: 'mk7',  name: 'Goob (Dandys World)', download: 'https://gamebanana.com/dl/1556526', modPage: '', thumb: 'images/GoobMK7PortPreview.jpg', video: 'images/GoobMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
 	
     { gameId: 'fnf',  name: 'v-slice mod that closes the game when you open it', download: 'https://gamebanana.com/dl/1769161', modPage: 'https://gamebanana.com/mods/698997', thumb: 'images/vslicemodthatclosesthegamewhenyouopenit.jpg', video: '', tags: ['V-Slice'], desc: '' },
+	
+	{ gameId: 'sm64dx',  name: 'Goob (Dandy\'s World)', download: 'https://gamebanana.com/dl/1800425', modPage: 'https://gamebanana.com/mods/711004', thumb: 'images/goob64.jpg', video: 'images/goob64video.mp4', tags: ['Character Select', 'Port'], desc: '' },
   ];
 
   // ─────────────────────────────────────────
@@ -1432,8 +1450,9 @@
       const showInfoBubble   = flags.infoBubble !== false;
       const showPreviewVideo = flags.previewVideo !== false;
 
-      const hasVideo = g.video && showPreviewVideo;
-      const videoHtml = hasVideo ? `<video class="game-card-banner showcase-video" src="${g.video}" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
+      const showcaseVideoList = Array.isArray(g.video) ? g.video.filter(Boolean) : (g.video ? [g.video] : []);
+      const hasVideo = showcaseVideoList.length > 0 && showPreviewVideo;
+      const videoHtml = hasVideo ? `<video class="game-card-banner showcase-video" loop playsinline style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; filter:brightness(0.75);"></video>` : '';
       const videoBtnHtml = hasVideo ? `<button type="button" class="video-toggle-btn has-video" aria-label="Play preview video">▶</button>` : '';
 
       const updateBubbleHtml = showUpdateBubble ? `<div class="showcase-bubble update-bubble" onclick="openChangelogModal(event, '${g.id}')">Updates</div>` : '';
@@ -1485,15 +1504,26 @@
     `;
 
     document.querySelectorAll('.showcase-card').forEach(card => {
+      const game = getGame(card.dataset.game);
+      const videoList = game && Array.isArray(game.video) ? game.video.filter(Boolean) : (game && game.video ? [game.video] : []);
       const img = card.querySelector('.game-card-banner:not(.showcase-video)');
       const video = card.querySelector('.showcase-video');
       const btn = card.querySelector('.video-toggle-btn');
-      if (!video) return;
+      if (!video || !videoList.length) return;
+
+      const pickRandomVideo = () => {
+        const src = videoList.length > 1
+          ? videoList[Math.floor(Math.random() * videoList.length)]
+          : videoList[0];
+        video.src = src;
+      };
 
       card.addEventListener('mouseenter', () => {
+        pickRandomVideo();
         img.style.opacity = '0';
         video.style.display = 'block';
         video.muted = false;
+        video.currentTime = 0;
         video.play().catch(() => {});
         if (btn) btn.textContent = '⏸';
       });
@@ -1512,6 +1542,7 @@
           e.preventDefault();
           const isPlaying = video.style.display === 'block';
           if (!isPlaying) {
+            pickRandomVideo();
             img.style.opacity = '0';
             video.style.display = 'block';
             video.muted = false;
