@@ -97,6 +97,118 @@
     .section-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gb-banana); margin-bottom: 16px; opacity: 0; transform: translateX(-12px); transition: opacity 0.5s, transform 0.5s; }
     .section-label.visible { opacity: 1; transform: none; }
 
+	/* ── FEATURED SHOWCASE (FULL RESOLUTION & CENTER-LEFT LAYOUT) ── */
+	#featured-showcase {
+	padding: 50px 0 0;
+	}
+	
+	.featured-card {
+	position: relative;
+	width: 100%;
+	border-radius: 12px;
+	overflow: hidden;
+	border: 4px solid var(--gb-banana);
+	background: var(--surface);
+	box-shadow: 0 0 25px rgba(245, 197, 24, 0.25);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	cursor: pointer;
+	user-select: none;
+	}
+	
+	.featured-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 0 35px rgba(245, 197, 24, 0.45);
+	}
+	
+	/* Full resolution image banner */
+	.featured-banner {
+	width: 100%;
+	height: auto;
+	display: block;
+	filter: brightness(0.6);
+	transition: filter 0.3s, opacity 0.3s;
+	}
+	
+	/* Full resolution video overlay */
+	.featured-video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 1;
+	filter: brightness(0.85);
+	display: none;
+	}
+	
+	.featured-card:hover .featured-banner {
+	filter: brightness(0.85);
+	}
+	
+	/* Row overlay centered vertically on the left side */
+	.featured-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 32px 40px;
+	background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%);
+	transition: opacity 0.25s ease;
+	}
+	
+	.featured-card:hover .featured-overlay {
+	opacity: 0.95;
+	}
+	
+	.featured-badge {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 10px;
+	background: var(--gb-banana);
+	color: #000;
+	padding: 6px 12px;
+	border-radius: 4px;
+	letter-spacing: 1px;
+	margin-bottom: 16px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+	}
+	
+	/* Side-by-side title image and text container */
+	.featured-header-row {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	margin-bottom: 12px;
+	}
+	
+	/* Large title image */
+	.featured-title-img {
+	width: 240px; /* Increased from 160px */
+	height: auto;
+	max-height: 180px; /* Increased from 120px */
+	object-fit: contain;
+	filter: drop-shadow(0 4px 10px rgba(0,0,0,0.9));
+	flex-shrink: 0;
+	}	
+	/* Text next to the title image */
+	.featured-title-text {
+	font-family: 'Press Start 2P', monospace;
+	font-size: clamp(16px, 3vw, 24px);
+	color: #fff;
+	text-shadow: 0 3px 10px rgba(0,0,0,0.9);
+	line-height: 1.4;
+	}
+	
+	.featured-desc {
+	font-size: 12px;
+	color: #ddd;
+	max-width: 580px;
+	line-height: 1.6;
+	text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+	}
+
     /* Sub-headers inside game picker */
     .selector-subgroup-title {
       font-family: 'Press Start 2P', monospace;
@@ -422,7 +534,7 @@
     }
 
     /* ── WIP / CURRENTLY COOKING SECTION ── */
-    #wip { padding: 50px 0 10px; }
+    #wip { padding: 40px 0 10px; }
 
     .wip-grid {
       display: grid;
@@ -859,6 +971,14 @@
     </div>
   </div>
 
+  <!-- SINGLE BIG FEATURED MOD SHOWCASE CARD -->
+  <section id="featured-showcase">
+    <div class="container">
+      <div class="section-label visible">// most anticipated project</div>
+      <div id="featuredCardContainer"></div>
+    </div>
+  </section>
+
   <section id="wip">
     <div class="container">
       <div class="section-label visible">// currently cooking</div>
@@ -922,32 +1042,22 @@
 
   <script>
   // ─────────────────────────────────────────
+  // MOST ANTICIPATED / FEATURED PROJECT CONFIG
+  // ─────────────────────────────────────────
+  // Edit this object to set whichever project is currently your biggest showcase!
+const FEATURED_PROJECT = {
+    title: '(The Plusrooms)',
+    banner: 'images/plusbanner.png',
+    logoImage: 'images/plusroomslogo.png',
+    color: '#f5c518',
+    video: 'images/ThePlusroomsteaser.mp4',
+    desc: '"The Portal Poster is really an experimental thing. I once tried it on a wall and discovered a part of the schoolhouse that doesn\'t belong and... It\'s like a maze, it just goes on and on."',
+    downloadUrl: 'https://gamebanana.com/wips/103640',
+    badge: 'MOST ANTICIPATED'
+  };
+  // ─────────────────────────────────────────
   // GAMES
   // ─────────────────────────────────────────
-  // `driveFolder` (showcase games only): link to a Google Drive FOLDER
-  // holding all versions of that mod. This is what the changelog popup
-  // links out to, so people can grab any version, not just the latest.
-  // Just paste the folder's "Anyone with the link" share URL in.
-  //
-  // `flags` (showcase games only): quick on/off switches for that game's
-  // card. Everything defaults to ON — you only need to add a flag when
-  // you want to turn something OFF. Leave the whole `flags` object out
-  // entirely and you get the normal full card.
-  //
-  //   updateBubble  : the yellow "New update!" bubble (opens changelog)
-  //   infoBubble    : the cyan "Info" bubble (opens the info popup)
-  //   previewVideo  : hover-to-play video preview on the card
-  //
-  // Example — hide just the update bubble for one game:
-  //   flags: { updateBubble: false }
-  //
-  // Example — hide everything extra, plain card only:
-  //   flags: { updateBubble: false, infoBubble: false, previewVideo: false }
-  //
-  // `video` (showcase games only): can be a single path (string) or an
-  // array of paths — give it an array (e.g. ['clip1.mp4', 'clip2.mp4'])
-  // and a random clip from the list plays each time you hover the card,
-  // same as the per-mod video field down in PORTS.
   const GAMES = [
     { 
       id: 'bb+',  
@@ -1046,7 +1156,7 @@
       nameImage: 'images/dxlogo.png', 
       showcase: false 
     },
-	    { 
+    { 
       id: 'fnf',  
       name: 'Friday Night Funkin\'', 
       banner: 'images/fnfbackground.jpg', 
@@ -1069,10 +1179,9 @@
   // ─────────────────────────────────────────
   // PORTS / MODS DATA
   // ─────────────────────────────────────────
-  // `video` can be a single path (string) or an array of paths — give it
-  // an array (e.g. ['clip1.mp4', 'clip2.mp4']) and a random clip from the
-  // list plays each time you hover the card.
   const PORTS = [
+    { gameId: 'bb+', name: 'Speedrun Timer +', download: 'https://gamebanana.com/dl/1812288', modPage: 'https://gamebanana.com/mods/715682', thumb: 'images/speedrunplus.jpg', video: 'images/speedrunplusvideo.mp4', tags: ['0.14.X'], desc: '' },
+    { gameId: 'bb+', name: 'BB+, but Principal hates you', download: 'https://gamebanana.com/dl/1814965', modPage: 'https://gamebanana.com/mods/716646', thumb: 'images/principalhatesu.jpg', video: 'images/principalhatesuvideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'Baldi\'s Basics Plus, but it\'s dark', download: 'https://gamebanana.com/dl/1797044', modPage: 'https://gamebanana.com/mods/709633', thumb: 'images/ICantSeeShit.jpg', video: '', tags: ['0.14.X'], desc: 'Recommended to use the Flashlight mod: https://gamebanana.com/mods/709172' },
     { gameId: 'bb+', name: 'Annoying \'Nana Peels', download: 'https://gamebanana.com/dl/1796919', modPage: 'https://gamebanana.com/mods/709574', thumb: 'images/Nana.jpg', video: 'images/NanaVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'Monochrome typing mechanic in BB+! ', download: 'https://gamebanana.com/dl/1793450', modPage: 'https://gamebanana.com/mods/708151', thumb: 'images/MonochromePlus.jpg', video: 'images/MonochromePlusVideo.mp4', tags: ['0.14.X'], desc: '' },
@@ -1082,7 +1191,7 @@
     { gameId: 'bb+', name: 'BB+, but if you lose you get a BSoD!', download: 'https://gamebanana.com/dl/1769769', modPage: 'https://gamebanana.com/mods/699188', thumb: 'images/BSoD.jpg', video: 'images/BSoDVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+, but 15 Playtimes torture you', download: 'https://gamebanana.com/dl/1770469', modPage: 'https://gamebanana.com/mods/699374', thumb: 'images/LETSPLAY.jpg', video: ['images/LETSPLAYVIDEO.mp4','images/laaa laaa.mp4', 'images/tortureplaytime.mp4'], tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+ but youre forced 2 use touch controls', download: 'https://gamebanana.com/dl/1772894', modPage: 'https://gamebanana.com/mods/700146', thumb: 'images/TouchControls.jpg', video: 'images/TouchControlsVideo.mp4', tags: ['0.14.X'], desc: '' },
-    { gameId: 'bb+', name: 'Portals in Baldi\'s Basics Plus', download: 'https://gamebanana.com/dl/1774188', modPage: 'https://gamebanana.com/mods/700325', thumb: 'images/PortalsBBP.jpg', video: 'images/PortalsBBPVideo.mp4', tags: ['0.14.X'], desc: '' },
+    { gameId: 'bb+', name: 'Portals in Baldi\'s Basics Plus', download: 'https://gamebanana.com/dl/1815609', modPage: 'https://gamebanana.com/mods/700325', thumb: 'images/PortalsBBP.jpg', video: 'images/PortalsBBPVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'Baldi\'s Basics Plus but Baldi WALKS', download: 'https://gamebanana.com/dl/1775466', modPage: 'https://gamebanana.com/mods/700638', thumb: 'images/BaldiWALKS.jpg', video: 'images/BaldiWALKSVideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: 'BB+ but youre friend is streaming it', download: 'https://gamebanana.com/dl/1775863', modPage: 'https://gamebanana.com/mods/701070', thumb: 'images/shitquality.jpg', video: 'images/shitqualityvideo.mp4', tags: ['0.14.X'], desc: '' },
     { gameId: 'bb+', name: '1/600 chance of 20 Flowerpots jumping you', download: 'https://gamebanana.com/dl/1777999', modPage: 'https://gamebanana.com/mods/701860', thumb: 'images/20flowerpots.jpg', video: '', tags: ['0.14.X'], desc: '' },
@@ -1094,7 +1203,7 @@
     { gameId: 'bb+', name: 'Please Close The Door When Leaving', download: 'https://gamebanana.com/dl/1752004', modPage: 'https://gamebanana.com/mods/693494', thumb: 'images/closethedoor.jpg', video: '', tags: ['0.14.X'], desc: 'Here\'s how it works:\nYou can leave the StandardDoor and FacultyOnlyDoor open, you can close it by clicking it \nIf Principal catches you, you get sent to Detention INSTANTLY, so this mod might be unfair (example: Principal opened a door you didnt even open and you get sent to detention), You can disable that in the config (BepInEx/config/com.elbfc.pleaseclosethedoor.cfg)' },
     { gameId: 'bb+', name: 'BB+, but baldi is fast if you see him!', download: 'https://gamebanana.com/dl/1752839', modPage: 'https://gamebanana.com/mods/693766', thumb: 'images/fastbaldi.jpg', video: 'images/fastbaldivideo.mp4', tags: ['0.14.X', 'No Info'], desc: 'Increases Baldi\'s movement speed whenever he enters line-of-sight.' },
     { gameId: 'bb+', name: 'BB+, But you die if you see Baldi!', download: 'https://gamebanana.com/dl/1754323', modPage: 'https://gamebanana.com/mods/694251', thumb: 'images/deathbaldi.jpg', video: '', tags: ['0.14.X', 'No Info'], desc: 'Lethal line-of-sight challenge mod where gazing at Baldi triggers game over.' },
-    { gameId: 'bb+', name: 'BB+, but Baldi is a weeping angel...', download: 'https://gamebanana.com/dl/1756172', modPage: 'https://gamebanana.com/mods/694067', thumb: 'images/weepingbaldi.jpg', video: 'images/weepingvideo.mp4', tags: ['0.14.X', 'No Info'], desc: 'Baldi only moves when you are not looking directly at him.' },
+    { gameId: 'bb+', name: 'BB+, but Baldi is a weeping angel...', download: 'https://gamebanana.com/dl/1813370', modPage: 'https://gamebanana.com/mods/694067', thumb: 'images/weepingbaldi.jpg', video: 'images/weepingvideo.mp4', tags: ['0.14.X', 'No Info'], desc: 'Baldi only moves when you are not looking directly at him.' },
     { gameId: 'bb+', name: 'Zoom Mod for BB+', download: 'https://gamebanana.com/dl/1744089', modPage: 'https://gamebanana.com/mods/550009', thumb: 'images/zoommod.png', video: 'images/zoommodvideo.mp4', tags: ['0.14.X'], desc: 'Here´s how to use it: \nHold C to Zoom and the Mouse Wheel to change the FOV.' },
     { gameId: 'bb+', name: 'Custom Pause Music in BB+', download: 'https://gamebanana.com/dl/1743701', modPage: 'https://gamebanana.com/mods/691000', thumb: 'images/pausemusic.png', video: 'images/pausemusicbaldivideo.mp4', tags: ['0.14.X'], desc: 'Heres how to use it: \nPut your .mp3s, .oggs or .wavs in the Modded/com.elbfc.pausemusic folder' },
     { gameId: 'bb+', name: 'EVIL AND INTIMIDATING FACULTY DOOR', download: 'https://gamebanana.com/dl/1743199', modPage: 'https://gamebanana.com/mods/690844', thumb: 'images/EVILDOOR.png', video: 'images/EVILDOORVIDEO.mp4', tags: ['0.14.X'], desc: 'If you see a faculty door, you DIE!' },
@@ -1116,6 +1225,7 @@
     { gameId: 'gmod', name: '[OC] Luna Starlet (Old, Ragdoll)', download: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3620503444', modPage: '', thumb: 'images/Luna Scarlet OLD.jpg', video: '', tags: ['Port', 'Fun', 'No Info'], desc: '' },
 
     /* MARIO KART 7 PORTS WITH No Info TAG */
+    { gameId: 'mk7',  name: 'Rudie (Dandy\'s World)', download: 'https://gamebanana.com/dl/1811883', modPage: '', thumb: 'images/rudiemk7.jpg', video: 'images/rudiemk7video.mp4', tags: ['Port', 'No Info'], desc: '' },
     { gameId: 'mk7',  name: 'ERROR (Source Engine)', download: 'https://gamebanana.com/dl/1766016', modPage: '', thumb: 'images/ERRORMK7PortPreview.jpg', video: '', tags: ['Port', 'No Info'], desc: '' },
     { gameId: 'mk7',  name: 'Sprout (Dandys World)', download: 'https://gamebanana.com/dl/1730613', modPage: '', thumb: 'images/SproutMK7PortPreview.jpg', video: 'images/SproutMK7PortPreview.mp4', tags: ['Port', 'No Info'], desc: '' },
     { gameId: 'mk7',  name: 'Tag (ModNation Racers)', download: 'https://gamebanana.com/dl/1692217', modPage: '', thumb: 'images/TagMK7PortPreview.png', video: '', tags: ['Port', 'No Info'], desc: '' },
@@ -1140,29 +1250,8 @@
   ];
 
   // ─────────────────────────────────────────
-  // PER-GAME CHANGELOGS (showcase "New update!" popup)
+  // PER-GAME CHANGELOGS
   // ─────────────────────────────────────────
-  // Each key below is a game's `id` from the GAMES array above.
-  // Every key holds its OWN list of changelog entries — totally separate
-  // per game, so updating one game's log never touches another's.
-  //
-  // ── TO ADD A NEW ENTRY ──
-  // 1. Find the game's id (e.g. 'su' for Sonic Unleashed).
-  // 2. Add a new entry object to the TOP of that game's array (newest first).
-  // 3. Fill in the 4 fields:
-  //      version : short tag text, e.g. 'v1.3'
-  //      type    : 'new' (green) | 'updated' (yellow) | 'fixed' (purple)
-  //      change  : one-line description of what changed
-  //      date    : any text, e.g. 'Today', 'July 2026', '2 weeks ago'
-  //
-  // Example — adding a new entry to Sonic Unleashed ('su'):
-  //   su: [
-  //     { version: 'v1.3', type: 'fixed', change: 'Fixed a clipping issue with Goob.', date: 'Today' },
-  //     { version: 'v1.2', type: 'new',   change: 'Added Shrimpo as Eggman.',           date: 'July 2026' },
-  //   ]
-  //
-  // If a game has no entries yet, just leave its array empty: []
-  // (the popup will show "no changelog yet" automatically).
   const GAME_CHANGELOGS = {
     slw: [
       { version: 'v1.0', type: 'new', change: 'Initial release of Looey Lost World.', date: '—' },
@@ -1188,38 +1277,6 @@
   // ─────────────────────────────────────────
   // WIP MODS ("Currently Cooking" section)
   // ─────────────────────────────────────────
-  // Teaser cards for stuff you're actively working on — nothing here is
-  // downloadable, there's just no link on the card at all.
-  //
-  // To add one, drop a new object anywhere in this array:
-  //   name   : working title of the mod
-  //   status : 'concept' | 'prototyping' | 'debugging' | 'polishing' | 'abandoned'
-  //            (controls the little colored badge — pick whichever fits.
-  //            'abandoned' = made some progress, but it's never getting
-  //            finished — the card goes grayscale with a gray ribbon
-  //            instead of the usual "WIP" one)
-  //   desc   : a sentence or two on what it does / what's currently stuck
-  //   thumb  : (optional) preview image path — leave '' for a placeholder
-  //   video  : (optional) short preview clip — hover the card to play it.
-  //            Can be a single path, OR an array of paths
-  //            (e.g. ['clip1.mp4', 'clip2.mp4']) — if you give it an array,
-  //            a random one from the list plays every time you hover.
-  //   gameId : (optional) matches an id from GAMES above — tints the card
-  //            border and shows a small game-name tag on it
-  //   download : (optional) link to an early build — shows a small
-  //            "DOWNLOAD" button on the card when set. Leave it out if
-  //            there's nothing to give people yet.
-  //   flags  : (optional) { darkenThumb: false } — normally the thumbnail
-  //            is dimmed a bit (and abandoned ones go full grayscale/dark).
-  //            Set darkenThumb to false to keep it full brightness/color
-  //            no matter what the status is. Leave `flags` out entirely
-  //            for the normal look.
-  //
-  // Once a mod actually ships, just delete its entry here and add it to
-  // PORTS instead (or to GAME_CHANGELOGS if it's for a big showcase game).
-  //
-  // Leave the array empty ( const WIP_MODS = []; ) to hide the whole
-  // section — it disappears automatically when there's nothing in it.
   const WIP_MODS = [
     {
       name: 'Portal 2 but with Dandy\'s World characters!',
@@ -1269,6 +1326,7 @@
 	  flags: { darkenThumb: false }
     },
   ];
+
   // ─────────────────────────────────────────
   const TAG_CLASS = { Video: 'video', Fun: 'fun', Roleplay: 'roleplay', New: 'new', Updated: 'updated', Fixed: 'fixed' };
   const getGame   = id => GAMES.find(g => g.id === id);
@@ -1278,6 +1336,52 @@
   const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
   const isModGame = id => id === 'bb+' || id === 'mc';
 
+  // ── Render Big Featured Showcase ──
+function renderFeaturedShowcase() {
+    const container = document.getElementById('featuredCardContainer');
+    if (!FEATURED_PROJECT || !container) return;
+
+    const fp = FEATURED_PROJECT;
+    const titleHtml = `
+      <div class="featured-header-row">
+        ${fp.logoImage ? `<img src="${fp.logoImage}" alt="${fp.title}" class="featured-title-img" />` : ''}
+        ${fp.title ? `<div class="featured-title-text">${fp.title}</div>` : ''}
+      </div>
+    `;
+
+    container.innerHTML = `
+      <div class="featured-card" style="border-color:${fp.color || 'var(--gb-banana)'};" onclick="window.open('${fp.downloadUrl || '#'}', '_blank')">
+        <img class="featured-banner" src="${fp.banner}" alt="${fp.title}" />
+        ${fp.video ? `<video class="featured-video" loop playsinline src="${fp.video}"></video>` : ''}
+        <div class="featured-overlay">
+          <span class="featured-badge">${fp.badge || 'FEATURED PROJECT'}</span>
+          ${titleHtml}
+          ${fp.desc ? `<div class="featured-desc">${fp.desc}</div>` : ''}
+        </div>
+      </div>
+    `;
+
+    const card = container.querySelector('.featured-card');
+    const video = container.querySelector('.featured-video');
+    const img = container.querySelector('.featured-banner');
+
+    if (card && video) {
+      card.addEventListener('mouseenter', () => {
+        img.style.opacity = '0';
+        video.style.display = 'block';
+        video.muted = false;
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      });
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+        video.style.display = 'none';
+        img.style.opacity = '1';
+      });
+    }
+  }
+  
   // ── Load changelog ──
   async function loadChangelog() {
     const list = document.getElementById('changelogList');
@@ -1736,35 +1840,37 @@
         }
       }
 
-      setTimeout(() => card.classList.add('visible'), i * 70);
+      setTimeout(() => card.classList.add('visible'), i * 60);
     });
   }
 
-  // ── MODAL CONTROLS ──
+  // ── MODAL UTILITIES ──
   function openModModal(index) {
     const port = PORTS[index];
-    if (!port || port.tags.includes('No Info')) return;
+    if (!port) return;
+
     const game = getGame(port.gameId);
-
-    document.getElementById('modalTitle').textContent = port.name;
-    document.getElementById('modalGame').textContent = `// Game: ${game ? game.name : 'Unknown'}`;
-    document.getElementById('modalDesc').textContent = port.desc || 'No detailed description provided for this modification.';
     
-    document.getElementById('modalActions').style.display = '';
-    const modalLink = document.getElementById('modalLink');
-    modalLink.href = port.modPage || '#';
+    document.getElementById('modalTitle').textContent = port.name;
+    document.getElementById('modalGame').textContent = game ? `// ${game.name}` : '';
+    document.getElementById('modalDesc').textContent = port.desc || 'No description provided.';
+    document.getElementById('modalLink').href = port.modPage || port.download;
 
-    const modalThumbContainer = document.getElementById('modalThumbContainer');
+    const thumbContainer = document.getElementById('modalThumbContainer');
     const modalThumb = document.getElementById('modalThumb');
-    const modalThumbLogo = document.getElementById('modalThumbLogo');
+    const modalLogo = document.getElementById('modalThumbLogo');
 
     if (port.thumb) {
       modalThumb.src = port.thumb;
-      modalThumb.style.filter = "none";
-      modalThumbContainer.style.display = 'block';
-      modalThumbLogo.style.display = 'none'; 
+      thumbContainer.style.display = 'block';
+      if (game && game.nameImage) {
+        modalLogo.src = game.nameImage;
+        modalLogo.style.display = 'block';
+      } else {
+        modalLogo.style.display = 'none';
+      }
     } else {
-      modalThumbContainer.style.display = 'none';
+      thumbContainer.style.display = 'none';
     }
 
     document.getElementById('modModal').classList.add('active');
@@ -1775,73 +1881,58 @@
   }
 
   function handleModalOverlayClick(e) {
-    if (e.target.id === 'modModal') {
-      closeModModal();
-    }
+    if (e.target.id === 'modModal') closeModModal();
   }
 
-  // ── SHOWCASE INFO MODAL CONTROLS ──
-  function openShowcaseInfoModal(e, gameId) {
-    e.stopPropagation();
-    e.preventDefault();
-    
+  function openShowcaseInfoModal(event, gameId) {
+    event.stopPropagation();
     const game = getGame(gameId);
     if (!game) return;
 
     document.getElementById('modalTitle').textContent = game.name;
-    document.getElementById('modalGame').textContent = `// Big Mod Showcase`;
-    document.getElementById('modalDesc').textContent = game.desc || 'No detailed description provided.';
+    document.getElementById('modalGame').textContent = '// SHOWCASE PROJECT';
+    document.getElementById('modalDesc').textContent = game.desc || 'No description available for this showcase mod.';
+    document.getElementById('modalLink').href = game.download || '#';
 
-    // Big mod showcases don't get a "GO TO MOD PAGE" button —
-    // their update bubble / changelog popup handles the outbound link instead.
-    document.getElementById('modalActions').style.display = 'none';
-
-    const modalThumbContainer = document.getElementById('modalThumbContainer');
+    const thumbContainer = document.getElementById('modalThumbContainer');
     const modalThumb = document.getElementById('modalThumb');
-    const modalThumbLogo = document.getElementById('modalThumbLogo');
+    const modalLogo = document.getElementById('modalThumbLogo');
 
     if (game.banner) {
       modalThumb.src = game.banner;
-      modalThumbContainer.style.display = 'block';
-      
+      thumbContainer.style.display = 'block';
       if (game.nameImage) {
-        modalThumbLogo.src = game.nameImage;
-        modalThumbLogo.style.display = 'block';
-        modalThumb.style.filter = "brightness(0.4)";
+        modalLogo.src = game.nameImage;
+        modalLogo.style.display = 'block';
       } else {
-        modalThumbLogo.style.display = 'none';
-        modalThumb.style.filter = "none";
+        modalLogo.style.display = 'none';
       }
     } else {
-      modalThumbContainer.style.display = 'none';
+      thumbContainer.style.display = 'none';
     }
 
     document.getElementById('modModal').classList.add('active');
   }
 
-  // ── CHANGELOG MODAL CONTROLS ──
-  function openChangelogModal(e, gameId) {
-    e.stopPropagation(); 
-    e.preventDefault();
-
+  function openChangelogModal(event, gameId) {
+    event.stopPropagation();
     const game = getGame(gameId);
     if (!game) return;
 
     document.getElementById('changelogGameName').textContent = `// ${game.name}`;
-    const driveLink = game.driveFolder || game.download || '#';
-
     const list = document.getElementById('changelogModalList');
-    const entries = GAME_CHANGELOGS[gameId] || [];
+    const logs = GAME_CHANGELOGS[gameId] || [];
 
-    if (entries.length === 0) {
-      list.innerHTML = '<div class="changelog-empty">no changelog yet</div>';
+    if (!logs.length) {
+      list.innerHTML = '<div class="changelog-empty">No updates recorded yet.</div>';
     } else {
-      list.innerHTML = entries.map(entry => `
-        <a href="${driveLink}" target="_blank" class="changelog-item">
-          <span class="changelog-item-tag ${(entry.type || '').toLowerCase()}">${entry.version}</span>
-          <div class="changelog-item-change" style="color:var(--text-dim);">${entry.change}</div>
-          <div class="changelog-item-date">${entry.date}</div>
-        </a>
+      list.innerHTML = logs.map(l => `
+        <div class="changelog-item">
+          <div class="changelog-item-name">${l.version}</div>
+          <span class="changelog-item-tag ${l.type}">${l.type}</span>
+          <div class="changelog-item-change">${l.change}</div>
+          <div class="changelog-item-date">${l.date}</div>
+        </div>
       `).join('');
     }
 
@@ -1853,27 +1944,15 @@
   }
 
   function handleChangelogOverlayClick(e) {
-    if (e.target.id === 'changelogModal') {
-      closeChangelogModal();
-    }
+    if (e.target.id === 'changelogModal') closeChangelogModal();
   }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModModal();
-      closeChangelogModal();
-    }
+  // ── INIT ──
+  document.addEventListener('DOMContentLoaded', () => {
+    renderFeaturedShowcase();
+    renderWipMods();
+    loadChangelog();
   });
-
-  // Scroll reveal
-  new IntersectionObserver(
-    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-    { threshold: 0.08 }
-  ).observe(document.querySelector('.section-label'));
-
-  loadChangelog();
-  renderWipMods();
   </script>
-
 </body>
 </html>
