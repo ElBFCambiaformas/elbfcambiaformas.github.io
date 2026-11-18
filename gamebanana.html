@@ -73,7 +73,7 @@
     }
     nav .container { display: flex; align-items: center; justify-content: space-between; }
     .logo-img { height: 36px; width: auto; image-rendering: pixelated; display: block; transition: opacity 0.2s; }
-    .logo-img:hover { opacity: 0.8; }
+    .logo-img:hover { opacity: 0.5; }
     nav ul { list-style: none; display: flex; gap: 28px; }
     nav a { color: var(--text-dim); text-decoration: none; font-size: 12px; letter-spacing: 1px; transition: color 0.2s; }
     nav a:hover { color: var(--gb-banana); }
@@ -201,12 +201,69 @@
 	line-height: 1.4;
 	}
 	
+	/* Centered layout: big logo in the middle (set centered: true on a project) */
+	.featured-card.featured-centered .featured-overlay {
+	  align-items: center;
+	  justify-content: center;
+	  text-align: center;
+	  background: radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 70%, rgba(0,0,0,0.1) 100%);
+	}
+	.featured-card.featured-centered .featured-header-row { justify-content: center; margin-bottom: 16px; }
+	.featured-card.featured-centered .featured-title-img { width: min(560px, 80%); max-height: 300px; }
+	.featured-card.featured-centered .featured-desc { max-width: 520px; }
+
+	/* Logo dims to 80% while the preview video plays on hover */
+	.featured-title-img { transition: opacity 0.25s ease; }
+	.featured-card.has-video:hover .featured-title-img { opacity: 0.8; }
+
 	.featured-desc {
 	font-size: 12px;
 	color: #ddd;
 	max-width: 580px;
 	line-height: 1.6;
 	text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+	}
+
+
+	/* ── VERSION CHOICE MODAL (Recomp / GameCube) ── */
+	.featured-stack { display: flex; flex-direction: column; gap: 44px; }
+	.featured-block .section-label { margin-bottom: 16px; }
+	.choice-modal-content { max-width: 680px; }
+	.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+	@media (max-width: 560px) { .choice-grid { grid-template-columns: 1fr; } }
+	.choice-window {
+	  display: flex; flex-direction: column;
+	  background: var(--bg);
+	  border: 2px solid var(--border);
+	  border-radius: 8px;
+	  overflow: hidden;
+	  text-decoration: none;
+	  color: inherit;
+	  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+	}
+	.choice-window:hover {
+	  transform: translateY(-4px);
+	  border-color: var(--choice-color, var(--gb-banana));
+	  box-shadow: 0 0 22px var(--choice-glow, rgba(245,197,24,0.3));
+	}
+	.choice-window-bar {
+	  font-family: 'Press Start 2P', monospace;
+	  font-size: 9px;
+	  padding: 10px 12px;
+	  background: var(--choice-color, var(--gb-banana));
+	  color: #000;
+	  letter-spacing: 1px;
+	}
+	.choice-window-thumb {
+	  width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;
+	  background: #000; border-bottom: 1px solid var(--border);
+	}
+	.choice-window-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+	.choice-window-title { font-family: 'Press Start 2P', monospace; font-size: 11px; color: #fff; line-height: 1.6; }
+	.choice-window-desc { font-size: 11px; color: var(--text-dim); line-height: 1.7; flex: 1; }
+	.choice-window-go {
+	  font-family: 'Press Start 2P', monospace; font-size: 9px;
+	  color: var(--choice-color, var(--gb-banana));
 	}
 
     /* Sub-headers inside game picker */
@@ -974,8 +1031,7 @@
   <!-- SINGLE BIG FEATURED MOD SHOWCASE CARD -->
   <section id="featured-showcase">
     <div class="container">
-      <div class="section-label visible">// most anticipated project</div>
-      <div id="featuredCardContainer"></div>
+      <div class="featured-stack" id="featuredStack"></div>
     </div>
   </section>
 
@@ -1020,6 +1076,16 @@
     </div>
   </div>
 
+  <!-- VERSION CHOICE POPUP (Recomp / GameCube-Dolphin) -->
+  <div class="modal-overlay" id="choiceModal" onclick="handleChoiceOverlayClick(event)">
+    <div class="modal-content choice-modal-content">
+      <button type="button" class="modal-close" onclick="closeChoiceModal()" aria-label="Close modal">✕</button>
+      <div id="choiceTitle" class="modal-title">Pick a version</div>
+      <div id="choiceSub" class="modal-game-name">// choose your version</div>
+      <div class="choice-grid" id="choiceGrid"></div>
+    </div>
+  </div>
+
   <!-- CHANGELOG MODAL POPUP WINDOW -->
   <div class="modal-overlay" id="changelogModal" onclick="handleChangelogOverlayClick(event)">
     <div class="modal-content">
@@ -1045,16 +1111,53 @@
   // MOST ANTICIPATED / FEATURED PROJECT CONFIG
   // ─────────────────────────────────────────
   // Edit this object to set whichever project is currently your biggest showcase!
-const FEATURED_PROJECT = {
-    title: '(The Plusrooms)',
-    banner: 'images/plusbanner.png',
-    logoImage: 'images/plusroomslogo.png',
-    color: '#f5c518',
-    video: 'images/ThePlusroomsteaser.mp4',
-    desc: '"The Portal Poster is really an experimental thing. I once tried it on a wall and discovered a part of the schoolhouse that doesn\'t belong and... It\'s like a maze, it just goes on and on."',
-    downloadUrl: 'https://gamebanana.com/wips/103640',
-    badge: 'MOST ANTICIPATED'
-  };
+const FEATURED_PROJECTS = [
+    // ── NEW: edit this one with your real mod info + links ──
+    {
+      label: '// most anticipated project',
+      title: 'Waxwell The Candle',
+      banner: 'images/WTCBannerFront.png',
+      logoImage: 'images/WTCLogo.png',
+      centered: true,
+      color: '#664E8C',
+      video: 'images/WTCVideo.mp4',
+      desc: 'Regenade or Hero? Uncover Waxwell\'s truth!',
+      badge: 'MOST ANTICIPATED',
+      versions: [
+        {
+          name: 'RECOMP',
+          title: 'Recomp',
+          desc: 'The mod ported to the recently released recomp.',
+          image: 'images/wtcbannerrecomp.jpg',
+          color: '#00e5ff',
+          glow: 'rgba(0,229,255,0.35)',
+          url: 'https://gamebanana.com/mods/741844'
+        },
+        {
+          name: 'GAMECUBE / DOLPHIN',
+          title: 'GameCube Version',
+          desc: 'Original GameCube build',
+          image: 'images/WTCBannerDolphin.jpg',
+          color: '#897dd0',
+          glow: 'rgba(137,125,208,0.35)',
+          url: 'https://gamebanana.com/mods/739536'
+        }
+      ]
+    },
+    // ── Original featured project (moved below) ──
+    {
+      label: '// most anticipated project',
+      title: '(The Plusrooms)',
+      banner: 'images/plusbanner.png',
+      logoImage: 'images/plusroomslogo.png',
+      color: '#f5c518',
+      video: 'images/ThePlusroomsteaser.mp4',
+      desc: '"The Portal Poster is really an experimental thing. I once tried it on a wall and discovered a part of the schoolhouse that doesn\'t belong and... It\'s like a maze, it just goes on and on."',
+      downloadUrl: 'https://gamebanana.com/wips/103640',
+      badge: 'MOST ANTICIPATED'
+    }
+  ];
+  
   // ─────────────────────────────────────────
   // GAMES
   // ─────────────────────────────────────────
@@ -1257,8 +1360,11 @@ const FEATURED_PROJECT = {
 	
     { gameId: 'fnf',  name: 'v-slice mod that closes the game when you open it', download: 'https://gamebanana.com/dl/1769161', modPage: 'https://gamebanana.com/mods/698997', thumb: 'images/vslicemodthatclosesthegamewhenyouopenit.jpg', video: '', tags: ['V-Slice'], desc: '' },
 	
-	{ gameId: 'sm64dx',  name: 'Shelly (Dandy\'s World)', download: 'https://gamebanana.com/dl/1843950', modPage: 'https://gamebanana.com/mods/726182', thumb: 'images/shelly64.jpg', video: '', tags: ['Character Select', 'Port'], desc: '' },
-	{ gameId: 'sm64dx',  name: 'Goob (Dandy\'s World)', download: 'https://gamebanana.com/dl/1843952', modPage: 'https://gamebanana.com/mods/711004', thumb: 'images/goob64.jpg', video: 'images/goob64video.mp4', tags: ['Character Select', 'Port'], desc: '' },
+	{ gameId: 'sm64dx',  name: 'Waxwell (Dandy\'s World)', download: 'https://gamebanana.com/dl/1894349', modPage: 'https://gamebanana.com/mods/742247', thumb: 'images/waxwell64.jpg', video: '', tags: ['Character Select', 'Port'], desc: 'Check the mod page to see how his ability works' },
+	{ gameId: 'sm64dx',  name: 'Rudie (Dandy\'s World)', download: 'https://gamebanana.com/dl/1894352', modPage: 'https://gamebanana.com/mods/742248', thumb: 'images/rudie64.jpg', video: '', tags: ['Character Select', 'Port'], desc: 'Check the mod page to see how his ability works' },
+	{ gameId: 'sm64dx',  name: 'Looey (Dandy\'s World)', download: 'https://gamebanana.com/dl/1894346', modPage: 'https://gamebanana.com/mods/729245', thumb: 'images/looey64.jpg', video: '', tags: ['Character Select', 'Port'], desc: '' },
+	{ gameId: 'sm64dx',  name: 'Shelly (Dandy\'s World)', download: 'https://gamebanana.com/dl/1894336', modPage: 'https://gamebanana.com/mods/726182', thumb: 'images/shelly64.jpg', video: '', tags: ['Character Select', 'Port'], desc: '' },
+	{ gameId: 'sm64dx',  name: 'Goob (Dandy\'s World)', download: 'https://gamebanana.com/dl/1894330', modPage: 'https://gamebanana.com/mods/711004', thumb: 'images/goob64.jpg', video: 'images/goob64video.mp4', tags: ['Character Select', 'Port'], desc: '' },
   ];
 
   // ─────────────────────────────────────────
@@ -1350,50 +1456,91 @@ const FEATURED_PROJECT = {
 
   // ── Render Big Featured Showcase ──
 function renderFeaturedShowcase() {
-    const container = document.getElementById('featuredCardContainer');
-    if (!FEATURED_PROJECT || !container) return;
+    const stack = document.getElementById('featuredStack');
+    if (!stack || !FEATURED_PROJECTS.length) return;
+    stack.innerHTML = '';
 
-    const fp = FEATURED_PROJECT;
-    const titleHtml = `
-      <div class="featured-header-row">
-        ${fp.logoImage ? `<img src="${fp.logoImage}" alt="${fp.title}" class="featured-title-img" />` : ''}
-        ${fp.title ? `<div class="featured-title-text">${fp.title}</div>` : ''}
-      </div>
-    `;
+    FEATURED_PROJECTS.forEach((fp, idx) => {
+      const block = document.createElement('div');
+      block.className = 'featured-block';
 
-    container.innerHTML = `
-      <div class="featured-card" style="border-color:${fp.color || 'var(--gb-banana)'};" onclick="window.open('${fp.downloadUrl || '#'}', '_blank')">
-        <img class="featured-banner" src="${fp.banner}" alt="${fp.title}" />
-        ${fp.video ? `<video class="featured-video" loop playsinline src="${fp.video}"></video>` : ''}
-        <div class="featured-overlay">
-          <span class="featured-badge">${fp.badge || 'FEATURED PROJECT'}</span>
-          ${titleHtml}
-          ${fp.desc ? `<div class="featured-desc">${fp.desc}</div>` : ''}
-        </div>
-      </div>
-    `;
+      const titleHtml = `
+        <div class="featured-header-row">
+          ${fp.logoImage ? `<img src="${fp.logoImage}" alt="${fp.title}" class="featured-title-img" />` : ''}
+          ${fp.title && !(fp.centered && fp.logoImage) ? `<div class="featured-title-text">${fp.title}</div>` : ''}
+        </div>`;
 
-    const card = container.querySelector('.featured-card');
-    const video = container.querySelector('.featured-video');
-    const img = container.querySelector('.featured-banner');
+      block.innerHTML = `
+        <div class="section-label visible">${fp.label || '// featured'}</div>
+        <div class="featured-card${fp.centered ? ' featured-centered' : ''}${fp.video ? ' has-video' : ''}" style="border-color:${fp.color || 'var(--gb-banana)'};">
+          <img class="featured-banner" src="${fp.banner}" alt="${fp.title}" />
+          ${fp.video ? `<video class="featured-video" loop playsinline src="${fp.video}"></video>` : ''}
+          <div class="featured-overlay">
+            <span class="featured-badge">${fp.badge || 'FEATURED PROJECT'}</span>
+            ${titleHtml}
+            ${fp.desc ? `<div class="featured-desc">${fp.desc}</div>` : ''}
+          </div>
+        </div>`;
+      stack.appendChild(block);
 
-    if (card && video) {
-      card.addEventListener('mouseenter', () => {
-        img.style.opacity = '0';
-        video.style.display = 'block';
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
+      const card = block.querySelector('.featured-card');
+      const video = block.querySelector('.featured-video');
+      const img = block.querySelector('.featured-banner');
+
+      // Click: open version chooser if the project has versions, else go straight to its page
+      card.addEventListener('click', () => {
+        if (fp.versions && fp.versions.length) openChoiceModal(idx);
+        else window.open(fp.downloadUrl || '#', '_blank');
       });
-      card.addEventListener('mouseleave', () => {
-        video.pause();
-        video.currentTime = 0;
-        video.style.display = 'none';
-        img.style.opacity = '1';
-      });
-    }
+
+      if (video) {
+        card.addEventListener('mouseenter', () => {
+          img.style.opacity = '0';
+          video.style.display = 'block';
+          video.muted = false;
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        });
+        card.addEventListener('mouseleave', () => {
+          video.pause();
+          video.currentTime = 0;
+          video.style.display = 'none';
+          img.style.opacity = '1';
+        });
+      }
+    });
   }
-  
+
+  // ── Version choice popup (Recomp / GameCube-Dolphin) ──
+  function openChoiceModal(idx) {
+    const fp = FEATURED_PROJECTS[idx];
+    if (!fp || !fp.versions) return;
+    document.getElementById('choiceTitle').textContent = fp.title;
+    document.getElementById('choiceSub').textContent = '// choose your version';
+    document.getElementById('choiceGrid').innerHTML = fp.versions.map(v => `
+      <a class="choice-window" href="${v.url || '#'}" target="_blank" rel="noopener"
+         style="--choice-color:${v.color || 'var(--gb-banana)'}; --choice-glow:${v.glow || 'rgba(245,197,24,0.3)'};">
+        <div class="choice-window-bar">${v.name}</div>
+        ${v.image ? `<img class="choice-window-thumb" src="${v.image}" alt="${v.name}" />` : ''}
+        <div class="choice-window-body">
+          <div class="choice-window-title">${v.title || v.name}</div>
+          <div class="choice-window-desc">${v.desc || ''}</div>
+          <div class="choice-window-go">GO TO MOD PAGE →</div>
+        </div>
+      </a>`).join('');
+    document.getElementById('choiceModal').classList.add('active');
+  }
+
+  function closeChoiceModal() {
+    document.getElementById('choiceModal').classList.remove('active');
+  }
+
+  function handleChoiceOverlayClick(e) {
+    if (e.target.id === 'choiceModal') closeChoiceModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeChoiceModal(); });
+
   // ── Load changelog ──
   async function loadChangelog() {
     const list = document.getElementById('changelogList');
